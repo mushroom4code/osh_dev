@@ -36,7 +36,18 @@ function is_valid_inn(i) {
 
 let className = '', classNameWindow = 'w-9/12', classInput = 'lg:w-4/5 w-full';
 
-function ContragentForm({initToClick, loads, setState, listContragent, setResult, setColor, setShowForm, showForm,type, setType}) {
+function ContragentForm({
+                            initToClick,
+                            loads,
+                            setState,
+                            listContragent,
+                            setResult,
+                            setColor,
+                            setShowForm,
+                            showForm,
+                            type,
+                            setType
+                        }) {
     const [inn, setInn] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
@@ -75,7 +86,6 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
         setPhone('')
         setName('')
         setInn('')
-        setEmail('')
     }
 
     function sendContragent(data) {
@@ -91,6 +101,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                     if (res.data?.error?.code) {
                         setResultNew(res.data?.error?.code)
                         setContrResult(res.data?.error?.item)
+                        setState(true)
                         setShowForm(false)
                     }
                 } else {
@@ -107,7 +118,6 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
         classNameWindow = 'lg:w-2/4 xs:w-full h-screen md:h-auto'
         classInput = 'w-full'
     }
-
 
     return (
         (listContragent === 0 && loads) || initToClick ?
@@ -167,82 +177,32 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                     <label className="text-sm dark:font-light font-normal text-textLight ml-3
                                      dark:text-textDarkLightGray">Индивидуальный предприниматель</label>
                                 </div>
-                                <div className="md:mr-7 mr-0 md:mb-0 mb-3">
-                                    <input type="radio" name="check"
-                                           className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
-                                dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
-                                 dark:checked:focus:border-white dark:focus:checked:ring-white
-                                 focus:checked:border-light-red focus:checked:ring-light-red
-                                  dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
-                                 dark:border-gray-slider-arrow"
-                                           onChange={(e) => {
-                                               setType(fiz)
-                                           }}
-                                           checked={type === fiz}
-                                           value={fiz}/>
-                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
-                                     dark:text-textDarkLightGray">Физическое лицо</label>
-                                </div>
                             </div>
-                            {type === ip || type === uric ?
-                                <>
-                                    <div className={"mb-3 " + classInput}>
-                                        <input type="text"
-                                               value={name}
-                                               required
-                                               onChange={(e) => {
-                                                   setName(e.target.value)
-                                               }}
-                                               minLength={3}
-                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4' +
-                                                   'outline-none rounded-md w-full'}
-                                               placeholder="Полное наименование организации"/>
-                                    </div>
-                                    <div className={"mb-3 " + classInput}>
-                                        <input type="text"
-                                               required
-                                               id="inn"
-                                               value={inn}
-                                               onChange={(e) => {
-                                                   setInn(e.target.value)
-                                               }}
-                                               minLength={8}
-                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                                   'outline-none rounded-md w-full'}
-                                               placeholder="ИНН"/>
-                                    </div>
-                                </>
-                                :
-                                <>
-                                    <div className={"mb-3 " + classInput}>
-                                        <input type="text"
-                                               value={name}
-                                               required
-                                               onChange={(e) => {
-                                                   setName(e.target.value)
-                                               }}
-                                               minLength={3}
-                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                                   'outline-none rounded-md w-full'}
-                                               placeholder="Фамилия Имя Отчество"/>
-                                    </div>
-                                    <div className={"mb-3 " + classInput}>
-                                        <input type="text"
-                                               required
-                                               id="emailContragent"
-                                               inputMode="email"
-                                               onChange={(e) => {
-                                                   setEmail(e.target.value)
-                                               }}
-                                               value={email}
-                                               minLength={8}
-                                               className={
-                                                   'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                                   'outline-none rounded-md w-full'}
-                                               placeholder="Email"/>
-                                    </div>
-                                </>
-                            }
+                            <div className={"mb-3 " + classInput}>
+                                <input type="text"
+                                       value={name}
+                                       required
+                                       onChange={(e) => {
+                                           setName(e.target.value)
+                                       }}
+                                       minLength={3}
+                                       className={'dark:bg-grayButton bg-textDark border-none py-3 px-4' +
+                                           'outline-none rounded-md w-full'}
+                                       placeholder="Полное наименование организации"/>
+                            </div>
+                            <div className={"mb-3 " + classInput}>
+                                <input type="text"
+                                       required
+                                       id="inn"
+                                       value={inn}
+                                       onChange={(e) => {
+                                           setInn(e.target.value)
+                                       }}
+                                       minLength={8}
+                                       className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
+                                           'outline-none rounded-md w-full'}
+                                       placeholder="ИНН"/>
+                            </div>
                             <div className={"mb-3 relative " + classInput}>
                                 <span className="" id="flag"></span>
                                 <input type="text"

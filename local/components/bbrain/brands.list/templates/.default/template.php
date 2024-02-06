@@ -29,7 +29,7 @@ $arParamsString = array(
                 </h5>
                 <?php if (count($arResult[$arSection['NAME']]) > $maxItemsLength) { ?>
                     <a href="javascript:void(0)"
-                       class="text-textDark text-center shadow-md dark:bg-dark-red text-md bg-light-red py-1 px-5 rounded-md w-fit"
+                       class="text-textDark text-center shadow-md dark:bg-dark-red text-base bg-light-red py-1 px-5 rounded-md w-fit"
                        data-id="click_brand_<?= $arSection['ID']; ?>" onclick="showHideBoxBrands(this)">Показать все</a>
                 <?php } ?>
             </div>

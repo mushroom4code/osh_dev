@@ -20,7 +20,6 @@ class EnteregoContragents
      */
 
     public const typeUric = 'uric';
-    public const typeFiz = 'fiz';
     public const typeIp = 'ip';
 
     /**
@@ -138,11 +137,11 @@ class EnteregoContragents
      */
     public static function addContragent(int $user_id = 0, array $arData = []): array
     {
-        $result = ['error' => 'Такой контрагент уже существует'];
+        $result = [];
         $resultSelect = EnteregoORMContragentsTable::getList(
             array(
-                'select' => array('ID_CONTRAGENT', 'XML_ID'),
-                'filter' => array($arData),
+                'select' => array("*"),
+                'filter' => array('INN' => $arData['INN'] ?? ''),
             )
         )->fetch();
 
@@ -174,7 +173,12 @@ class EnteregoContragents
 
             }
         } else {
-            $result = ['error' => ['code' => '', 'item' => $resultSelect]];
+            $result = [
+                'error' => [
+                    'code' => 'Контрагент с такими данными уже существует!',
+                    'item' => $resultSelect
+                ]
+            ];
         }
 
         return $result;
@@ -214,70 +218,72 @@ class EnteregoContragents
         return $result;
     }
 
-    /**
-     * @param array $filter
-     * @return bool|array
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
-     */
-    public static function getContragentByFilter(array $filter = []): bool|array
-    {
-        $result = false;
-        if (!empty($filter)) {
-            $resultSelect = EnteregoORMContragentsTable::getList(
-                array(
-                    'select' => array('ID_CONTRAGENT', 'TYPE', 'NAME_ORGANIZATION', 'PHONE_COMPANY', 'EMAIL', 'INN'),
-                    'filter' => $filter,
-                )
-            )->fetch();
-
-            $result = empty($resultSelect) ? true : $resultSelect;
-        }
-        return $result;
-    }
-
 
     /**
      * @param int $user_id
-     * @return array
+     * @return bool
      * @throws ArgumentException
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public static function getActiveContragentForUser(int $user_id = 0): array
+    public static function getActiveContragentForUser(int $user_id = 0): bool
     {
-        $result = [];
+        $result = false;
         $ids_new = [];
         $resultUserRelationships = EnteregoORMRelationshipUserContragentsTable::getList(
             array(
                 'select' => array(
-                    'ID_CONTRAGENT',
+                    "ID_CONTRAGENT",
                 ),
                 'filter' => array(
-                    'USER_ID' => $user_id
+                    "USER_ID" => $user_id,
+                    "STATUS" => 1
                 ),
             )
         );
 
-        while ($ids_str = $resultUserRelationships->fetch()) {
-            $ids_new[] = $ids_str['ID_CONTRAGENT'];
-        }
-        if (!empty($ids_new)) {
-            $resultSelect = EnteregoORMContragentsTable::getList(
-                array(
-                    'select' => array('ID_CONTRAGENT'),
-                    'filter' => array(
-                        "@ID_CONTRAGENT" => $ids_new,
-                        'STATUS_CONTRAGENT' => 1
-                    ),
-                )
-            );
-            if (!empty($resultSelect)) {
-                while ($contargent = $resultSelect->fetch()) {
-                    $result[] = $contargent;
+        if (!empty($resultUserRelationships)) {
+            while ($ids_str = $resultUserRelationships->fetch()) {
+                $ids_new[] = $ids_str['ID_CONTRAGENT'];
+            }
+            if (!empty($ids_new)) {
+                $resultSelect = EnteregoORMContragentsTable::getList(
+                    array(
+                        'select' => array('ID_CONTRAGENT'),
+                        'filter' => array(
+                            "@ID_CONTRAGENT" => $ids_new,
+                            "STATUS_CONTRAGENT" => 1
+                        ),
+                    )
+                );
+                if (!empty($resultSelect->fetch())) {
+                    $result = true;
                 }
             }
+        }
+        return $result;
+    }
+
+    /**
+     * @param int $contr_id
+     * @return false|array
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function getContrAgentNameOnOrder(int $contr_id = 0): false|array
+    {
+        $result = [];
+        if ($contr_id !== 0) {
+            $result = EnteregoORMContragentsTable::getList(
+                array(
+                    'select' => array('ID_CONTRAGENT', 'NAME_ORGANIZATION'),
+                    'filter' => array(
+                        "ID_CONTRAGENT" => $contr_id,
+                        "STATUS_CONTRAGENT" => 1
+                    ),
+                )
+            )->fetch();
         }
         return $result;
     }

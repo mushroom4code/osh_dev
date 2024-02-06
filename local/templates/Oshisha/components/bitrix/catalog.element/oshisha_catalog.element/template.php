@@ -516,7 +516,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                             </div>
                             <div class="flex flex-row items-center xl:p-5 p-3 justify-between relative">
                                 <?php if ($USER->IsAuthorized()) {
-                                    if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price) { ?>
+                                    if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price && $arResult['ADD_TO_BASKET']) { ?>
                                         <div>
                                             <div class="mb-lg-3 mb-md-3 mb-4 flex flex-row items-center bx_catalog_item bx_catalog_item_controls"
                                                 <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
@@ -537,7 +537,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                     <div class="product-item-amount-field-block">
                                                         <input class="product-item-amount card_element cat-det
                                          dark:bg-grayButton bg-textDarkLightGray cursor-pointer
-                                    focus:border-none text-center border-none text-md
+                                    focus:border-none text-center border-none text-base
                                      shadow-none py-3.5 px-3 mx-2 outline-none rounded-md w-16"
                                                                id="<?= $itemIds['QUANTITY_ID'] ?>"
                                                                type="number" value="<?= $priceBasket ?>"
@@ -588,6 +588,47 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                             dark:text-textDarkLightGray ganerate_price">
                                                     <?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    <?php }
+                                    else if (!$item['ADD_TO_BASKET']) { ?>
+                                        <div>
+                                <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 open-popup md:w-auto w-full"
+                                      onclick="showHidePopupPrice(this)">Подробнее</span>
+                                            <div class="text-black font-extralight text-center hidden absolute p-5 shadow-lg popup-window-price
+                                bg-filterGray dark:text-textDarkLightGray text-xs dark:bg-grayButton rounded-lg w-72
+                                 z-50 left-0">
+                                                <p class="flex justify-center">
+                                                    <svg width="20" height="20" viewBox="0 0 24 24"
+                                                         class="mb-3 stroke-light-red dark:stroke-white"
+                                                         fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <circle cx="12" cy="12" r="11" stroke-width="2"/>
+                                                        <line x1="12" y1="11" x2="12" y2="18" stroke-width="2"
+                                                              stroke-linecap="round" stroke-linejoin="round"/>
+                                                        <line x1="12" y1="7" x2="12" y2="6" stroke-width="2" stroke-linecap="round"
+                                                              stroke-linejoin="round"/>
+                                                    </svg>
+                                                </p>
+                                                У вас нет активных контрагентов для совершения покупок на этом сайте!<br>
+                                                Вы можете
+                                                <a href="/personal/contragents/"
+                                                   class="text-light-red dark:text-white font-medium">Создать контрагента</a>
+                                                и обратиться к менеджеру <br>
+                                                или перейти на наш
+                                                <a href="https://oshisha.net"
+                                                   class="text-light-red dark:text-white font-medium">Розничный сайт</a>
+                                                <span class="absolute -right-2 -top-2 cursor-pointer"
+                                                      onclick="$(this).closest('div').toggleClass('hidden')">
+                                        <svg width="25" height="25" viewBox="0 0 60 60" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path opacity="0.7"
+                                                  d="M55 30C55 43.807 43.807 55 30 55C16.1929 55 5 43.807 5 30C5 16.1929 16.1929 5 30 5C43.807 5 55 16.1929 55 30Z"
+                                                  fill="#676767"></path>
+                                            <path d="M22.4242 22.4242C23.1564 21.6919 24.3436 21.6919 25.0757 22.4242L30 27.3485L34.9242 22.4242C35.6565 21.692 36.8435 21.692 37.5757 22.4242C38.308 23.1564 38.308 24.3436 37.5757 25.076L32.6517 30L37.5757 34.924C38.308 35.6562 38.308 36.8435 37.5757 37.5757C36.8435 38.308 35.6562 38.308 34.924 37.5757L30 32.6517L25.076 37.5757C24.3436 38.308 23.1564 38.308 22.4242 37.5757C21.692 36.8435 21.692 35.6565 22.4242 34.9242L27.3485 30L22.4242 25.0757C21.6919 24.3436 21.6919 23.1564 22.4242 22.4242Z"
+                                                  fill="white"></path>
+                                        </svg>
+                                    </span>
                                             </div>
                                         </div>
                                     <?php } else { ?>
@@ -642,7 +683,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         </div>
                                     <?php }
                                 } else { ?>
-                                    <div class="text-center text-md font-medium text-lightGrayBg dark:text-textDarkLightGray
+                                    <div class="text-center text-base font-medium text-lightGrayBg dark:text-textDarkLightGray
                                     dark:font-normal w-full">
                                         Для покупки товара вам необходимо
                                         <a href="/auth/"

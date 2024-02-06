@@ -81,7 +81,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                     * Вам будет выслан код подтверждения</p>
                                 <div class="form-group mb-2 flex flex-col relative w-full">
                                     <label class="main-profile-form-label mb-3 dark:text-textDarkLightGray text-textLight
-                                 dark:font-normal font-semibold text-md" for="smsauth-phone">
+                                 dark:font-normal font-semibold text-base" for="smsauth-phone">
                                         <?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                     <span id="flag"></span>
                                     <div class="code relative">
@@ -140,7 +140,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                 <!-- ERROR STEP -->
                 <div id="ctweb_form_step_error" class="ctweb-smsauth-menu-step hidden flex-col">
-                    <h3 class="ctweb-title text-hover-red mb-3 text-md font-semibold"
+                    <h3 class="ctweb-title text-hover-red mb-3 text-base font-semibold"
                         id="<?= $jsParams['TEMPLATE']['ERROR_TITLE'] ?>"></h3>
                     <div class="form-group">
                         <label class="ctweb-label ctweb-label-error text-hover-red dark:font-normal font-semibold mb-3 text-sm"
@@ -152,7 +152,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                 <div class="ctweb-button-block profile mt-6">
                     <input class="btn btn dark:bg-dark-red rounded-md bg-light-red text-white xs:px-7 py-3
                              dark:shadow-md shadow-shadowDark font-light dark:hover:bg-hoverRedDark cursor-pointer
-                              sm:w-72 px-5 w-56 get_code_button profile xs:text-md text-sm sm:font-normal mb-5"
+                              sm:w-72 px-5 w-56 get_code_button profile xs:text-base text-sm sm:font-normal mb-5"
                            id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
                            type="submit"
                            value="Сохранить"
@@ -485,9 +485,9 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                          checked:hover:bg-grayButton border-iconGray dark:text-white cursor-pointer
                                           font-normal rounded-full text-light-red checked:focus:bg-grayButton mr-4"
                                                id="soa-property-USER_RULES" checked name="USER_RULES"/>
-                                        <p class="dark:text-textDarkLightGray dark:font-light font-medium md:text-md text-sm">
+                                        <p class="dark:text-textDarkLightGray dark:font-light font-medium md:text-base text-sm">
                                             Я принимаю условия
-                                            <a class="md:text-md text-sm text-light-red font-medium dark:text-white underline"
+                                            <a class="md:text-base text-sm text-light-red font-medium dark:text-white underline"
                                                href="/about/users_rules/">
                                                 Пользовательского соглашения
                                             </a>
@@ -499,9 +499,9 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                 border-iconGray dark:text-white cursor-pointer font-normal rounded-full
                                                 text-light-red checked:focus:bg-grayButton mr-4"
                                                name="USER_POLITICS"/>
-                                        <label class="dark:text-textDarkLightGray dark:font-light font-medium md:text-md text-sm">
+                                        <label class="dark:text-textDarkLightGray dark:font-light font-medium md:text-base text-sm">
                                             Я принимаю условия
-                                            <a class="md:text-md text-sm text-light-red font-medium dark:text-white underline"
+                                            <a class="md:text-base text-sm text-light-red font-medium dark:text-white underline"
                                                href="/about/politics/">
                                                 Политики конфиденциальности
                                             </a>
@@ -524,7 +524,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                    value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
                                                    class="auth-phone bg-white p-3 border-textDark dark:border-grayButton
                                                     dark:bg-grayButton cursor-pointer w-full text-textLight rounded-md
-                                                     dark:text-white text-md"
+                                                     dark:text-white text-base"
                                                    id="<?= $mainID . "phone" ?>"
                                                    autocomplete="off"/>
                                         </div>
@@ -567,7 +567,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                         dark:text-textDarkLightGray text-xs" for="sms-auth-code"></label>
                                     <div class="flex flex-row justify-between items-center">
                                         <label class="ctweb-label font-normal mb-2 text-textLight
-                                        dark:text-white text-md" for="sms-auth-code">Код</label>
+                                        dark:text-white text-base" for="sms-auth-code">Код</label>
                                         <a class="ctweb-link font-medium mb-2 text-textLight
                                         dark:text-white underline text-xs"
                                            id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>">
@@ -656,7 +656,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                         </div>
                         <input class="btn link_menu_catalog get_code_button red_button_cart btn dark:bg-dark-red rounded-md bg-light-red text-white xs:px-7 py-3
                              dark:shadow-md shadow-shadowDark font-light dark:hover:bg-hoverRedDark cursor-pointer
-                              sm:w-96 px-5 w-full xs:text-md text-md sm:font-normal"
+                              sm:w-96 px-5 w-full text-base sm:font-normal"
                                id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
                                type="submit"
                                value="Регистрация"
@@ -809,7 +809,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                         dark:text-textDarkLightGray text-xs" for="sms-auth-code"></label>
                                             <div class="flex flex-row justify-between">
                                                 <label class="ctweb-label font-normal mb-2 text-textLight
-                                        dark:text-white text-md"
+                                        dark:text-white text-base"
                                                        for="sms-auth-code"><?= GetMessage("SMS_AUTH_CODE") ?></label>
                                                 <a class="ctweb-link font-medium mb-2 text-textLight
                                         dark:text-white underline text-xs"

@@ -27,7 +27,7 @@ function OshishaDoorDelivery({ result, params, sendRequest, currentLocation, han
                     <span className="font-medium text-[15px]">Срок доставки </span>
                 </div>
             </div>
-            <div className='w-full px-[15px] pt-3 mx-auto overflow-auto my-2 border border-x-0 border-grey-line-order dark:border-grayLight'>
+            <div className='w-full px-[15px] pt-3 mx-auto lg:max-h-96 overflow-auto max-h-60 my-2 border border-x-0 border-grey-line-order dark:border-grayLight'>
                 {deliveryInfo.map(delivery => {
 
                     const isChecked = delivery.code === propTypeDelivery?.VALUE[0]

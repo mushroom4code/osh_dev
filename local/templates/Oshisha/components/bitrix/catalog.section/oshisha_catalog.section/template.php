@@ -210,7 +210,7 @@ if (!empty($resQuery)) {
 
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
-//Есть ли контрагент у пользователя или нет - зависит возможность покупки
+// CONTRAGENT Есть ли контрагент у пользователя или нет - зависит возможность покупки
 $userViewPrice = EnteregoContragents::getActiveContragentForUser($USER->GetID());
 $isAjax = Context::getCurrent()->getRequest();
 
@@ -325,7 +325,7 @@ if ($type === 'line') {
                                         'BIG_BUTTONS' => 'Y',
                                         'SCALABLE' => 'N',
                                         'AR_BASKET' => $arBasketItems,
-                                        'ADD_TO_BASKET' => !empty($userViewPrice),
+                                        'ADD_TO_BASKET' => $userViewPrice,
                                         'F_USER_ID' => $FUser_id,
                                         'ID_PROD' => $item['ID'],
                                         'COUNT_LIKE' => $item['COUNT_LIKE'],
@@ -384,7 +384,7 @@ if ($type === 'line') {
         if (($arParams['HIDE_SECTION_DESCRIPTION'] !== 'Y') && !empty($arResult['DESCRIPTION'])) { ?>
             <div class="row mb-4 md:mt-8 mt-5">
                 <div class="col catalog-section-description">
-                    <p class="text-dark dark:text-textDarkLightGray font-medium dark:font-light text-md"><?= $arResult['DESCRIPTION'] ?></p>
+                    <p class="text-dark dark:text-textDarkLightGray font-medium dark:font-light text-base"><?= $arResult['DESCRIPTION'] ?></p>
                 </div>
             </div>
             <?php

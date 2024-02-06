@@ -280,7 +280,7 @@ $is_key_found = isset($found_key) && ($found_key !== false);
                     </div>
                     {{#NOT_AVAILABLE}}
                     <div class="basket-items-list-item-warning-container">
-                        <div class="md:my-4 my-1 md:text-md text-10 text-hover-red font-medium">
+                        <div class="md:my-4 my-1 md:text-base text-10 text-hover-red font-medium">
                             <?= Loc::getMessage('SBB_BASKET_ITEM_NOT_AVAILABLE') ?>.
                         </div>
                     </div>
@@ -407,7 +407,7 @@ $is_key_found = isset($found_key) && ($found_key !== false);
                                 {{^GIFT}}
                                 {{/GIFT}}
                                 <div class="basket-item-price-current flex justify-end">
-                                        <span class="basket-item-price-current-text md:text-2xl text-md text-textLight
+                                        <span class="basket-item-price-current-text md:text-2xl text-base text-textLight
                                                 dark:text-white font-semibold dark:font-normal"
                                               id="basket-item-sum-price-{{ID}}">
                                             {{{SUM_PRICE_FORMATED}}}
@@ -436,7 +436,7 @@ $is_key_found = isset($found_key) && ($found_key !== false);
                         </div>
                         {{#SHOW_SALE_PRICE}}
                         <div class="flex md:flex-row flex-col items-center">
-                            <span class="line-through mr-2 md:text-md text-sm font-light text-textLight dark:text-textDarkLightGray">{{{SUM_OLD}}}₽</span>
+                            <span class="line-through mr-2 md:text-base text-sm font-light text-textLight dark:text-textDarkLightGray">{{{SUM_OLD}}}₽</span>
                             <span class="sale-percent py-1 md:px-3 px-1 md:text-sm text-xs rounded-md bg-light-red dark:bg-light-red text-white font-light "> - {{{SALE_PRICE_VAL}}}₽</span>
                         </div>
                         {{/SHOW_SALE_PRICE}}

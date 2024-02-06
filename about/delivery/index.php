@@ -16,7 +16,7 @@ if ($USER->IsAuthorized()) {
         <h2 class="md:text-3xl text-2xl my-5 font-semibold dark:font-medium text-textLight dark:text-textDarkLightGray">
             Условия доставки и способы оплаты
         </h2>
-        <p class="mb-10 text-md font-semibold dark:font-medium text-textLight dark:text-textDarkLightGray">
+        <p class="mb-10 text-base font-semibold dark:font-medium text-textLight dark:text-textDarkLightGray">
             Доставка кальянов, табачной и никотиносодержащей продукции для физических лиц - не осуществляется,<br>
             в отношении иной продукции применяются следующие условия о доставке:
         </p>

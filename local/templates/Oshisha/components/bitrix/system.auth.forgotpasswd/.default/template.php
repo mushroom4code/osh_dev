@@ -20,7 +20,7 @@
         <?= GetMessage("sys_forgot_pass_note_email") ?>
     </div>
     <div class="form-group row">
-        <div class="dark:text-textDarkLightGray font-semibold dark:font-medium text-dark mb-2 text-md">
+        <div class="dark:text-textDarkLightGray font-semibold dark:font-medium text-dark mb-2 text-base">
             <?= GetMessage("sys_forgot_pass_login1") ?></div>
         <div class="flex md:flex-row flex-col mb-5 mr-5">
             <input type="text" class="dark:bg-grayButton bg-white dark:border-none border-borderColor

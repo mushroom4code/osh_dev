@@ -40,7 +40,6 @@ function ContragentList({typeForms}) {
 
     useEffect(() => {
         const boxPhone = $('#phoneCodeContragent');
-        const boxEmail = $('#emailContragent');
         if (loads) {
             boxPhone.phonecode({
                 preferCo: 'ru', default_prefix: '7'
@@ -54,9 +53,6 @@ function ContragentList({typeForms}) {
                 clearMaskOnLostFocus: false,
                 clearMaskOnLostHover: false,
             });
-        }
-        if (type === 'fiz' && loads && boxEmail.length > 0) {
-            boxEmail.inputmask("email");
         }
     }, [initToClick, loads, type]);
 
@@ -88,8 +84,8 @@ function ContragentList({typeForms}) {
                             }
                         </p>
                         <div className="flex flex-row flex-wrap">
-                            {listContragent.map((contragent, keys) => <ContragentItem key={keys}
-                                                                                      contragent={contragent}/>)}
+                            {listContragent.map((contragent, keys) =>
+                                <ContragentItem key={keys} contragent={contragent}/>)}
                         </div>
                     </div> : false
             }

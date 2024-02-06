@@ -280,7 +280,7 @@ $option = $option_site; ?>
                     </div>
 
                     <div class="submit-wrap">
-                        <input type="submit" class="btn btn-submit p-3 rounded-lg w-full text-white text-md
+                        <input type="submit" class="btn btn-submit p-3 rounded-lg w-full text-white text-base
                                cursor-pointer font-normal bg-light-red dark:bg-dark-red"
                                value="Отправить"
                                onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">

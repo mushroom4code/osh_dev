@@ -74,10 +74,10 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                     <div class="<?php if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<?php else: ?><?php endif ?>  mb-7 smart-filter-parameters-box bx-active">
                         <span class="smart-filter-container-modef"></span>
 
-                        <div class="smart-filter-parameters-box-title mb-2 md:text-sm text-md font-semibold
+                        <div class="smart-filter-parameters-box-title mb-2 md:text-sm text-base font-semibold
                             dark:font-normal dark:text-medium text-gray-box-dark dark:text-white"
                              onclick="smartFilter.hideFilterProps(this)">
-                                <span class="smart-filter-parameters-box-title-text mb-2 md:text-sm text-md font-semibold
+                                <span class="smart-filter-parameters-box-title-text mb-2 md:text-sm text-base font-semibold
                             dark:font-normal dark:text-medium text-gray-box-dark dark:text-white">
                                     <?= (int)$arItem['ID'] === B2B_PRICE ? 'Цена' : $arItem['NAME'] ?>
                                 </span>
@@ -172,7 +172,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                     />
                                     <label data-role="label_in_stoсk"
                                            class="smart-filter-checkbox-text hide_not_available dark:text-white
-                                            md:text-sm text-md font-semibold dark:font-normal dark:text-medium
+                                            md:text-sm text-base font-semibold dark:font-normal dark:text-medium
                                             text-gray-box-dark"
                                            id="hide_not_available_label" for="<?php echo $ar["CONTROL_ID"] ?>">
                                         В наличии
@@ -234,7 +234,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                            class="fill-iconLune"/>
                                 </svg>
                             </span>
-                            <span class="smart-filter-parameters-box-title-text md:text-sm text-md font-semibold
+                            <span class="smart-filter-parameters-box-title-text md:text-sm text-base font-semibold
                             dark:font-normal dark:text-medium text-gray-box-dark dark:text-white">
                                 <?= $arItem["NAME"] ?></span>
                             <?php if ($arItem["FILTER_HINT"] <> ""): ?>

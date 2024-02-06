@@ -21,7 +21,7 @@ function showOrderBlock($listStatuses, $accountNumber)
         <div class="flex flex-col bg-textDark dark:bg-darkBox md:rounded-3xl rounded-xl xl:p-8 p-5 mx-0 mb-5 sale-order-list-inner-container relative">
             <div class="sale-order-list-title-container">
                 <h3 class="mb-2 title-orders-his">
-                    <p class="mb-3 xl:text-2xl flex md:flex-row flex-col lg:text-lg text-md font-medium
+                    <p class="mb-3 xl:text-2xl flex md:flex-row flex-col lg:text-lg text-base font-medium
                      text-textLight dark:text-textDarkLightGray md:items-center">
                         <?= Loc::getMessage('SPOL_TPL_ORDER') ?>
                         <?= Loc::getMessage('SPOL_TPL_NUMBER_SIGN') . $order['ACCOUNT_NUMBER'] ?>
@@ -50,9 +50,9 @@ function showOrderBlock($listStatuses, $accountNumber)
                             <div class="sale-order-list-payment">
                                 <div class="sale-order-list-payment-price flex flex-row">
                                     <span class="sale-order-list-payment-element mr-2 font-semibold dark:font-medium
-                                     text-textLight dark:text-textDarkLightGray xl:text-lg text-md ">Итого: </span>
-                                    <span class="sale-order-list-payment-number text-md font-semibold dark:font-medium
-                                    text-textLight dark:text-textDarkLightGray xl:text-lg text-md">
+                                     text-textLight dark:text-textDarkLightGray xl:text-lg text-base">Итого: </span>
+                                    <span class="sale-order-list-payment-number font-semibold dark:font-medium
+                                    text-textLight dark:text-textDarkLightGray xl:text-lg text-base">
                                         <?= round($order['PRICE']) . ' ₽' ?>
                                     </span>
                                 </div>
@@ -77,8 +77,9 @@ function showOrderBlock($listStatuses, $accountNumber)
                             <div id="popup_mess_order_copy"></div>
                         </div>
                         <div class=" sale-order-list-about-container md:w-full w-1/2">
-                            <a class="sale-order-list-about-link md:px-5 px-1 xl:py-3 py-2 dark:shadow-md w-max shadow-shadowDark
-                            dark:hover:bg-black cursor-pointer dark:bg-grayButton rounded-md bg-lightGrayBg flex items-center  justify-center"
+                            <a class="sale-order-list-about-link md:px-5 px-1 xl:py-3 py-2 dark:shadow-md md:w-max shadow-shadowDark
+                            dark:hover:bg-black cursor-pointer dark:bg-grayButton rounded-md bg-lightGrayBg  w-full
+                            flex items-center justify-center "
                                href="/personal/orders/<?= $order['ACCOUNT_NUMBER'] ?>/">
                                 <svg class="md:w-7 w-4 md:h-6 h-5" viewBox="0 0 25 26" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">

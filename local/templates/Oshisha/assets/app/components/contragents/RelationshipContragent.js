@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import IconNameContr from "./IconNameContr";
 import axios from "axios";
 
@@ -20,15 +20,19 @@ function RelationshipContragent({
             {'ACTION': 'createRelationship', 'ID_CONTRAGENT': contragent.ID_CONTRAGENT})
             .then(res => {
                 if (res.data?.success) {
+                    console.log('test2')
                     setResults(res.data?.success)
                     setState(false);
                     setColorResNew('dark:text-textDarkLightGray text-greenButton')
                     setInit(false);
+
                 } else if (res.data?.error) {
+                    console.log('test4')
                     setResult(res.data?.error)
                 } else {
                     setResult('Вы не смогли запросить связь - попробуйте еще раз или обратитесь к менеджеру')
                 }
+                console.log('test3')
             })
     }
 
