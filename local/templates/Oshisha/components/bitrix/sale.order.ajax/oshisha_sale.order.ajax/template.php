@@ -259,7 +259,7 @@ if ($request->get('ORDER_ID') <> '') {
     $hideDelivery = empty($arResult['DELIVERY']);
     $contrAgent = [];
     if ($USER->IsAuthorized()) {
-        $contrAgent = EnteregoContragents::getContragentsByUserId($USER->GetID(), ["STATUS_CONTRAGENT" => 1], ["STATUS" => 1]);
+        $contrAgent = EnteregoContragents::getContragentsByUserId($USER->GetID(), ["STATUS_CONTRAGENT" => 1], ["STATUS" => 1]) ;
         $savedDeliveryProfiles = SavedDeliveryProfiles::getAll($USER->GetID());
     } ?>
 
