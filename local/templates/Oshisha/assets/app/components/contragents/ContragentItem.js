@@ -2,16 +2,14 @@ import React, {useState} from 'react';
 import IconNameContr from "./IconNameContr";
 
 const active = 'Активен';
-const notAccept = 'Не подтвержден';
-const archive = 'Архивирован';
 const waitAccept = 'Ожидает подтверждения';
 
 function StatusContr(status) {
     const statusColor = status === active
         ? ' dark:bg-greenButton bg-greenLight text-white font-medium '
-        : status === notAccept || status === archive
-            ? 'bg-grayLight text-white font-normal'
-            : 'bg-yellowSt text-black font-medium'
+        : status === waitAccept
+            ? 'bg-yellowSt text-black font-medium'
+            : 'bg-grayLight text-white font-normal'
 
     return `${statusColor} py-2 px-4 rounded-bl-xl rounded-tr-xl w-fit text-xs flex self-end max-w-[250px] 
     md:min-w-[200px] w-full flex justify-center items-center`;

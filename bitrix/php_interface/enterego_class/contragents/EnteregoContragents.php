@@ -88,10 +88,11 @@ class EnteregoContragents
         if ($user_id !== 0) {
 
             $ids_new = [];
+            $arData = [];
             $resultUserRelationships = EnteregoORMRelationshipUserContragentsTable::getList(
                 array(
                     'select' => array(
-                        'ID_CONTRAGENT',
+                        'ID_CONTRAGENT', 'STATUS'
                     ),
                     'filter' => array(
                         'USER_ID' => $user_id
@@ -103,6 +104,7 @@ class EnteregoContragents
 
                 while ($ids_str = $resultUserRelationships->fetch()) {
                     $ids_new[] = $ids_str['ID_CONTRAGENT'];
+                    $arData[$ids_str['ID_CONTRAGENT']] = $ids_str['STATUS'];
                 }
 
                 if (!empty($ids_new)) {
@@ -114,9 +116,18 @@ class EnteregoContragents
                             'filter' => $filters,
                         )
                     );
+
                     if (!empty($resultSelect)) {
-                        while ($contargent = $resultSelect->fetch()) {
-                            $result[] = $contargent;
+
+                        while ($contArgent = $resultSelect->fetch()) {
+                            // TODO придумать другую проверку статуса
+                            $contArgent['STATUS_VIEW'] = 'Ожидает подтверждения';
+
+                            if ($contArgent['STATUS_CONTRAGENT'] == 1 && $arData[$contArgent['ID_CONTRAGENT']] == 1) {
+                                $contArgent['STATUS_VIEW'] = 'Активен';
+                            }
+
+                            $result[] = $contArgent;
                         }
                     }
                 }
