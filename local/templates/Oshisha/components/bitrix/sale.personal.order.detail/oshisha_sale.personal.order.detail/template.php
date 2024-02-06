@@ -199,7 +199,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                             $item_id = [];
 
                             foreach ($arResult['BASKET'] as $basketItem) {
-                                $item_id[] = $basketItem['ID'];
+                                $item_id[] = $basketItem['PRODUCT_ID'];
                             }
 
                             $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
@@ -211,7 +211,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                 }
 
                                 foreach ($count_likes['USER'] as $keyLike => $count) {
-                                    if ($keyLike == $basketItem['ID']) {
+                                    if ($keyLike == $basketItem['PRODUCT_ID']) {
                                         $basketItem['COUNT_LIKE'] = $count['Like'][0];
                                         $basketItem['COUNT_FAV'] = $count['Fav'][0];
                                     }
@@ -300,7 +300,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                         $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                                             'templates',
                                             array(
-                                                'ID_PROD' => $basketItem['ID'],
+                                                'ID_PROD' => $basketItem['PRODUCT_ID'],
                                                 'F_USER_ID' => $FUser_id,
                                                 'LOOK_LIKE' => true,
                                                 'LOOK_FAVORITE' => false,
@@ -320,7 +320,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                             $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                                                 'templates',
                                                 array(
-                                                    'ID_PROD' => $basketItem['ID'],
+                                                    'ID_PROD' => $basketItem['PRODUCT_ID'],
                                                     'F_USER_ID' => $FUser_id,
                                                     'LOOK_LIKE' => false,
                                                     'LOOK_FAVORITE' => true,
