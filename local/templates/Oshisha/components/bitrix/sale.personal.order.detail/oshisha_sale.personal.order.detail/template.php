@@ -6,6 +6,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 use Bitrix\Main\Localization\Loc,
     Bitrix\Main\Page\Asset;
 use Bitrix\Sale\Fuser;
+use Enterego\contragents\EnteregoContragents;
 use Enterego\EnteregoHelper;
 
 if ($arParams['GUEST_MODE'] !== 'Y') {
@@ -36,7 +37,6 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
         }
     }
 
-
     if ($arParams['AUTH_FORM_IN_TEMPLATE'] && isset($arResult['ERRORS']['FATAL'][$component::E_NOT_AUTHORIZED])) {
         $userName = $arResult["USER_NAME"];
         $paymentData[$payment['ACCOUNT_NUMBER']] = array(
@@ -65,6 +65,14 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
     }
     $classStatus = '';
 
+    $contrAgentId = 0;
+    foreach($arResult['ORDER_PROPS'] as $prop){
+        if($prop['CODE'] === 'CONTRAGENT_ID'){
+            $contrAgentId = $prop['VALUE'];
+        }
+    }
+
+    $contrAgent = EnteregoContragents::getContrAgentNameOnOrder($contrAgentId);
     if ($arResult['STATUS_ID'] === 'N') {
         $classStatus = 'status_pending_payment bg-yellowSt text-black font-medium';
     } else if ($arResult['STATUS_ID'] === 'P') {
@@ -154,6 +162,11 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                         } else {
                                             echo htmlspecialcharsbx($arResult["USER"]['LOGIN']);
                                         } ?>
+                                    </p>
+                                    <p class="mb-3 md:text-base text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
+                                        <span class="mr-2 font-semibold dark:font-light">Контрагент: </span>
+                                        <?= !empty($contrAgent['NAME_ORGANIZATION']) ? $contrAgent['NAME_ORGANIZATION']
+                                            : 'Поле не заполнено, обратитесь к менеджеру' ?>
                                     </p>
                                 </div>
                             </div>

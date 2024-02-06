@@ -263,4 +263,28 @@ class EnteregoContragents
         }
         return $result;
     }
+
+    /**
+     * @param int $contr_id
+     * @return false|array
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function getContrAgentNameOnOrder(int $contr_id = 0): false|array
+    {
+        $result = [];
+        if ($contr_id !== 0) {
+            $result = EnteregoORMContragentsTable::getList(
+                array(
+                    'select' => array('ID_CONTRAGENT', 'NAME_ORGANIZATION'),
+                    'filter' => array(
+                        "ID_CONTRAGENT" => $contr_id,
+                        "STATUS_CONTRAGENT" => 1
+                    ),
+                )
+            )->fetch();
+        }
+        return $result;
+    }
 }
