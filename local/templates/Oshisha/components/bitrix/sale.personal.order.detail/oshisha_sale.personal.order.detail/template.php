@@ -66,8 +66,8 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
     $classStatus = '';
 
     $contrAgentId = 0;
-    foreach($arResult['ORDER_PROPS'] as $prop){
-        if($prop['CODE'] === 'CONTRAGENT_ID'){
+    foreach ($arResult['ORDER_PROPS'] as $prop) {
+        if ($prop['CODE'] === 'CONTRAGENT_ID') {
             $contrAgentId = $prop['VALUE'];
         }
     }
@@ -117,19 +117,19 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                     </div>
                     <div class="border-2 border-t-0 border-textDark dark:border-darkBox md:rounded-b-[2rem] rounded-b-xl">
                         <div class="flex md:flex-row flex-col xl:px-8 xl:py-6 md:px-5 md:py-5 px-3 py-3 justify-between">
-                            <div class="flex flex-col">
+                            <div class="flex flex-col lg:w-4/6 w-full">
                                 <div class="flex flex-col pr-1">
                                     <p class="mb-3 md:text-base text-xs font-normal dark:font-light text-textLight
                                      dark:text-textDarkLightGray">
                                         <span class="mr-2 font-semibold dark:font-light">Товаров:</span>
                                         <?= count($arResult['BASKET']); ?>
                                     </p>
-                                    <p class="mb-3 md:text-base text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
+                                    <p class="mb-3 xl:text-base md:text-sm text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
                                         <span class="mr-2 font-semibold dark:font-light">Контрагент: </span>
                                         <?= !empty($contrAgent['NAME_ORGANIZATION']) ? $contrAgent['NAME_ORGANIZATION']
                                             : 'Поле не заполнено, обратитесь к менеджеру' ?>
                                     </p>
-                                    <p class="mb-3 md:text-base text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
+                                    <p class="mb-3 xl:text-base md:text-sm text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
                                         <span class="mr-2 font-semibold dark:font-light">Получатель: </span>
                                         <?php if ($userName <> '') {
                                             echo htmlspecialcharsbx($userName);
@@ -139,9 +139,9 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                             echo htmlspecialcharsbx($arResult["USER"]['LOGIN']);
                                         } ?>
                                     </p>
-                                    <p class="mb-3 md:text-base text-xs md:block flex flex-col dark:text-textDarkLightGray
+                                    <p class="mb-3 xl:text-base md:text-sm text-xs md:block flex flex-col dark:text-textDarkLightGray
                                     text-textLight">
-                                        <span class="mr-2 md:mb-0 mb-1 md:text-base text-xs font-semibold dark:font-light">
+                                        <span class="mr-2 md:mb-0 mb-1 xl:text-base md:text-sm text-xs font-semibold dark:font-light">
                                             Способ оплаты: </span>
                                         <span class="font-normal dark:font-light">
                                         <?php foreach ($arResult['PAYMENT'] as $payment) {
@@ -149,7 +149,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                         } ?>
                                         </span>
                                     </p>
-                                    <p class="mb-3 md:text-base text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
+                                    <p class="mb-3 xl:text-base md:text-sm text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
                                         <span class="mr-2 font-semibold dark:font-light">Сумма доставки:</span>
                                         <?php $deliveryPrice = 0;
                                         foreach ($arResult['SHIPMENT'] as $shipment) {
@@ -158,19 +158,17 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                         echo htmlspecialcharsbx(CurrencyFormat($deliveryPrice, $arResult['CURRENCY'])); ?>
                                     </p>
                                 </div>
-                                <div class="flex flex-col">
-                                    <p class="mb-3 md:text-base text-xs md:block flex flex-col dark:text-textDarkLightGray
+                                <p class="mb-3 xl:text-base md:text-sm text-xs flex flex-col dark:text-textDarkLightGray
                                     text-textLight">
-                                        <span class="mr-2 md:mb-0 mb-1 md:text-base text-xs font-semibold dark:font-light">Способ доставки:</span>
-                                        <span class="font-normal dark:font-light">
-                                            <?php foreach ($arResult['SHIPMENT'] as $shipment) {
-                                                echo htmlspecialcharsbx($shipment["DELIVERY_NAME"]);
-                                            } ?>
-                                        </span>
-                                    </p>
-                                </div>
+                                    <span class="mr-2 md:mb-0 mb-1 xl:text-base md:text-sm text-xs font-semibold dark:font-light">Способ доставки:</span>
+                                    <span class="font-normal dark:font-light">
+                                        <?php foreach ($arResult['SHIPMENT'] as $shipment) {
+                                            echo htmlspecialcharsbx($shipment["DELIVERY_NAME"]);
+                                        } ?>
+                                    </span>
+                                </p>
                             </div>
-                            <div class="flex md:flex-col flex-col-reverse justify-between mb-3 items-end">
+                            <div class="flex md:flex-col flex-col-reverse justify-between mb-3 items-end lg:w-2/6 w-full">
                                 <a href="<?= $arResult["URL_TO_COPY"] ?>"
                                    class="link_repeat_orders sale-order-list-repeat-link md:px-5 px-3 py-3
                                     dark:bg-dark-red rounded-md bg-light-red dark:shadow-md shadow-shadowDark w-full
