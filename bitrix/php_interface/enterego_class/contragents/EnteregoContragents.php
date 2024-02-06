@@ -76,12 +76,13 @@ class EnteregoContragents
     /**
      * @param int $user_id
      * @param array[] $filters
+     * @param array $filterRelation
      * @return array
      * @throws ArgumentException
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public static function getContragentsByUserId(int $user_id = 0, array $filters = []): array
+    public static function getContragentsByUserId(int $user_id = 0, array $filters = [],array $filterRelation = []): array
     {
         $result = [];
 
@@ -89,14 +90,13 @@ class EnteregoContragents
 
             $ids_new = [];
             $arData = [];
+            $filterRelation['USER_ID'] = $user_id;
             $resultUserRelationships = EnteregoORMRelationshipUserContragentsTable::getList(
                 array(
                     'select' => array(
                         'ID_CONTRAGENT', 'STATUS'
                     ),
-                    'filter' => array(
-                        'USER_ID' => $user_id
-                    ),
+                    'filter' => $filterRelation,
                 )
             );
 
