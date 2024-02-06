@@ -216,7 +216,7 @@ $isAjax = Context::getCurrent()->getRequest();
 
 $itemWidth = 'xl:w-72 lg:w-1/3 md:w-1/3 w-1/2 md:h-96 h-80 md:pr-3 pr-2 mb-8';
 $positionItem = 'flex flex-row flex-wrap';
-if (count($arResult['ITEMS']) > 3) {
+if (count($arResult['ITEMS']) > 3 && strripos($APPLICATION->GetCurPage(), '/personal/') === false) {
     $positionItem .= ' justify-between';
 }
 $type = 'card';
