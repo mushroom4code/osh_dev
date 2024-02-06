@@ -73,7 +73,7 @@ function ContragentItem({contragent}) {
                 {
                     <div className={!initBoxInfo ?
                         'hidden' :
-                        'pt-4 absolute dark:bg-darkBox bg-textDark w-full pb-4 pr-8 pl-8 left-0 rounded-b-lg shadow-lg'}>
+                        'pt-4 dark:bg-darkBox bg-textDark w-full pb-4 pr-8 pl-8 left-0 rounded-b-lg shadow-lg'}>
                         {
                             arData?.map((item, i) => {
                                 if (item.value !== '' && item.value !== null) {
