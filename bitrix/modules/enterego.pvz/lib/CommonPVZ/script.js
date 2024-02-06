@@ -253,7 +253,7 @@ BX.SaleCommonPVZ = {
         if (doorDelivery !== undefined) {
 
             const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
-
+            this.clearDeliveryTime()
             deliveryInfo.forEach(delivery => {
                 if (!delivery.error) {
                     const propsRadio = {type: 'radio', name: 'delivery'}
@@ -336,6 +336,7 @@ BX.SaleCommonPVZ = {
                     })
 
                     if (delivery.code === 'oshisha') {
+                        this.updateDeliveryTime(delivery.deliveryIntervals ?? ['Не выбрано'])
                         var osh_block = BX.findChildByClassName(boxWithDeliveryInfo, 'box-with-props-delivery')
                         if (delivery.noMarkup != false) {
                             osh_block.appendChild(
@@ -1358,13 +1359,20 @@ BX.SaleCommonPVZ = {
     },
 
     buildDeliveryTime: function () {
+
         let __this = this;
-        let datetime_interval_order = $('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]');
         const TimeDeliveryNode = BX.create({
             tag: 'div',
-            html: '<select style="background-color: unset; height: 40px; padding: 0 23px;"' +
-                ' class="form-control bx-soa-customer-input bx-ios-fix" id="datetime_interval_popup">' +
-                datetime_interval_order.html()+'</select>',
+            children: [
+                BX.create({
+                    tag: 'select',
+                    props: {
+                        id: 'datetime_interval_popup',
+                        className: 'form-control bx-soa-customer-input bx-ios-fix',
+                        style: "background-color: unset; height: 40px; padding: 0 23px;"
+                    },
+                })
+            ],
             dataset: {name: 'DELIVERYTIME_INTERVAL'},
         })
 
@@ -1399,11 +1407,41 @@ BX.SaleCommonPVZ = {
             );
 
             let datetime_interval_popup = $('#datetime_interval_popup');
-            datetime_interval_popup.val(datetime_interval_order.val());
             datetime_interval_popup.on("change", function () {
                 $('[name="ORDER_PROP_'+__this.propDeliveryTimeInterval+'"]').val(this.value);
             });
         }
+    },
+
+    updateDeliveryTime: function (deliveryIntervals) {
+        let datetime_interval_order = $('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]');
+        BX.adjust(
+            BX('datetime_interval_popup'),
+            {
+                props: {
+                    disabled: false
+                },
+                children: deliveryIntervals.map(interval => BX.create({
+                    tag: 'option',
+                    text: interval,
+                }))
+            }
+        )
+
+        $(`#datetime_interval_popup option:contains(${datetime_interval_order.val()})`).prop('selected', true);
+
+    },
+
+    clearDeliveryTime: function () {
+        BX.cleanNode(BX('datetime_interval_popup'))
+        BX.adjust(
+            BX('datetime_interval_popup'),
+            {
+                props: {
+                    disabled: 'disabled'
+                }
+            }
+        )
     },
 
     buildSuccessButtonPVZ: function () {
