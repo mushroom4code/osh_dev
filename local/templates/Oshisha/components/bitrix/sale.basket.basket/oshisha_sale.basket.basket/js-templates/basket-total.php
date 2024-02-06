@@ -1,6 +1,8 @@
-<?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+<?php global $USER;
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Main\Localization\Loc;
+use Enterego\contragents\EnteregoContragents;
 
 /**
  * @var array $arParams
@@ -53,22 +55,31 @@ use Bitrix\Main\Localization\Loc;
                     </div>
                 </div>
                 <div class="basket-checkout-block basket-checkout-block-btn">
-                    <?php if ($USER->IsAuthorized()) {
-                        $canOrder = empty($arResult['ITEMS']['nAnCanBuy']); ?>
-                        <button class="btn_basket basket-btn-checkout shadow-md text-white w-full font-normal dark:font-light text-base
-                        dark:bg-dark-red bg-light-red py-3 px-4 rounded-5
-                        {{#DISABLE_CHECKOUT}} opacity-50 {{/DISABLE_CHECKOUT}}"
-                                {{#DISABLE_CHECKOUT}} disabled {{/DISABLE_CHECKOUT}}
-                        data-entity="basket-checkout-button">
-                        <?= Loc::getMessage('SBB_ORDER') ?>
-                        </button>
-                        {{#DISABLE_CHECKOUT}}
-                        <div id="basket_bnt_checkout_errors"
-                             class="text-center mt-4 text-xs text-hover-red font-medium">
-                            Удалите или замените отсутствующие товары корзины.
-                        </div>
-                        {{/DISABLE_CHECKOUT}}
-                    <?php } else { ?>
+                    <?php $userViewPrice = EnteregoContragents::getActiveContragentForUser($USER->GetID());
+                    if ($USER->IsAuthorized()) {
+                        if ($userViewPrice) {
+                            $canOrder = empty($arResult['ITEMS']['nAnCanBuy']); ?>
+                            <button class="btn_basket basket-btn-checkout shadow-md text-white w-full font-normal dark:font-light text-base
+                            dark:bg-dark-red bg-light-red py-3 px-4 rounded-5
+                            {{#DISABLE_CHECKOUT}} opacity-50 {{/DISABLE_CHECKOUT}}"
+                                    {{#DISABLE_CHECKOUT}} disabled {{/DISABLE_CHECKOUT}}
+                            data-entity="basket-checkout-button">
+                            <?= Loc::getMessage('SBB_ORDER') ?>
+                            </button>
+                            {{#DISABLE_CHECKOUT}}
+                            <div id="basket_bnt_checkout_errors"
+                                 class="text-center mt-4 text-xs text-hover-red font-medium">
+                                Удалите или замените отсутствующие товары корзины.
+                            </div>
+                            {{/DISABLE_CHECKOUT}}
+                        <?php } else { ?>
+                            <div class="mt-3 text-xs text-hover-red font-normal dark:font-medium">
+                                Для оформления заказа необходимо иметь подвержденного контрагента
+                                - обратитесь к нашему менеджеру или создайте его в
+                                <a class="text-dark dark:text-white" href="/personal/"> Личном кабинете.</a>
+                            </div>
+                        <?php }
+                    } else { ?>
                         <div class="mt-3 text-xs text-hover-red text-center font-normal dark:font-medium">
                             Для оформления заказа необходимо авторизоваться
                         </div>
