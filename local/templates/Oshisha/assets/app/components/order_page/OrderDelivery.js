@@ -298,9 +298,11 @@ function OrderDelivery() {
                         {itemsJsx}
                     </div>
                 </div>
-                <div className="hidden">
-                    <DeliveryItemsProps result={result}/>
-                </div>
+
+                {/*TODO fix another delivery*/}
+                {/*<div className="hidden">*/}
+                {/*    <DeliveryItemsProps result={result}/>*/}
+                {/*</div>*/}
             </div>
         </div>
     );

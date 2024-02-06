@@ -81,7 +81,6 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
             },
             { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
         ).then(response => {
-
             const locations = eval("(" + response.data + ")")
             if (locations.result && locations.data.ITEMS.length > 0) {
                 const pathInfo = locations.data.ITEMS[0].PATH.map(path => locations.data.ETC.PATH_ITEMS[path])
@@ -90,7 +89,7 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                 setCurrentLocation(null)
             }
         })
-
+        window.commonDelivery.bxPopup.init(params.OSH_DELIVERY.deliveryOptions);
     }, []);
 
     useEffect(() => {
@@ -143,33 +142,42 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
         setAdditionalData(additionalData, 'LONGITUDE', longitude)
         additionalData[`ORDER_PROP_${propLocation.ID}`] = currentLocation.CODE
 
-        sendRequest('refreshOrderAjax', {}, additionalData);
-
         //TODO get value for osh distanse delivery
         const dateDelivery = document.querySelector(`input[name="ORDER_PROP_${propDateDelivery.ID}"]`)?.value ?? ''
 
-        // axios.post(
-        //     ajaxDeliveryUrl,
-        //     {
-        //         sessid: BX.bitrix_sessid(),
-        //         latitude: latitude,
-        //         longitude: longitude,
-        //         'action': 'getSavedOshishaDelivery'
-        //     },
-        //     {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(response => {
-        //         if (response.data) {
-        //
-        //             sendRequest('refreshOrderAjax', {}, additionalData);
-        //         } else {
-        //             //TODO send request
-        //             window.commonDelivery.oshMkadDistance.init(params.OSH_DELIVERY.deliveryOptions).then(oshMkad => {
-        //                 oshMkad.afterSave = null;
-        //                 oshMkad.getDistance([latitude, longitude], dateDelivery,
-        //                     suggest.value, true);
-        //             })
-        //         }
-        //     }
-        // )
+        axios.post(
+            ajaxDeliveryUrl,
+            {
+                sessid: BX.bitrix_sessid(),
+                latitude: latitude,
+                longitude: longitude,
+                'action': 'getSavedOshishaDelivery'
+            },
+            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(response => {
+                if (response.data) {
+        
+                    sendRequest('refreshOrderAjax', {}, additionalData);
+                } else {
+                    const sendSaveDelivery = (params) => {
+                        axios.post(
+                            ajaxDeliveryUrl,
+                            {
+                                sessid: BX.bitrix_sessid(),
+                                params: params,
+                                action: 'saveOshishaDelivery'
+                            },
+                            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+                        ).then(sendRequest('refreshOrderAjax', {}, additionalData))
+                    }
+
+                    window.commonDelivery.oshMkadDistance.init(params.OSH_DELIVERY.deliveryOptions).then(oshMkad => {
+                        oshMkad.afterSave = null;
+                        oshMkad.getDistance([latitude, longitude], dateDelivery,
+                            suggest.value, sendSaveDelivery);
+                    })
+                }
+            }
+        )
     }
 
     const onSelectTypePvzList = (e) => {

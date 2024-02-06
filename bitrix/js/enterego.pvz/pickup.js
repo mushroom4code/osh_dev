@@ -29,110 +29,12 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
     };
     selfObj.afterSave = null;
     selfObj.date_delivery = '';
-    selfObj.last_select_derival_geo = null;
     selfObj.last_select_geo = null;
-    selfObj.last_select_geo_zone = null;
-    selfObj.msk_center_point = [55.75119082121071, 37.61699737548825];
+    selfObj.regionSettings = {};
 
-    var mkad_poly = null,
-        south_west_zone_poly = null,
-        north_zone_poly = null,
-        south_east_zone_poly = null,
-        msk_250km_boundedBy = [[53.45159731566762, 33.63312692442719], [57.938891029311215, 41.58884573182265]],
+    var msk_250km_boundedBy = [[53.45159731566762, 33.63312692442719], [57.938891029311215, 41.58884573182265]],
         myMap = null,
 
-        south_west_zone_points = [[55.828543, 37.394084], [56.471988, 36.107156],
-            [56.032525, 35.669637], [55.436232, 35.785215], [54.724356, 36.478780],
-            [54.805781, 37.720554], [55.573340, 37.641119], [55.576425, 37.592249],
-            [55.595279, 37.513669],  [55.600438, 37.503670], [55.660009, 37.434495],
-            [55.682509, 37.416327], [55.691595, 37.412032], [55.710099, 37.388017],
-            [55.747122, 37.369275], [55.783033, 37.369473], [55.789887, 37.371811],
-            [55.803473, 37.385317], [55.806569, 37.387237]],
-
-        south_east_zone_points = [[54.805781, 37.720554], [55.573340, 37.641119],
-            [55.571919, 37.667939], [55.573081, 37.679293], [55.573631, 37.681889],
-            [55.601439, 37.752504],[55.625211, 37.796341],[55.650285, 37.834331],
-            [55.654067, 37.838116], [55.661022, 37.839846],[55.689804, 37.829573],
-            [55.697727, 37.830005], [55.714848, 37.838548], [55.773013, 37.843193],
-            [55.820846, 37.837584], [55.827411, 37.832303], [55.874911, 37.740843],
-            [56.293210, 39.639279], [55.330949, 40.117631], [54.628927, 38.942431],
-        ],
-
-        north_zone_points = [[55.874911, 37.740843], [56.293210, 39.639279],
-            [56.831933, 38.606204], [56.847491, 36.954449], [56.471988, 36.107156],
-            [55.828543, 37.394084], [55.837792, 37.395910], [55.845472, 37.391980], [55.848223, 37.391827], [55.860283, 37.398411],
-            [55.863376, 37.400912], [55.867815, 37.406423], [55.872110, 37.414793],
-            [55.874687, 37.421938], [55.881872, 37.446282], [55.882760, 37.454958],
-            [55.882989, 37.464399], [55.884363, 37.471799], [55.888656, 37.488131],
-            [55.890860, 37.493949], [55.905885, 37.529228], [55.906751, 37.533863],
-            [55.911012, 37.575672], [55.910812, 37.582154], [55.910010, 37.587813],
-            [55.902166, 37.616787], [55.898083, 37.638576], [55.895973, 37.657875],
-            [55.895231, 37.672769], [55.894285, 37.697815], [55.892707, 37.704455],
-            [55.889591, 37.711817]
-        ],
-
-
-
-        //Для отображения на яндекс карты полигона МКАД
-        mkad_points = [[55.77682929150693, 37.8427186924053], [55.77271261339107, 37.843152686304705],
-            [55.738276896644805, 37.84134161820584], [55.71399689835854, 37.83813880871875],
-            [55.699921267680175, 37.83078428272048], [55.6962950504132, 37.82954151435689],
-            [55.6928207993758, 37.82931794772561], [55.6892209716432, 37.829854389528585],
-            [55.66165146026852, 37.83966290527148], [55.658376283618054, 37.8394483285503],
-            [55.65605007409182, 37.838791290011436], [55.6531141363056, 37.8370746762419],
-            [55.65145113826342, 37.83568956934368], [55.64812656859308, 37.8314409502641],
-            [55.644824797922006, 37.82628977266418], [55.625585595616016, 37.79678983996685],
-            [55.62124956968963, 37.78912615774818], [55.60391627214637, 37.75711862597196],
-            [55.59919459324873, 37.74706053825473], [55.59180719241245, 37.72946947797549],
-            [55.588836348363664, 37.7225364780563], [55.575884202346515, 37.68793829096614],
-            [55.57326575851499, 37.679926824757885], [55.57229316496271, 37.67458386440024],
-            [55.571916278457984, 37.66924090404256], [55.57203486325925, 37.66469310778763],
-            [55.576012618166274, 37.59661654265479], [55.576997275315456, 37.58977417112674],
-            [55.593461027106216, 37.52076943829923], [55.5950406236937, 37.51480420545011],
-            [55.59619490389248, 37.51175721600919], [55.597166902872914, 37.509675821813644],
-            [55.59866130413232, 37.50692923978237], [55.59992481831982, 37.505169710668625],
-            [55.60066420884299, 37.50419141558768], [55.61116763612223, 37.491928885586624],
-            [55.638875974823236, 37.459586882490854], [55.659861822998046, 37.43484779763937],
-            [55.66403637567329, 37.43088149929608], [55.68274170580392, 37.41690766704496],
-            [55.68445104083821, 37.41598498714383], [55.68864009415873, 37.41437258409716],
-            [55.69086356292832, 37.41284823307507], [55.69271798296722, 37.41115307697766],
-            [55.694411609835676, 37.40906103948314], [55.69633857479258, 37.40646466115671],
-            [55.70821582138647, 37.39042283284293], [55.709960382334486, 37.388470184680074],
-            [55.71100223559, 37.387526047106846], [55.714297215701556, 37.38550902592765],
-            [55.74299678995391, 37.37085040270776], [55.74737891548303, 37.3693383084583],
-            [55.749835763080554, 37.36897352803228], [55.78212184948561, 37.36975523402037],
-            [55.78471424142089, 37.370104443868414], [55.7865400068638, 37.370812547048324],
-            [55.789647237893845, 37.37287248357179], [55.80029924148098, 37.38296043585071],
-            [55.804902293956964, 37.38656302639442], [55.80873309836682, 37.38838692852456],
-            [55.83469933158447, 37.39616684582014], [55.838100191970035, 37.39588770506112],
-            [55.84068411346117, 37.394943567487864], [55.844347068377, 37.39240249367216],
-            [55.84601308639975, 37.391908967213396], [55.847449667553015, 37.39193042488553],
-            [55.84921212285334, 37.39242395134426], [55.85763645302826, 37.39690455309926],
-            [55.860737839006916, 37.39879032715197], [55.862584159418496, 37.40035673721667],
-            [55.864949251589444, 37.40273853882189], [55.86706126571094, 37.40537841047629],
-            [55.869498474258364, 37.40936953749045], [55.871054829060206, 37.412373611587114],
-            [55.87204410730281, 37.41473395552023], [55.87320337129219, 37.41764120434771],
-            [55.875543687912774, 37.424979728212456], [55.8813305362832, 37.44392953059815],
-            [55.88207002762898, 37.44778576813208], [55.882588650864065, 37.452763948063726],
-            [55.88275750343904, 37.46081057510839], [55.88292635527642, 37.464286717991705],
-            [55.883384663688354, 37.46735516510474], [55.88551934442368, 37.47628155670629],
-            [55.888075982000466, 37.48647395096288], [55.88926982558072, 37.49010029755102],
-            [55.89215178082288, 37.496623429875235], [55.904441104424826, 37.52475156556294],
-            [55.90586346265124, 37.529643914806094], [55.90676747666915, 37.53442897568867],
-            [55.90726166205295, 37.538141152965274], [55.910865408147124, 37.57275237809345],
-            [55.911022085130945, 37.57652892838642], [55.91097387689595, 37.579554460155215],
-            [55.91063641756565, 37.58356704484148], [55.90998559481434, 37.587579629527774],
-            [55.9092021825094, 37.5910986877553], [55.90847901858254, 37.593480489360545],
-            [55.901901172883115, 37.6180182383294], [55.89891144249577, 37.63301715114069],
-            [55.89687395332799, 37.64762982585381], [55.89576474245468, 37.659367172502996],
-            [55.89456572248885, 37.69416117435827], [55.89393874366838, 37.699139354289926],
-            [55.89328763950915, 37.70195030933754], [55.89247977280019, 37.70471834904089],
-            [55.89140661030458, 37.70757221943274], [55.880130573679516, 37.73042464023962],
-            [55.8304865952908, 37.8268977445699], [55.829001074066674, 37.82968724194538],
-            [55.82757588633297, 37.831725720796705], [55.82488607061184, 37.834775327717445],
-            [55.822361493423664, 37.836706518208175], [55.82024748644772, 37.8376291981093],
-            [55.816165064041414, 37.83857287182817], [55.81242284003345, 37.83903585464755],
-            [55.803139424516395, 37.839775801016756], [55.77682929150693, 37.8427186924053]],
         //Координаты сеъздов со мкада для расчета стоиомости доставки
         b_junctions = [[55.77682626803085, 37.84269989967345], [55.76903191638017, 37.84318651588698],
             [55.74392477931212, 37.84185519957153], [55.73052122580085, 37.84037898416108],
@@ -189,13 +91,10 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
         html_map_id = 'map',
         balloon = null,
         apikey = param.YA_API_KEY ?? '',
-        cost = parseFloat(param.START_COST),
-        costKm = parseFloat(param.DELIVERY_COST),
         limitBasket = parseFloat(param.LIMIT_BASKET),
         currentBasket = parseFloat(param.CURRENT_BASKET),
         distKm = 0,
         is_mobile_api = true,
-        no_markup = false,
         delivery_date_week_day = null,
         delivery_address,
         delivery_price;
@@ -213,34 +112,47 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
             return
         }
 
-        myMap = new ymaps.Map(html_map_id, {
-            center: selfObj.msk_center_point,
-            zoom: 9,
-            controls: ["zoomControl", "typeSelector"]
-        });
+        $.ajax({
+            type: "GET",
+            url: "/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php",
+            data: {sessid: BX.bitrix_sessid(), action: 'getOshishaDeliveryRegions'},
+            dataType: "JSON", timeout: 30000, async: false,
+            error: function (xhr) {
+                console.log('error while getting no markup days for oshisha delivery');
+            },
+            success: function (res) {
+                selfObj.regionSettings = res
 
-        selfObj.initCircleControl();
-        selfObj.initGeoLocationControl();
-        selfObj.initSearchControls();
-        selfObj.prepareData();
+                myMap = new ymaps.Map(html_map_id, {
+                    center: selfObj.regionSettings.center_point,
+                    zoom: 9,
+                    controls: ["zoomControl", "typeSelector"]
+                });
 
-        if (is_mobile_api) {
-            $('#adr').on('change', function () {
-                $('#rez').val('{"loading:true"}');
-                var mkad_address = ($(this).val()).replace(/\s+/g, ' ');
-                if (typeof (selfObj.mobile_api_cache[mkad_address]) == 'undefined') {
-                    selfObj.update_order_form(mkad_address, function (calculatedObj) {
-                        selfObj.mobile_api_cache[mkad_address] = calculatedObj;
-                        $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
+                selfObj.initCircleControl();
+                selfObj.initGeoLocationControl();
+                selfObj.initSearchControls();
+                selfObj.prepareData();
+
+                if (is_mobile_api) {
+                    $('#adr').on('change', function () {
+                        $('#rez').val('{"loading:true"}');
+                        var mkad_address = ($(this).val()).replace(/\s+/g, ' ');
+                        if (typeof (selfObj.mobile_api_cache[mkad_address]) == 'undefined') {
+                            selfObj.update_order_form(mkad_address, function (calculatedObj) {
+                                selfObj.mobile_api_cache[mkad_address] = calculatedObj;
+                                $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
+                            });
+                        } else {
+                            $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
+                        }
                     });
-                } else {
-                    $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
+
                 }
-            });
 
-        }
-
-        selfObj.configuredPromise.resolve('config end');
+                selfObj.configuredPromise.resolve('config end');
+            }
+        });
     };
 
     selfObj.initCircleControl = function (){
@@ -331,13 +243,12 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
      * @param selectGeo - координаты точки для расчета
      * @param saveDelivery
      */
-    selfObj.getDistance = function (selectGeo, deliveryDate = '', address = '', saveDelivery=false) {
+    selfObj.getDistance = function (selectGeo, deliveryDate = '', address = '', onGetDistance = null) {
         collection.removeAll();
         selectGeo[0] = Number('' + selectGeo[0]).toPrecision(6);
         selectGeo[1] = Number('' + selectGeo[1]).toPrecision(6);
         // Местоположение
         delivery_address = address;
-        selfObj.last_select_geo = selectGeo;
         selfObj.date_delivery = false;
         selfObj.setDisabled();
         var deliveryDateArray = (deliveryDate)
@@ -358,46 +269,47 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
             delivery_date_week_day = tomorrow.getDay();
         }
 
-        selfObj.getDistanceCache[selectGeo] = {inMkad: 0, inNorthZone: 0, inSouthEastZone: 0, inSouthWestZone: 0, geometry: undefined}
-
-        var checkInResult = selfObj.checkIn(selectGeo);
-        selfObj.getDistanceCache[selectGeo].inMkad = checkInResult['inMkad'];
-        selfObj.getDistanceCache[selectGeo].inNorthZone = checkInResult['inNorthZone'];
-        selfObj.getDistanceCache[selectGeo].inSouthEastZone = checkInResult['inSouthEastZone'];
-        selfObj.getDistanceCache[selectGeo].inSouthWestZone = checkInResult['inSouthWestZone'];
-        selfObj.last_select_geo_zone = checkInResult['inMkad']
-            ? 'MKAD'
-            : (checkInResult['inNorthZone']
-                ? 'NORTH'
-                : (checkInResult['inSouthEastZone']
-                    ? 'SOUTHEAST'
-                    : (checkInResult['inSouthWestZone']
-                        ? 'SOUTHWEST'
-                        : false)));
-        if (selfObj.getDistanceCache[selectGeo].inMkad) {
-            distKm = 0
-            delivery_price = this.calculateCost(0);
-            selfObj.showResults(selfObj.getDistanceCache[selectGeo], selectGeo, delivery_address);
-            if (saveDelivery){
-                selfObj.saveDelivery();
+        let isCalculate = false;
+        selfObj.getDistanceCache[selectGeo] = {inMkad: 0, geometry: undefined}
+        selfObj.regionSettings.regions.forEach(region => {
+            if (!isCalculate) {
+                const inRegion = selfObj.checkIn(selectGeo, region.polygon);
+                if (inRegion) {
+                    selfObj.calculateDeliveryCost(selectGeo, onGetDistance, region);
+                    isCalculate = true
+                }
             }
-        } else {
-            balloon.close();
+        })
+        selfObj.removeDisabled();
+    };
 
-            if (typeof (selfObj.getDistanceCache[selectGeo].geometry) == 'undefined') {
-                var b = [];
-                selfObj.routeFromCenter(selectGeo, function (c, e) {
-                    selfObj.last_select_derival_geo = e[0];
-                    b.push(e[0]);
-                    var f = selfObj.findNearest(jGq, selectGeo, 1),
-                        a = 3500 > selfObj.getPointDistance(f[0], selectGeo) ? selfObj.findNearest(jGq, selectGeo, 7)
-                            : selfObj.findNearest(jGq, selectGeo, 5);
-                    a.forEach(function (g) {
-                        g[0] == e[0][0] && g[1] == e[0][1] || b.push(g);
-                    });
-                    async.map(b, function (g, i) {
-                        selfObj.getRoute(g, selectGeo, i);
-                    }, function (i, j) {
+    /**
+     * Рассчитывает стоимость доставки в разрезе выбранного полигона
+     *
+     * @param selectGeo
+     * @param onGetDistance
+     * @param region
+     */
+    selfObj.calculateDeliveryCost = async function (selectGeo, onGetDistance, region) {
+        if (region) {
+            selfObj.showText(delivery_address)
+            if (region.calculation.type === 'static') {
+                distKm = 0
+                delivery_price = this.calculateCost(region, 0);
+                selfObj.showResultPolygon(selectGeo, delivery_address, region.template);
+                if (onGetDistance !== null) {
+                    onGetDistance({
+                        date_delivery: selfObj.date_delivery,
+                        latitude: selectGeo[0],
+                        longitude: selectGeo[1],
+                        address: delivery_address,
+                        zone: region.name,
+                        distance: distKm
+                    })
+                }
+            } else {
+                if (typeof (selfObj.getDistanceCache[selectGeo].geometry) == 'undefined') {
+                    const calcSmallestRoute = (j) => {
                         let g = j.map(function (h) {
                             return h.getLength();
                         });
@@ -409,37 +321,40 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
 
                         selfObj.getDistanceCache[selectGeo].geometry = j[g];
                         distKm = selfObj.getDistanceCache[selectGeo].geometry.getLength() / 1000;
-                        delivery_price = selfObj.calculateCost(distKm);
-                        var cur_zone_days_key = selfObj.getDistanceCache[selectGeo].inNorthZone
-                            ? 'north_days'
-                            : (selfObj.getDistanceCache[selectGeo].inSouthEastZone
-                                ? 'south_east_days'
-                                : (selfObj.getDistanceCache[selectGeo].inSouthWestZone ? 'south_west_days' : false));
-                        no_markup = false;
-                        if (cur_zone_days_key) {
-                            var noMarkupMessage = '';
-                            window.commonDelivery.bxPopup.no_markup_days[cur_zone_days_key].forEach((dayNumeric, id, array) => {
+                        delivery_price = selfObj.calculateCost(region, distKm);
+
+                        let noMarkupMessage = '';
+                        if (region.no_markup_days
+                            && !region.no_markup_days.includes(delivery_date_week_day.toString())) {
+
+                            region.no_markup_days.forEach((dayNumeric, id, array) => {
                                 if (id === array.length - 1)
                                     noMarkupMessage += window.commonDelivery.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
                                 else
                                     noMarkupMessage += window.commonDelivery.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
                             });
-                            if (window.commonDelivery.bxPopup.no_markup_days[cur_zone_days_key].includes(delivery_date_week_day.toString())) {
-                                no_markup = true;
-                                delivery_price = (currentBasket >= limitBasket ? 0 : cost);
-                            }
                         }
-                        selfObj.showResults(selfObj.getDistanceCache[selectGeo], selectGeo, delivery_address,
+                        selfObj.showResultPath(selfObj.getDistanceCache[selectGeo], selectGeo, delivery_address,
                             noMarkupMessage);
-                        if (saveDelivery){
-                            selfObj.saveDelivery();
+                        if (onGetDistance !== null) {
+                            onGetDistance({
+                                date_delivery: selfObj.date_delivery,
+                                latitude: selectGeo[0],
+                                longitude: selectGeo[1],
+                                address: delivery_address,
+                                zone: region.name,
+                                distance: distKm
+                            })
                         }
-                    });
-                });
+                    }
+
+                    const route = await selfObj.getRoute(selfObj.regionSettings.center_point, selectGeo)
+                    const routesFromCenter = selfObj.getRouteFromCenter(route, region)
+                    selfObj.calcRoutes(routesFromCenter, selectGeo).then(j => calcSmallestRoute(j))
+                }
             }
         }
-        selfObj.removeDisabled();
-    };
+    }
 
     selfObj.getAddress = function (geocode) {
 
@@ -484,46 +399,51 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
         });
     };
 
-    selfObj.checkIn = function (d) {
+    selfObj.checkIn = function (d, region) {
         d = new ymaps.Placemark(d);
-        var b = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(mkad_poly).getLength();
-        var m = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(north_zone_poly).getLength();
-        var t = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(south_east_zone_poly).getLength();
-        var w = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(south_west_zone_poly).getLength();
-
+        const res = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(region).getLength();
         myMap.geoObjects.remove(d);
-        return {'inMkad': b, 'inNorthZone': m, 'inSouthEastZone': t, 'inSouthWestZone': w};
+        return res;
     };
 
-    selfObj.routeFromCenter = function (d, b) {
-
-        selfObj.getRoute(selfObj.msk_center_point, d, function (h, route) {
-            var g = [];
-            ymaps.geoQuery(route.getPaths()).each(function (i) {
-                i = i.geometry.getCoordinates();
-                if (i.length < 3000)
-                    for (var k = 1, j = i.length; k < j; k++) {
-                        g.push({
-                            type: "LineString",
-                            coordinates: [i[k], i[k - 1]]
-                        })
-                    }
-            });
-            var a = ymaps.geoQuery(g).setOptions("visible", 0).addToMap(myMap),
-                e = a.searchInside(mkad_poly),
-                e = (g.length ? a.remove(e).get(0).geometry.getCoordinates()[1] : []);
-            a.removeFromMap(myMap);
-            a = selfObj.findNearest(jGq, e, 1);
-            b(null, a);
-        })
-    };
-
-    selfObj.getRoute = function (e, b, d) {
+    selfObj.getRoute = async function (e, b) {
         var opts = {boundedBy: msk_250km_boundedBy, routingMode: 'auto', strictBounds: true, multiRoute: false};
-        ymaps.route([e, b], opts).done(function (c) {
-            d(null, c);
-        })
+        return ymaps.route([e, b], opts)
     };
+
+    selfObj.getRouteFromCenter = function (route, region) {
+        var g = [];
+        ymaps.geoQuery(route.getPaths()).each(function (i) {
+            i = i.geometry.getCoordinates();
+            if (i.length < 3000)
+                for (var k = 1, j = i.length; k < j; k++) {
+                    g.push({
+                        type: "LineString",
+                        coordinates: [i[k], i[k - 1]]
+                    })
+                }
+        });
+        var a = ymaps.geoQuery(g).setOptions("visible", 0).addToMap(myMap),
+            e = a.searchInside(region.polygon)
+        e = (g.length ? a.remove(e).get(0).geometry.getCoordinates()[1] : []);
+        a.removeFromMap(myMap);
+        return selfObj.findNearest(jGq, e, 1);
+    }
+
+    selfObj.calcRoutes = function (e, selectGeo) {
+        const b = [];
+        b.push(e[0]);
+        var f = selfObj.findNearest(jGq, selectGeo, 1),
+            a = 3500 > selfObj.getPointDistance(f[0], selectGeo) ? selfObj.findNearest(jGq, selectGeo, 7)
+                : selfObj.findNearest(jGq, selectGeo, 5);
+        a.forEach(function (g) {
+            g[0] == e[0][0] && g[1] == e[0][1] || b.push(g);
+        });
+
+        return async.map(b, function (g, callback) {
+            selfObj.getRoute(g, selectGeo).then(route => callback(null, route));
+        });
+    }
 
     selfObj.findNearest = function (f, b, d) {
         f = f.sortByDistance(b);
@@ -550,106 +470,83 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
         return ["воскресенье", "понедельник","вторник","среда","четверг","пятница","суббота"][dayIndex] || '';
     };
 
-    selfObj.calculateCost = function (dist) {
-        //TODO validate round
-        const dist_m = Math.ceil(dist-0.8);
-        return currentBasket>=limitBasket ? Math.max(dist_m - 5, 0) * costKm : cost + dist_m * costKm;
-    };
+    /** Рассчитывает конечную стоимость доставки
+     *
+     * @param region
+     * @param dist
+     * @returns {number|*}
+     */
+    selfObj.calculateCost = function (region, dist) {
 
-    selfObj.showResults = function (result, d, delivery_address = '', noMarkupMessage = '') {
-        if (result.inMkad) {
-            let str = `В пределах МКАД - ${delivery_price} руб.`;
-            selfObj.showText(delivery_address);
-            balloon.open(d, str);
+        //TODO calculate from backend
+        if (region?.calculation?.type === 'static') {
+            return currentBasket>=limitBasket
+                ? 0
+                : region.calculation.cost;
         } else {
-            var i = result.geometry;
-            let g, b;
-            i.getPaths().options.set({
-                strokeColor: "F55F5C"
-            });
-            i.getWayPoints().each(function (c) {
-                if ("1" == c.properties.get("iconContent") || "МКАД" == c.properties.get("iconContent")) {
-                    c.properties.set("iconContent", "МКАД");
-                    c.options.set("preset", "islands#redStretchyIcon");
-                    b = c.geometry.getCoordinates();
-                    c.properties.set("balloonContent", "");
-                } else {
-                    c.options.set("preset", "islands#redStretchyIcon");
+            const dist_m = Math.ceil(dist-0.8);
+            if (region.no_markup_days
+                && region.no_markup_days.includes(delivery_date_week_day.toString())) {
 
-                    if ((result.inNorthZone || result.inSouthEastZone || result.inSouthWestZone)
-                        && (noMarkupMessage !== true) && (noMarkupMessage !== false) && (noMarkupMessage !== ' ')) {
-                        c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                            + delivery_price.toFixed() + ' руб. Без наценки в этом регионе в следующие дни: ' + noMarkupMessage);
-                    } else {
-                        c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                            + delivery_price.toFixed() + ' руб');
-                    }
+                return currentBasket>=limitBasket
+                    ? 0
+                    : region.calculation.cost;
+            } else {
+                return currentBasket>=limitBasket
+                    ? Math.max(dist_m - 5, 0) * region?.calculation.costKm ?? 0
+                    : region?.calculation.cost + dist_m * region?.calculation.costKm ?? 0;
+            }
 
-                    g = c.geometry.getCoordinates();
-                    c.properties.set("balloonContent", "");
-                    selfObj.showText(delivery_address);
-                }
-            });
-
-            collection.add(i);
         }
     };
 
+    selfObj.showResultPolygon = function (d, delivery_address, template = '') {
+
+        let resultMessage = template.replace('{delivery_price}', delivery_price)
+            .replace('{delivery_address}', delivery_address)
+
+        balloon.setData({ content: resultMessage });
+        balloon.open(d);
+    };
+
+    selfObj.showResultPath = function (result, d, delivery_address = '', noMarkupMessage = '') {
+        var i = result.geometry;
+        let g, b;
+        i.getPaths().options.set({
+            strokeColor: "F55F5C"
+        });
+        i.getWayPoints().each(function (c) {
+            if ("1" == c.properties.get("iconContent") || "МКАД" == c.properties.get("iconContent")) {
+                c.properties.set("iconContent", "МКАД");
+                c.options.set("preset", "islands#redStretchyIcon");
+                b = c.geometry.getCoordinates();
+                c.properties.set("balloonContent", "");
+            } else {
+                c.options.set("preset", "islands#redStretchyIcon");
+
+                let iconContent = selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
+                    + delivery_price.toFixed() + ' руб';
+                if (noMarkupMessage!=='') {
+                    iconContent += ' руб. Без наценки в этом регионе в следующие дни: ' + noMarkupMessage
+                }
+
+                c.properties.set("iconContent", iconContent);
+                g = c.geometry.getCoordinates();
+                c.properties.set("balloonContent", "");
+                selfObj.showText(delivery_address);
+            }
+        });
+
+        collection.add(i);
+    }
+
     selfObj.prepareData = function () {
-        mkad_poly = new ymaps.Polygon([mkad_points], {}, {
-            // цвет заливки.
-            fillColor: 'rgba(255,94,89,0.12)',
-            // цвет обводки.
-            strokeColor: 'rgba(255,94,89,0.22)',
-            // Прозрачность.
-            opacity: 1,
-            // ширина обводки.
-            strokeWidth: 0.1,
-            zIndex: -999,
-            zIndexActive: -999,
-        });
 
-        south_west_zone_poly = new ymaps.Polygon([south_west_zone_points], {}, {
-            // цвет заливки.
-            fillColor: 'rgba(245, 20, 39, 0.15)',
-            // цвет обводки.
-            strokeColor: 'rgba(245,20,39,0.2)',
-            // Прозрачность.
-            opacity: 1,
-            // ширина обводки.
-            strokeWidth: 0.1,
-            zIndex: -999,
-            zIndexActive: -999,
-            cursor: 'none',
-        });
-
-        north_zone_poly = new ymaps.Polygon([north_zone_points], {}, {
-            // цвет заливки.
-            fillColor: 'rgba(154, 251, 0, 0.11)',
-            // цвет обводки.
-            strokeColor: 'rgba(154,251,0,0.22)',
-            // Прозрачность.
-            opacity: 1,
-            // ширина обводки.
-            strokeWidth: 0.1,
-            zIndex: -999,
-            zIndexActive: -999,
-            cursor: 'none',
-        });
-
-        south_east_zone_poly = new ymaps.Polygon([south_east_zone_points], {}, {
-            // цвет заливки.
-            fillColor: 'rgba(0, 195, 250, 0.11)',
-            // цвет обводки.
-            strokeColor: 'rgba(0,195,250,0.22)',
-            // Прозрачность.
-            opacity: 1,
-            // ширина обводки.
-            strokeWidth: 0.1,
-            zIndex: -999,
-            zIndexActive: -999,
-            cursor: 'none',
-        });
+        selfObj.regionSettings.regions.forEach(region => {
+                region.polygon = new ymaps.Polygon([region.points], {}, region.property)
+                ymaps.geoQuery(region.polygon).addToMap(myMap)
+            }
+        )
 
         balloon = new ymaps.Balloon(myMap, {
             closeButton: false
@@ -658,11 +555,6 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
 
         collection = new ymaps.GeoObjectCollection({});
         myMap.geoObjects.add(collection);
-
-        ymaps.geoQuery(mkad_poly).addToMap(myMap);
-        ymaps.geoQuery(south_west_zone_poly).addToMap(myMap);
-        ymaps.geoQuery(north_zone_poly).addToMap(myMap);
-        ymaps.geoQuery(south_east_zone_poly).addToMap(myMap);
 
         let d = new ymaps.GeoObjectCollection({}),
             b = new ymaps.GeoObjectCollection({});
@@ -677,7 +569,7 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
 
         bjGq = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap);
         jGq = ymaps.geoQuery(b).setOptions("visible", 0).addToMap(myMap);
-        mkad_points = b = d = s_junctions = b_junctions = null;
+        b = d = s_junctions = b_junctions = null;
     };
 
     selfObj.update_order_form = function (user_address, callback_func) {
@@ -926,7 +818,7 @@ window.commonDelivery.bxPopup = {
         setPriceDelivery: "/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajaxOshishaSetPricePVZ.php",
     },
 
-    init: function () {
+    init: function (deliveryOptions={}) {
         if (this.instance !== null)
             return;
 
@@ -939,7 +831,6 @@ window.commonDelivery.bxPopup = {
         const nodeYaMapContainer = BX.create("DIV", {
             props: {
                 id: 'osh-map-container',
-                className: 'bg-white dark:bg-darkBox dark:text-white'
             },
             children: [
                 BX.create('span', {
@@ -956,52 +847,14 @@ window.commonDelivery.bxPopup = {
                 id: 'map',
             },
         })
-        var __this = this;
         nodeYaMapContainer.append(nodeYaMap);
-        $.ajax({
-            type: "GET",
-            url: "/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php",
-            data: {sessid: BX.bitrix_sessid(), action: 'getNoMarkupDaysOshisha'},
-            dataType: "JSON", timeout: 30000, async: false,
-            error: function (xhr) {
-                console.log('error while getting no markup days for oshisha delivery');
-            },
-            success: function (res) {
-                __this.no_markup_days = {north_days: res['northdays'], south_east_days: res['southeastdays'],
-                    south_west_days: res['southwestdays']};
-            }
-        });
-
-        var noMarkupNorthText = '- Без наценки в следующие дни: ';
-        this.no_markup_days.north_days.forEach((dayNumeric, id, array) => {
-            if (id === array.length - 1)
-                noMarkupNorthText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
-            else
-                noMarkupNorthText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
-        });
-        var noMarkupSouthEastText = '- Без наценки в следующие дни: ';
-        this.no_markup_days.south_east_days.forEach((dayNumeric, id, array) => {
-            if (id === array.length - 1)
-                noMarkupSouthEastText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
-            else
-                noMarkupSouthEastText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
-        });
-        var noMarkupSouthWestText = '- Без наценки в следующие дни: ';
-        this.no_markup_days.south_west_days.forEach((dayNumeric, id, array) => {
-            if (id === array.length - 1)
-                noMarkupSouthWestText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
-            else
-                noMarkupSouthWestText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
-        });
 
         const dateDeliveryNodeOsh = BX.create({
             tag: 'input',
             props: {
                 type: 'text',
                 readOnly: 'readonly',
-                className: 'datepicker_order date_delivery_osh readonly form-control bx-soa-customer-input bx-ios-fix' +
-                    ' w-full text-sm cursor-text border-grey-line-order ring:grey-line-order dark:border-grayButton' +
-                    ' rounded-lg dark:bg-grayButton',
+                className: 'datepicker_order date_delivery_osh readonly form-control bx-soa-customer-input bx-ios-fix',
                 style: 'background-color: unset',
             },
             dataset: {name: 'DATE_DELIVERY_OSH'},
@@ -1012,34 +865,12 @@ window.commonDelivery.bxPopup = {
                 id: 'osh-map-action',
             },
             children: [
-                BX.create("div", {
+                BX.create("input", {
                     props: {
-                        className: "w-full flex gap-4 mb-3"
+                        className: 'form-control',
+                        id: 'osh_delivery_ya_map_address',
+                        placeholder: 'Введите адрес доставки'
                     },
-                    children: [
-                        BX.create("input", {
-                            props: {
-                                className: 'form-control bx-soa-customer-input bx-ios-fix min-width-700w-full text-sm' +
-                                    ' cursor-text border-grey-line-order ring:grey-line-order dark:border-grayButton' +
-                                    ' rounded-lg dark:bg-grayButton suggestions-input basis-3/4',
-                                id: 'osh_delivery_ya_map_address',
-                                placeholder: 'Введите адрес доставки'
-                            },
-                        }),
-                        BX.create("button", {
-                            props: {
-                                className: 'btn btn_red link_red_button text-white text-center flex items-center' +
-                                    ' justify-content-center dark:text-textDark shadow-md text-white dark:bg-dark-red' +
-                                    ' bg-light-red py-2 lg:px-16 md:px-16 px-10 rounded-5 block text-center font-bold' +
-                                    ' basis-1/4',
-                                id: 'saveBTN',
-                            },
-                            text: BX.message("SAVE"),
-                            events: {
-                                click: BX.proxy(this.onPopupSave, this),
-                            }
-                        })
-                    ]
                 }),
                 BX.create({
                     tag: 'div',
@@ -1049,11 +880,16 @@ window.commonDelivery.bxPopup = {
                     },
                     children: [
                         BX.create('DIV', {
+                            style: {
+                                display: 'flex',
+                                alignItems: 'center'
+                            },
                             children: [
                                 BX.create({
-                                    tag: 'div',
-                                    props: {
-                                        className: 'mb-2.5 font-medium uppercase'
+                                    tag: 'label',
+                                    style: {
+                                        marginBottom: '0px',
+                                        width: '320px'
                                     },
                                     text: 'Плановая дата доставки:'
                                 }),
@@ -1067,107 +903,31 @@ window.commonDelivery.bxPopup = {
                             ]
                         })
                     ]
-                }),BX.create("DIV", {
+                }),
+                BX.create("button", {
                     props: {
-                        id: 'osh-map-description',
-                        className: 'bg-white text-black p-2.5'
+                        className: 'btn btn_red mt-2',
+                        id: 'saveBTN',
                     },
-                    children: [
-                        BX.create("DIV", {
-                            props: {
-                                className: 'osh-regions-container text-sm'
-                            },
-                            children: [
-                                BX.create('DIV', {
-                                    props: {
-                                        id: 'north-block'
-                                    },
-                                    style: {
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        marginBottom: '5px'
-                                    },
-                                    children: [
-                                        BX.create('DIV', {
-                                            props: {
-                                                id: 'north-color'
-                                            },
-                                            style: {
-                                                width: '25px',
-                                                height: '25px',
-                                                marginRight: '15px',
-                                                backgroundColor: 'rgba(154, 251, 0, 0.22)'
-                                            }
-                                        }),
-                                        BX.create('DIV', {
-                                            props: {
-                                                id: 'north-text'
-                                            },
-                                            text: noMarkupNorthText
-                                        })
-                                    ]
-                                }),
-                                BX.create('DIV', {
-                                    props: {
-                                        id: 'south-east-block'
-                                    },
-                                    style: {
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        marginBottom: '5px'
-                                    },
-                                    children: [
-                                        BX.create('DIV', {
-                                            props: {
-                                                id: 'south-west-color'
-                                            },
-                                            style: {
-                                                width: '25px',
-                                                height: '25px',
-                                                marginRight: '15px',
-                                                backgroundColor: 'rgba(0, 195, 250, 0.22)'
-                                            }
-                                        }),
-                                        BX.create('DIV', {
-                                            props: {
-                                                id: 'south-west-text'
-                                            },
-                                            text: noMarkupSouthEastText
-                                        })
-                                    ]
-                                }),
-                                BX.create('DIV', {
-                                    props: {
-                                        id: 'south-west-block'
-                                    },
-                                    style: {
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        marginBottom: '5px'
-                                    },
-                                    children: [
-                                        BX.create('DIV', {
-                                            props: {
-                                                id: 'south-west-color'
-                                            },
-                                            style: {
-                                                width: '25px',
-                                                height: '25px',
-                                                marginRight: '15px',
-                                                backgroundColor: 'rgba(245, 20, 39, 0.22)'
-                                            }
-                                        }),
-                                        BX.create('DIV', {
-                                            props: {
-                                                id: 'south-west-text'
-                                            },
-                                            text: noMarkupSouthWestText
-                                        })
-                                    ]
-                                })
-                            ]
-                        })
-                    ]
+                    text: BX.message("SAVE"),
+                    events: {
+                        click: BX.proxy(this.onPopupSave, this),
+                    }
+                })
+            ]
+        })
+
+        const noMarkUpBlock = this.showNoMarkupBlock();
+        const nodeYaDescription = BX.create("DIV", {
+            props: {
+                id: 'osh-map-description',
+            },
+            children: [
+                BX.create("DIV", {
+                    props: {
+                        className: 'osh-regions-container'
+                    },
+                    children: noMarkUpBlock
                 })
             ]
         })
@@ -1192,8 +952,8 @@ window.commonDelivery.bxPopup = {
                     oshMkad.afterSave = null;
                     oshMkad.getDistance([BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propLatitudeId),
                             BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propLongitudeId)],
-                            BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propDateDeliveryId),
-                            BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propAddressId), true);
+                        BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propDateDeliveryId),
+                        BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propAddressId), true);
                 })
                 BX.Sale.OrderAjaxComponent.sendRequest()
             }.bind(this)
@@ -1201,6 +961,7 @@ window.commonDelivery.bxPopup = {
         datepicker.data('datepicker').selectDate(curDate);
 
         nodeYaMapContainer.prepend(nodeYaAction);
+        nodeYaMapContainer.append(nodeYaDescription);
         this.nodeYaMapContainer = nodeYaMapContainer
 
         document.body.append(nodeOshOverlay)
@@ -1208,15 +969,12 @@ window.commonDelivery.bxPopup = {
         this.instance = nodeOshOverlay;
 
         $('#osh_delivery_ya_map_address').suggestions({
-            token: BX.SaleCommonPVZ.oshishaDeliveryOptions.DA_DATA_TOKEN,
+            token: deliveryOptions.DA_DATA_TOKEN,
             type: "ADDRESS",
             hint: false,
             floating: false,
             triggerSelectOnEnter: true,
             autoSelectFirst: true,
-            constraints: {
-                locations: [{region: "Московская"}, {region: "Москва"}]
-            },
             onSelect: function (suggestion) {
                 if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
                     document.querySelector(`input#user-address`).value = suggestion?.value ?? '';
@@ -1231,6 +989,54 @@ window.commonDelivery.bxPopup = {
         })
     },
 
+    showNoMarkupBlock: function () {
+        $.ajax({
+            type: "GET",
+            url: "/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php",
+            data: {sessid: BX.bitrix_sessid(), action: 'getNoMarkupDaysOshisha'},
+            dataType: "JSON", timeout: 30000, async: false,
+            error: function (xhr) {
+                console.log('error while getting no markup days for oshisha delivery');
+            },
+            success: function (res) {
+                this.no_markup_days = res;
+            }.bind(this)
+        });
+
+        let noMarkUpBlock = []
+        this.no_markup_days.forEach(noMarkUpItem => {
+            const noMarkupText = noMarkUpItem.days.map(item => this.dayOfWeekAsString(parseInt(item))).join(', ')
+
+            noMarkUpBlock.push(BX.create('DIV', {
+                style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '5px'
+                },
+                children: [
+                    BX.create('DIV', {
+                        style: {
+                            width: '30px',
+                            height: '30px',
+                            marginRight: '15px',
+                            border: 'solid 2px #eee',
+                            borderRadius: '8px',
+                            backgroundColor: noMarkUpItem.color
+                        }
+                    }),
+                    BX.create('DIV', {
+                        text: `- Без наценки в следующие дни: ${noMarkupText}`,
+                        style: {
+                            fontWeight: 600,
+                        }
+                    })
+                ]
+            }))
+        })
+
+        return noMarkUpBlock;
+    },
+
     dayOfWeekAsString: function (dayIndex) {
         return ["воскресенье", "понедельник","вторник","среда","четверг","пятница","суббота"][dayIndex] || '';
     },
@@ -1240,13 +1046,21 @@ window.commonDelivery.bxPopup = {
         document.body.style.overflow = "hidden";
         BX('osh_map_overlay').style.display = "flex";
         window.commonDelivery.oshMkadDistance.getInstance().then(oshMkadDelivery => {
+            if (oshMkadDelivery.regionSettings.locations){
+                $('#osh_delivery_ya_map_address').suggestions().setOptions({
+                    constraints: {
+                        locations: oshMkadDelivery.regionSettings.locations
+                    }
+                });
+            }
+
             this.oshMkadDelivery = oshMkadDelivery
             this.oshMkadDelivery.date_delivery = date_delivery;
             this.oshMkadDelivery.show();
             if (latitude && longitude)
                 this.oshMkadDelivery.getDistance([latitude, longitude], date_delivery, address);
             else
-                this.oshMkadDelivery.getDistance(this.oshMkadDelivery.msk_center_point, date_delivery);
+                this.oshMkadDelivery.getDistance(this.oshMkadDelivery.regionSettings.center_point, date_delivery);
         })
     },
 

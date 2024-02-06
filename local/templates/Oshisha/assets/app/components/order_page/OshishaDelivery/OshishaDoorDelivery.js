@@ -31,6 +31,9 @@ function OshishaDoorDelivery({ result, params, sendRequest, currentLocation, han
                 {deliveryInfo.map(delivery => {
 
                     const isChecked = delivery.code === propTypeDelivery?.VALUE[0]
+                    if (delivery.price === undefined || delivery.error !==undefined) {
+                        return null
+                    }
 
                     return <div key={delivery.name} className={`mt-3 p-3 flex items-center rounded-xl border border-grey-line-order
                      dark:bg-lightGrayBg ${isChecked ? 'dark:border-white' : 'dark:border-0'} `}>

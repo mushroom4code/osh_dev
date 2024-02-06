@@ -2,6 +2,7 @@
 
 use CommonPVZ\CommonPVZ;
 use CommonPVZ\DeliveryHelper;
+ use CommonPVZ\OshishaDelivery;
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
@@ -28,7 +29,9 @@ if ($USER->IsAuthorized() && check_bitrix_sessid()) {
         case 'getSavedOshishaDelivery':
             exit(json_encode(DeliveryHelper::getSavedOshishaDelivery($request->get('latitude'), $request->get('longitude'))));
         case 'getNoMarkupDaysOshisha':
-            exit(json_encode((new \CommonPVZ\OshishaDelivery())->getNoMarkupDays()));
+            exit(json_encode((new OshishaDelivery())->getNoMarkupDays()));
+        case 'getOshishaDeliveryRegions':
+            exit(json_encode((new OshishaDelivery())->getOshishaDeliveryRegions()));
         case 'saveOshishaDelivery':
             exit(json_encode(DeliveryHelper::SaveOshishaDelivery($request->get('params'))));
         case 'getDaDataSuggestLocation':

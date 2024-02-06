@@ -31,8 +31,6 @@ if (!isset($arParams['SHOW_ORDER_BUTTON'])) {
 foreach ($arResult['JS_DATA']['ORDER_PROP']['properties'] as &$propItems) {
     if ($propItems['CODE'] === 'LOCATION') {
         $propItems['VALUE'][0] = $_SESSION['code_region'];
-    } elseif ($propItems['CODE'] === 'CITY') {
-        $propItems['VALUE'][0] = $_SESSION['city_of_user'];
     }
 }
 
