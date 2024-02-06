@@ -118,7 +118,7 @@
 }
 
 .nav-item .nav-link {
-    z-index: 1000;
+    z-index: 1;
     top: 10%;
     position: relative;
 }

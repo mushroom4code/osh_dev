@@ -400,9 +400,6 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                         <?php } ?>
                                     </select>
                                 </div>
-                                <script>$('#subsidiary_link').select2({
-                                        minimumResultsForSearch: -1,
-                                    })</script>
                             <?php } else { ?>
                                 <a href="/about/feedback_new_site/"
                                    class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
