@@ -82,6 +82,8 @@ module.exports = {
             backgroundImage: {
                 'order_pen': "url('/local/templates/Oshisha/images/order_pen.svg')",
                 'order_pen_dark': "url('/local/templates/Oshisha/images/order_pen_dark.png')",
+                'boxUser': "url('/local/templates/Oshisha/images/bg-boxUser.svg')",
+                'boxUserDark': "url('/local/templates/Oshisha/images/bg-boxUserDark.svg')",
             }
         }
     },
