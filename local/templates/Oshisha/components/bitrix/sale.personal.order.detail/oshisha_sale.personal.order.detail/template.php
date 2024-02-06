@@ -125,6 +125,31 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                         <?= count($arResult['BASKET']); ?>
                                     </p>
                                     <p class="mb-3 md:text-base text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
+                                        <span class="mr-2 font-semibold dark:font-light">Контрагент: </span>
+                                        <?= !empty($contrAgent['NAME_ORGANIZATION']) ? $contrAgent['NAME_ORGANIZATION']
+                                            : 'Поле не заполнено, обратитесь к менеджеру' ?>
+                                    </p>
+                                    <p class="mb-3 md:text-base text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
+                                        <span class="mr-2 font-semibold dark:font-light">Получатель: </span>
+                                        <?php if ($userName <> '') {
+                                            echo htmlspecialcharsbx($userName);
+                                        } elseif (mb_strlen($arResult['FIO'])) {
+                                            echo htmlspecialcharsbx($arResult['FIO']);
+                                        } else {
+                                            echo htmlspecialcharsbx($arResult["USER"]['LOGIN']);
+                                        } ?>
+                                    </p>
+                                    <p class="mb-3 md:text-base text-xs md:block flex flex-col dark:text-textDarkLightGray
+                                    text-textLight">
+                                        <span class="mr-2 md:mb-0 mb-1 md:text-base text-xs font-semibold dark:font-light">
+                                            Способ оплаты: </span>
+                                        <span class="font-normal dark:font-light">
+                                        <?php foreach ($arResult['PAYMENT'] as $payment) {
+                                            echo $payment['PAY_SYSTEM_NAME'];
+                                        } ?>
+                                        </span>
+                                    </p>
+                                    <p class="mb-3 md:text-base text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
                                         <span class="mr-2 font-semibold dark:font-light">Сумма доставки:</span>
                                         <?php $deliveryPrice = 0;
                                         foreach ($arResult['SHIPMENT'] as $shipment) {
@@ -142,31 +167,6 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                                 echo htmlspecialcharsbx($shipment["DELIVERY_NAME"]);
                                             } ?>
                                         </span>
-                                    </p>
-                                    <p class="mb-3 md:text-base text-xs md:block flex flex-col dark:text-textDarkLightGray
-                                    text-textLight">
-                                        <span class="mr-2 md:mb-0 mb-1 md:text-base text-xs font-semibold dark:font-light">
-                                            Способ оплаты: </span>
-                                        <span class="font-normal dark:font-light">
-                                        <?php foreach ($arResult['PAYMENT'] as $payment) {
-                                            echo $payment['PAY_SYSTEM_NAME'];
-                                        } ?>
-                                        </span>
-                                    </p>
-                                    <p class="mb-3 md:text-base text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
-                                        <span class="mr-2 font-semibold dark:font-light">Получатель: </span>
-                                        <?php if ($userName <> '') {
-                                            echo htmlspecialcharsbx($userName);
-                                        } elseif (mb_strlen($arResult['FIO'])) {
-                                            echo htmlspecialcharsbx($arResult['FIO']);
-                                        } else {
-                                            echo htmlspecialcharsbx($arResult["USER"]['LOGIN']);
-                                        } ?>
-                                    </p>
-                                    <p class="mb-3 md:text-base text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
-                                        <span class="mr-2 font-semibold dark:font-light">Контрагент: </span>
-                                        <?= !empty($contrAgent['NAME_ORGANIZATION']) ? $contrAgent['NAME_ORGANIZATION']
-                                            : 'Поле не заполнено, обратитесь к менеджеру' ?>
                                     </p>
                                 </div>
                             </div>
