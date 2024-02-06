@@ -655,15 +655,11 @@ class OshishaDelivery extends CommonPVZ
                 $distance = ceil(($point['DISTANCE'] ?? 0) - 0.8);
                 $noMarkup = false;
                 $nextNoMarkup = false;
-                $typeCalculation = '';
-                $costKm = 0;
-                $cost = 0;
 
                 $deliveryRegions = self::getOshishaDeliveryRegions();
                 foreach ($deliveryRegions['regions'] as $region) {
                     if ($point['ZONE'] === $region['name']) {
                         $cost = $region['calculation']['cost'];
-                        $typeCalculation = $region['calculation']['type'];
 
                         if (!empty($region['no_markup_days'])) {
                             foreach ($region['no_markup_days'] as $noMarkupDay) {
@@ -673,21 +669,27 @@ class OshishaDelivery extends CommonPVZ
                             }
                             $nextNoMarkup = $this->getNextNoMarkupDate($region['no_markup_days']);
                         }
+
+                        $typeCalculation = $region['calculation']['type'];
+                        if ($typeCalculation === 'static') {
+                            $delivery_price = $itBigOrder ? 0 : $cost;
+                        } elseif ($typeCalculation === 'path') {
+                            if ($noMarkup) {
+                                $delivery_price = $itBigOrder ? 0 : $cost;
+                            } else {
+                                $delivery_price = $itBigOrder
+                                    ? max($distance - 5, 0) * $region['calculation']['costKm']
+                                    : $cost + $distance * $region['calculation']['costKm'];
+                            }
+                        } else {
+                            $this->errors[] = 'Не корректный формат расчетов';
+                            return array('errors' => $this->errors);
+                        }
                     }
                 }
 
-                if ($typeCalculation === 'static') {
-                    $delivery_price = $itBigOrder ? 0 : $cost;
-                } elseif ($typeCalculation === 'path') {
-                    if ($noMarkup) {
-                        $delivery_price = $itBigOrder ? 0 : $cost;
-                    } else {
-                        $delivery_price = $itBigOrder
-                            ? max($distance - 5, 0) * $cost
-                            : $cost + $distance * $costKm;
-                    }
-                } else {
-                    $this->errors[] = 'Не корректный формат расчетов';
+                if (!isset($delivery_price)) {
+                    $this->errors[] = 'Не удалось рассчитать стоимость доставки';
                     return array('errors' => $this->errors);
                 }
 
