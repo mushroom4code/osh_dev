@@ -58,7 +58,7 @@ function ContragentList({typeForms}) {
 
 
     return (
-        <div className="md:px-0 px-5">
+        <div className="px-5">
             <ContragentForm loads={loads} initToClick={initToClick} setState={setInitToClick}
                             listContragent={listContragent.length} setResult={setResult} setColor={setColor}
                             showForm={showForm} setShowForm={setShowForm} type={type} setType={setType}
