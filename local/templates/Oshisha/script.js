@@ -1782,9 +1782,11 @@ function ToggleThemeLocalStorages() {
     if (localStorage.theme === 'dark' ||
         (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark')
+        localStorage.theme = 'dark'
         document.themeOld = 'light';
     } else {
         document.documentElement.classList.remove('dark')
+        localStorage.theme = 'light'
         document.themeOld = 'dark';
     }
 }
@@ -1811,11 +1813,11 @@ function switchHeader(item) {
 }
 
 //
-$(document).ready(function () {
+ToggleThemeLocalStorages()
+document.addEventListener('DOMContentLoaded', function () {
     const item = document.querySelector('.header-switch');
     switchHeader(item)
 })
-ToggleThemeLocalStorages();
 
 // LOADER
 function loaderForSite(initParam, itemParent = false) {
