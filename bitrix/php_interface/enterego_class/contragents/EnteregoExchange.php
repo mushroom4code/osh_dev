@@ -77,6 +77,7 @@ class EnteregoExchange
                     'EMAIL',
                     'TIMESTAMP_X',
                     'USER_ID' => 'ID',
+                    'XML_ID',
                     'RELATION_ID_CONTRAGENT' => 'RELATION.ID_CONTRAGENT',
                     'RELATION_STATUS' => 'RELATION.STATUS',
                     'CONTRAGENT',
@@ -127,6 +128,8 @@ class EnteregoExchange
                     if (!empty($arResultUser) && !empty($arResultUser['RELATION_ID_CONTRAGENT'])) {
                         $userID = $arResultUser['USER_ID'];
                         $arData['USERS'][$userID]['ID'] = $arResultUser['USER_ID'];
+                        $arData['USERS'][$userID]['XML_ID'] = !empty($arResultUser['XML_ID']) ?
+                            $arResultUser['XML_ID'] : $arResultUser['USER_ID'] ;
                         $arData['USERS'][$userID]['TIMESTAMP_X'] = $arResultUser['TIMESTAMP_X'];
                         $arData['USERS'][$userID]['NAME'] = $arResultUser['NAME'];
                         $arData['USERS'][$userID]['PERSONAL_PHONE'] = $arResultUser['PERSONAL_PHONE'];

@@ -313,7 +313,7 @@ class CSaleExportEe extends CSaleExport
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_USERS") ?>>
             <?php foreach ($arData['USERS'] as $user) { ?>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER") ?>>
-                <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($user["ID"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
+                <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($user["XML_ID"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_NAME") ?>><?= htmlspecialcharsbx($user["NAME"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_NAME") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_LOGIN") ?>><?= htmlspecialcharsbx($user["LOGIN"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_LOGIN") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_WORK_PHONE") ?>><?= htmlspecialcharsbx($user["PERSONAL_PHONE"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_WORK_PHONE") ?>>

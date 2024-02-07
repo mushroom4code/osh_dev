@@ -28,7 +28,7 @@ class EnteregoImport extends ImportOneCBase
         if (!empty($items['Адрес']['Представление'][0]['#'])) {
             $companyObject->ADDRESS = (string)$items['Адрес']['Представление'][0]['#'];
         }
-        $companyObject->DATE_EDIT = (string)date(DATE_ATOM);
+        $companyObject->DATE_EDIT = date(DATE_ATOM);
         $companyObject->NAME_COMP = (string)$items['Наименование'];
         $companyObject->ARCHIVED = $items['КомпанияАрхивирована'] == 'true' ? 1 : 0;
         $companyObject->XML_ID = (string)$items['Ид'];

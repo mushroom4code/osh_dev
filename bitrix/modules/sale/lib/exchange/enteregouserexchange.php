@@ -12,7 +12,6 @@ class EnteregoUserExchange
     public int $USER_ID = 0;
     public string $NAME = 'Пользователь';
     public string $EMAIL = '';
-    public string $XML_ID;
     public string $PERSONAL_PHONE = '';
     public array $contragents_user = [];
     public array $company_user = [];
@@ -76,11 +75,9 @@ class EnteregoUserExchange
                             'STATUS' => $this->contragents_user[$contr['XML_ID']]['STATUS']
                         ]);
                     }
-
                 }
             }
         }
-
     }
 
 
@@ -90,23 +87,29 @@ class EnteregoUserExchange
     public function saveUserDB()
     {
         $user = new CUser();
-        if ($this->ID != 0) {
-            $result = $user->Update($this->ID, [
-                    'NAME' => $this->NAME,
-                    'EMAIL' => $this->EMAIL,
-                    'TIMESTAMP_X' => $this->TIMESTAMP_X,
-                    'PERSONAL_PHONE' => $this->PERSONAL_PHONE,
-                    'PERSONAL_NOTES' => 'Обновлена связь между пользователем и контр-том со стороны обмена  '
-                        . ConvertTimeStamp(false, "FULL")
-                ]
-            );
+        $getUser = $user->GetById($this->ID)->Fetch();
+         //        TODO - получение и проверка пользователя
+//        1 - если
+        if (!empty($getUser)) {
+            $userIdRelation = $getUser['ID'];
         } else {
+            $userOnXml = $user->GetList('', '', ['XML_ID' => $this->ID], ['FIELDS' => ['ID']])->Fetch();
+            $userIdRelation = $userOnXml['ID'];
+        }
 
+        if (!empty($userIdRelation)) {
+            $result = $user->Update($userIdRelation, [
+                'TIMESTAMP_X' => $this->TIMESTAMP_X,
+                'PERSONAL_NOTES' => 'Обновлена связь между пользователем и контр-том со стороны обмена  '
+                    . ConvertTimeStamp(false, "FULL")
+            ]);
+
+        } else {
             $login = $this->PERSONAL_PHONE;
-            if ($this->PERSONAL_PHONE === '') {
+            if (empty($this->PERSONAL_PHONE)) {
                 $login = $this->EMAIL;
             }
-            $password = CUser::GeneratePasswordByPolicy(6);
+            $password = CUser::GeneratePasswordByPolicy([6]);
             $checkword = randString(8);
             $arFields = array(
                 "EMAIL" => $this->EMAIL,
@@ -120,13 +123,13 @@ class EnteregoUserExchange
                 "CONFIRM_PASSWORD" => $password,
                 "CONFIRM_CODE" => $checkword,
                 "LID" => SITE_ID,
-                'XML_ID' => $this->XML_ID,
+                'XML_ID' => $this->ID,
                 'PERSONAL_PHONE' => $this->PERSONAL_PHONE,
                 'PERSONAL_NOTES' => 'Обновлена связь между пользователем и контр-том со стороны обмена  '
                     . ConvertTimeStamp(false, "FULL")
             );
 
-            $result = $user->Add([$arFields]);
+            $result = $user->Add($arFields);
             $this->ID = $result;
         }
 

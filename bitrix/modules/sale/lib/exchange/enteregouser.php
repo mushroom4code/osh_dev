@@ -20,7 +20,6 @@ class EnteregoUser extends ImportOneCBase
     {
         $result = new Result();
         $user_object = new EnteregoUserExchange();
-        $user_object->XML_ID = $items['Ид'];
         $user_object->ID = $items['Ид'];
         $user_object->NAME = (string)$items['Имя'];
         $user_object->EMAIL = (string)$items['Почта'];
