@@ -37,7 +37,6 @@ function ContragentList({typeForms}) {
         }
     }, []);
 
-
     useEffect(() => {
         const boxPhone = $('#phoneCodeContragent');
         if (loads) {
@@ -55,7 +54,6 @@ function ContragentList({typeForms}) {
             });
         }
     }, [initToClick, loads, type]);
-
 
     return (
         <div className="md:px-0 px-5">

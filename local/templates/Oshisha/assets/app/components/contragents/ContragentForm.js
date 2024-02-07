@@ -33,7 +33,6 @@ function is_valid_inn(i) {
     return false;
 }
 
-let className = '', classNameWindow = 'w-9/12', classInput = 'lg:w-4/5 w-full';
 
 function ContragentForm({
                             initToClick,
@@ -47,6 +46,8 @@ function ContragentForm({
                             type,
                             setType
                         }) {
+    let classNameWindow = 'w-9/12'
+    let classInput = 'lg:w-4/5 w-full'
     const [inn, setInn] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
@@ -111,15 +112,19 @@ function ContragentForm({
     }
 
     if (initToClick) {
-        className = 'fixed top-0 h-screen flex justify-center flex-col items-center left-0 dark:bg-darkOpacityWindow' +
-            ' bg-lightOpacityWindow w-screen z-50'
         classNameWindow = 'lg:w-2/4 xs:w-full h-screen md:h-auto'
         classInput = 'w-full'
     }
 
     return (
         (listContragent === 0 && loads) || initToClick ?
-            <div className={className}>
+            <div
+                className={initToClick
+                    ? 'fixed top-0 h-screen flex justify-center flex-col items-center left-0 dark:bg-darkOpacityWindow' +
+                    ' bg-lightOpacityWindow w-screen z-50'
+                    : ''
+                }
+            >
                 {contrResult?.NAME_ORGANIZATION !== undefined ?
                     <RelationshipContragent contragent={contrResult}
                                             setState={setState}
@@ -219,8 +224,7 @@ function ContragentForm({
                             </div>
                         </div>
                         <div className="flex flex-row md:mt-4 mt-8">
-                            <div
-                                className="d-flex flex-row align-items-center justify-content-start md:w-fit w-1/2 mr-3">
+                            <div className="md:w-fit w-1/2 mr-3">
                                 <button className="dark:bg-dark-red rounded-md bg-light-red text-white px-7 py-3
                              dark:shadow-md shadow-shadowDark w-full dark:hover:bg-hoverRedDark cursor-pointer"
                                         type="submit">
@@ -229,8 +233,7 @@ function ContragentForm({
                             </div>
                             {
                                 initToClick ?
-                                    <div
-                                        className="d-flex flex-row align-items-center justify-content-start ml-3 md:w-fit w-1/2">
+                                    <div className="ml-3 md:w-fit w-1/2">
                                         <button className="dark:bg-grayButton rounded-md bg-grayButton text-white px-7
                                          py-3 dark:shadow-md w-full shadow-shadowDark
                                          dark:hover:bg-black cursor-pointer" onClick={
@@ -251,7 +254,6 @@ function ContragentForm({
                 }
             </div>
             : false
-
     );
 }
 
