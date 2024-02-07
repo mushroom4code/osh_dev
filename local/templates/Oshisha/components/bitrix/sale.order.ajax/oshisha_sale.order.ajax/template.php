@@ -257,178 +257,206 @@ if ($request->get('ORDER_ID') <> '') {
     $hideDelivery = empty($arResult['DELIVERY']);
     $contrAgent = [];
     if ($USER->IsAuthorized()) {
-        $contrAgent = EnteregoContragents::getContragentsByUserId($USER->GetID(), ["STATUS_CONTRAGENT" => 1], ["STATUS" => 1]) ;
+        $contrAgent = EnteregoContragents::getContragentsByUserId($USER->GetID(), ["STATUS_CONTRAGENT" => 1], ["STATUS" => 1]);
         $savedDeliveryProfiles = SavedDeliveryProfiles::getAll($USER->GetID());
-    } ?>
+    }
+    if (!empty($contrAgent)) { ?>
 
-    <form action="<?= POST_FORM_ACTION_URI ?>" method="POST" name="ORDER_FORM"
-          class="bx-soa-wrapper text-sm my-5 <?= $themeClass ?>" id="bx-soa-order-form" enctype="multipart/form-data">
+        <form action="<?= POST_FORM_ACTION_URI ?>" method="POST" name="ORDER_FORM"
+              class="bx-soa-wrapper text-sm my-5 <?= $themeClass ?>" id="bx-soa-order-form"
+              enctype="multipart/form-data">
+            <?php
+            echo bitrix_sessid_post();
+
+            if ($arResult['PREPAY_ADIT_FIELDS'] <> '') {
+                echo $arResult['PREPAY_ADIT_FIELDS'];
+            }
+            ?>
+            <input type="hidden" name="<?= $arParams['ACTION_VARIABLE'] ?>" value="saveOrderAjax">
+            <input type="hidden" name="location_type" value="code">
+            <input type="hidden" name="BUYER_STORE" id="BUYER_STORE" value="<?= $arResult['BUYER_STORE'] ?>">
+            <!-- GENERAL ORDER BLOCK -->
+            <div id="bx-soa-order" class="container lg:grid-cols-3 lg:grid row md:p-0 p-4"></div>
+        </form>
+
+        <div id="bx-soa-saved-files" style="display:none"></div>
+        <div id="bx-soa-soc-auth-services" style="display:none">
+            <?php
+            $arServices = false;
+            $arResult['ALLOW_SOCSERV_AUTHORIZATION'] = Option::get('main', 'allow_socserv_authorization', 'Y') != 'N' ? 'Y' : 'N';
+            $arResult['FOR_INTRANET'] = false;
+
+            if (ModuleManager::isModuleInstalled('intranet') || ModuleManager::isModuleInstalled('rest'))
+                $arResult['FOR_INTRANET'] = true;
+
+            if (Loader::includeModule('socialservices') && $arResult['ALLOW_SOCSERV_AUTHORIZATION'] === 'Y') {
+                $oAuthManager = new CSocServAuthManager();
+                $arServices = $oAuthManager->GetActiveAuthServices(array(
+                    'BACKURL' => $this->arParams['~CURRENT_PAGE'],
+                    'FOR_INTRANET' => $arResult['FOR_INTRANET'],
+                ));
+
+                if (!empty($arServices)) {
+                    $APPLICATION->IncludeComponent(
+                        'bitrix:socserv.auth.form',
+                        'flat',
+                        array(
+                            'AUTH_SERVICES' => $arServices,
+                            'AUTH_URL' => $arParams['~CURRENT_PAGE'],
+                            'POST' => $arResult['POST'],
+                        ),
+                        $component,
+                        array('HIDE_ICONS' => 'Y')
+                    );
+                }
+            }
+            ?>
+        </div>
+
+        <div style="display: none">
+            <?php
+            // we need to have all styles for sale.location.selector.steps, but RestartBuffer() cuts off document head with styles in it
+            $APPLICATION->IncludeComponent(
+                'bitrix:sale.location.selector.steps',
+                '.default',
+                array(),
+                false
+            );
+            $APPLICATION->IncludeComponent(
+                'bitrix:sale.location.selector.search',
+                'oshisha_sale.location.selector.search',
+                array(),
+                false
+            );
+            ?>
+        </div>
         <?php
-        echo bitrix_sessid_post();
+        $signer = new Signer;
+        $signedParams = $signer->sign(base64_encode(serialize($arParams)), 'sale.order.ajax');
+        $messages = Loc::loadLanguageFile(__FILE__);
 
-        if ($arResult['PREPAY_ADIT_FIELDS'] <> '') {
-            echo $arResult['PREPAY_ADIT_FIELDS'];
-        }
-        ?>
-        <input type="hidden" name="<?= $arParams['ACTION_VARIABLE'] ?>" value="saveOrderAjax">
-        <input type="hidden" name="location_type" value="code">
-        <input type="hidden" name="BUYER_STORE" id="BUYER_STORE" value="<?= $arResult['BUYER_STORE'] ?>">
-        <!-- GENERAL ORDER BLOCK -->
-        <div id="bx-soa-order" class="container lg:grid-cols-3 lg:grid row md:p-0 p-4"></div>
-    </form>
+        $PeriodDelivery = [];
+        $start_json_day = Option::get('osh.shipping', 'osh_timeDeliveryStartDay');
+        $end_json_day = Option::get('osh.shipping', 'osh_timeDeliveryEndDay');
+        $start_json_night = Option::get('osh.shipping', 'osh_timeDeliveryStartNight');
+        $end_json_night = Option::get('osh.shipping', 'osh_timeDeliveryEndNight');
+        $start_day = json_decode($start_json_day);
+        $end_day = json_decode($end_json_day);
+        $start_night = json_decode($start_json_night);
+        $end_night = json_decode($end_json_night);
 
-    <div id="bx-soa-saved-files" style="display:none"></div>
-    <div id="bx-soa-soc-auth-services" style="display:none">
-        <?php
-        $arServices = false;
-        $arResult['ALLOW_SOCSERV_AUTHORIZATION'] = Option::get('main', 'allow_socserv_authorization', 'Y') != 'N' ? 'Y' : 'N';
-        $arResult['FOR_INTRANET'] = false;
-
-        if (ModuleManager::isModuleInstalled('intranet') || ModuleManager::isModuleInstalled('rest'))
-            $arResult['FOR_INTRANET'] = true;
-
-        if (Loader::includeModule('socialservices') && $arResult['ALLOW_SOCSERV_AUTHORIZATION'] === 'Y') {
-            $oAuthManager = new CSocServAuthManager();
-            $arServices = $oAuthManager->GetActiveAuthServices(array(
-                'BACKURL' => $this->arParams['~CURRENT_PAGE'],
-                'FOR_INTRANET' => $arResult['FOR_INTRANET'],
-            ));
-
-            if (!empty($arServices)) {
-                $APPLICATION->IncludeComponent(
-                    'bitrix:socserv.auth.form',
-                    'flat',
-                    array(
-                        'AUTH_SERVICES' => $arServices,
-                        'AUTH_URL' => $arParams['~CURRENT_PAGE'],
-                        'POST' => $arResult['POST'],
-                    ),
-                    $component,
-                    array('HIDE_ICONS' => 'Y')
-                );
+        if (!empty($start_day) && !empty($end_day)) {
+            foreach ($start_day as $key => $elems_start) {
+                $PeriodDelivery[] = $elems_start . '-' . $end_day[$key];
             }
         }
-        ?>
-    </div>
 
-    <div style="display: none">
-        <?php
-        // we need to have all styles for sale.location.selector.steps, but RestartBuffer() cuts off document head with styles in it
-        $APPLICATION->IncludeComponent(
-            'bitrix:sale.location.selector.steps',
-            '.default',
-            array(),
-            false
-        );
-        $APPLICATION->IncludeComponent(
-            'bitrix:sale.location.selector.search',
-            'oshisha_sale.location.selector.search',
-            array(),
-            false
-        );
-        ?>
-    </div>
-    <?php
-    $signer = new Signer;
-    $signedParams = $signer->sign(base64_encode(serialize($arParams)), 'sale.order.ajax');
-    $messages = Loc::loadLanguageFile(__FILE__);
-
-    $PeriodDelivery = [];
-    $start_json_day = Option::get('osh.shipping', 'osh_timeDeliveryStartDay');
-    $end_json_day = Option::get('osh.shipping', 'osh_timeDeliveryEndDay');
-    $start_json_night = Option::get('osh.shipping', 'osh_timeDeliveryStartNight');
-    $end_json_night = Option::get('osh.shipping', 'osh_timeDeliveryEndNight');
-    $start_day = json_decode($start_json_day);
-    $end_day = json_decode($end_json_day);
-    $start_night = json_decode($start_json_night);
-    $end_night = json_decode($end_json_night);
-
-    if (!empty($start_day) && !empty($end_day)) {
-        foreach ($start_day as $key => $elems_start) {
-            $PeriodDelivery[] = $elems_start . '-' . $end_day[$key];
-        }
-    }
-
-    if (!empty($start_night) && !empty($end_night)) {
-        foreach ($start_night as $keys => $elems_start_night) {
-            $PeriodDelivery[] .= $elems_start_night . '-' . $end_night[$keys];
-        }
-    }
-
-    $arParams['AR_DELIVERY_PICKUP'] = AR_DELIVERY_PICKUP;
-    ?>
-    <script>
-        BX.message(<?=CUtil::PhpToJSObject($messages)?>);
-    </script>
-    <script id="react-order-js" src="/dist/order_page.generated.js"
-            data-contr-agents='<?= json_encode($contrAgent); ?>'
-            data-result='<?= json_encode($arResult['JS_DATA']); ?>'
-            data-delivery-options='<?= json_encode($arResult['DELIVERY_OPTIONS']) ?>'
-            data-locations='<?= json_encode($arResult['LOCATIONS'], JSON_HEX_APOS) ?>'
-            data-saved-delivery-profiles='<?= json_encode($savedDeliveryProfiles) ?>'
-            data-params="<?= htmlspecialchars(json_encode($arParams), ENT_QUOTES, 'UTF-8') ?>"
-            data-signed-params-string='<?= CUtil::JSEscape($signedParams) ?>'
-            data-site-id='<?= CUtil::JSEscape($component->getSiteId()) ?>'
-            data-ajax-url='<?= CUtil::JSEscape($component->getPath() . '/ajax.php') ?>'
-            data-template-folder='<?= CUtil::JSEscape($templateFolder) ?>'
-            data-order-block-id='bx-soa-order'
-            data-auth-block-id='bx-soa-auth'
-            data-region-block-id='bx-soa-region'
-            data-pay-system-block-id='bx-soa-paysystem'
-            data-delivery-block-id='delivery-block'
-            data-pick-up-block-id='bx-soa-pickup'
-            data-user-props-block-id='user-properties-block'
-            data-general-user-props-block-id='bx-soa-properties'
-            data-new-block-with-comment-id='new_block_with_comment_box'
-            data-total-block-id='order_total_block'
-            data-user-agreements-block-id='user-agreements'
-            data-user-check-block-id='userCheck'
-            data-paysystems-block-id='paysystems_block'
-            data-main-errors-block-id='bx-soa-main-notifications'
-            data-property-validation="true"
-            data-show-warnings="true"
-    ></script>
-    <script>
-
-        BX.ready(function () {
-            var wait = BX.showWait('bx-soa-order-form');  // показываем прелоадер в правом верхнем углу контейнер
-            var deferreds = [];
-
-            BX.closeWait('bx-soa-order-form', wait); // прячем прелоадер
-        });
-        $(document).on('click', 'input.checked_active_button', function () {
-            if ($('input[name="USER_RULES"]').prop('checked') === true
-                && $('input[name="USER_POLITICS"]').prop('checked') === true) {
-                $(document).find('.btn-order-save').removeAttr('style');
-            } else {
-                $(document).find('.btn-order-save').attr('style', 'opacity: 0.65');
+        if (!empty($start_night) && !empty($end_night)) {
+            foreach ($start_night as $keys => $elems_start_night) {
+                $PeriodDelivery[] .= $elems_start_night . '-' . $end_night[$keys];
             }
-        });
-    </script>
-    <script>
-        <?php
-        // spike: for children of cities we place this prompt
-        $city = TypeTable::getList(array('filter' => array('=CODE' => 'CITY'), 'select' => array('ID')))->fetch();
-        ?>
-    </script>
-    <?php
+        }
 
-    if ($arParams['USE_YM_GOALS'] === 'Y') {
+        $arParams['AR_DELIVERY_PICKUP'] = AR_DELIVERY_PICKUP;
         ?>
         <script>
-            (function bx_counter_waiter(i) {
-                i = i || 0;
-                if (i > 50)
-                    return;
+            BX.message(<?=CUtil::PhpToJSObject($messages)?>);
+        </script>
+        <script id="react-order-js" src="/dist/order_page.generated.js"
+                data-contr-agents='<?= json_encode($contrAgent); ?>'
+                data-result='<?= json_encode($arResult['JS_DATA']); ?>'
+                data-delivery-options='<?= json_encode($arResult['DELIVERY_OPTIONS']) ?>'
+                data-locations='<?= json_encode($arResult['LOCATIONS'], JSON_HEX_APOS) ?>'
+                data-saved-delivery-profiles='<?= json_encode($savedDeliveryProfiles) ?>'
+                data-params="<?= htmlspecialchars(json_encode($arParams), ENT_QUOTES, 'UTF-8') ?>"
+                data-signed-params-string='<?= CUtil::JSEscape($signedParams) ?>'
+                data-site-id='<?= CUtil::JSEscape($component->getSiteId()) ?>'
+                data-ajax-url='<?= CUtil::JSEscape($component->getPath() . '/ajax.php') ?>'
+                data-template-folder='<?= CUtil::JSEscape($templateFolder) ?>'
+                data-order-block-id='bx-soa-order'
+                data-auth-block-id='bx-soa-auth'
+                data-region-block-id='bx-soa-region'
+                data-pay-system-block-id='bx-soa-paysystem'
+                data-delivery-block-id='delivery-block'
+                data-pick-up-block-id='bx-soa-pickup'
+                data-user-props-block-id='user-properties-block'
+                data-general-user-props-block-id='bx-soa-properties'
+                data-new-block-with-comment-id='new_block_with_comment_box'
+                data-total-block-id='order_total_block'
+                data-user-agreements-block-id='user-agreements'
+                data-user-check-block-id='userCheck'
+                data-paysystems-block-id='paysystems_block'
+                data-main-errors-block-id='bx-soa-main-notifications'
+                data-property-validation="true"
+                data-show-warnings="true"
+        ></script>
+        <script>
 
-                if (typeof window['yaCounter<?=$arParams['YM_GOALS_COUNTER']?>'] !== 'undefined')
-                    BX.Sale.OrderAjaxComponent.reachGoal('initialization');
-                else
-                    setTimeout(function () {
-                        bx_counter_waiter(++i)
-                    }, 100);
-            })();
+            BX.ready(function () {
+                var wait = BX.showWait('bx-soa-order-form');  // показываем прелоадер в правом верхнем углу контейнер
+                var deferreds = [];
+
+                BX.closeWait('bx-soa-order-form', wait); // прячем прелоадер
+            });
+            $(document).on('click', 'input.checked_active_button', function () {
+                if ($('input[name="USER_RULES"]').prop('checked') === true
+                    && $('input[name="USER_POLITICS"]').prop('checked') === true) {
+                    $(document).find('.btn-order-save').removeAttr('style');
+                } else {
+                    $(document).find('.btn-order-save').attr('style', 'opacity: 0.65');
+                }
+            });
+        </script>
+        <script>
+            <?php
+            // spike: for children of cities we place this prompt
+            $city = TypeTable::getList(array('filter' => array('=CODE' => 'CITY'), 'select' => array('ID')))->fetch();
+            ?>
         </script>
         <?php
-    }
+
+        if ($arParams['USE_YM_GOALS'] === 'Y') {
+            ?>
+            <script>
+                (function bx_counter_waiter(i) {
+                    i = i || 0;
+                    if (i > 50)
+                        return;
+
+                    if (typeof window['yaCounter<?=$arParams['YM_GOALS_COUNTER']?>'] !== 'undefined')
+                        BX.Sale.OrderAjaxComponent.reachGoal('initialization');
+                    else
+                        setTimeout(function () {
+                            bx_counter_waiter(++i)
+                        }, 100);
+                })();
+            </script>
+            <?php
+        }
+    } else { ?>
+        <div class="flex justify-center flex-col items-center relative mt-16 md:p-0 p-6">
+            <div class="flex justify-center mb-2">
+                <svg width="70" height="71" viewBox="0 0 50 51" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_2032_5062)">
+                        <rect y="0.154785" width="50" height="50.8453" rx="25"
+                              class="dark:fill-white fill-lightGrayBg"></rect>
+                        <path d="M15.7272 14.3916H33.4543C34.2043 14.3916 34.8179 15.0156 34.8179 15.7783C34.8179 16.5409 34.2043 17.165 33.4543 17.165H15.7272C14.9773 17.165 14.3636 16.5409 14.3636 15.7783C14.3636 15.0156 14.9773 14.3916 15.7272 14.3916ZM33.4543 32.4184C34.2043 32.4184 34.8179 31.7944 34.8179 31.0317V28.2584C35.5679 28.2584 36.1816 27.6344 36.1816 26.8717V25.6237C36.1816 25.5266 36.1679 25.4434 36.1543 25.3463L35.0361 19.661C34.9134 19.0231 34.3543 18.5516 33.6998 18.5516H15.4818C14.8273 18.5516 14.2682 19.0231 14.1454 19.661L13.0273 25.3463C13.0136 25.4434 13 25.5266 13 25.6237V26.8717C13 27.6344 13.6136 28.2584 14.3636 28.2584V35.1917C14.3636 35.9544 14.9773 36.5784 15.7272 36.5784H25.2726C26.0226 36.5784 26.6362 35.9544 26.6362 35.1917V28.2584H32.0907V31.0317C32.0907 31.7944 32.7043 32.4184 33.4543 32.4184ZM23.909 33.8051H17.0909V28.2584H23.909V33.8051Z"
+                              class="dark:fill-black fill-white"></path>
+                        <line x1="25.5038" y1="22.6068" x2="25.5037" y2="26.8882" class="dark:stroke-black stroke-white"
+                              stroke-width="1.82" stroke-linecap="round"></line>
+                    </g>
+                </svg>
+            </div>
+            <div class="w-fit rounded-xl md:p-8 p-4 bg-textDark dark:bg-darkBox">
+                <h4 class="mb-3 text-xl text-dark dark:text-textDarkLightGray font-normal text-center">
+                    Для оформления заказа необходимо иметь подвержденного контрагента.<br>
+                </h4>
+                <h4 class="text-xl text-dark dark:text-textDarkLightGray font-normal text-center">
+                    Обратитесь к нашему менеджеру или создайте его в
+                    <a class="text-hover-red font-medium underline" href="/personal/"> Личном кабинете.</a>
+                </h4>
+            </div>
+        </div>
+    <?php }
 }
