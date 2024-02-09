@@ -344,7 +344,7 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
                 $_SESSION['START_STEP_CONTRAGENT'] = '2';
             }
         }
-// TODO - проверить
+
         if ($_SESSION['START_STEP_CONTRAGENT'] === '2') {
             $stepContrDate = DateTime::createFromUserTime(COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE'));
             $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_ID');

@@ -2,9 +2,6 @@
 
 namespace Bitrix\Sale\Exchange;
 
-use Bitrix\Main\ArgumentException;
-use Bitrix\Main\ObjectPropertyException;
-use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\DateTime;
 use Bitrix\Sale\Exchange\Entity\UserImportBase;
 use Bitrix\Sale\Result;
@@ -19,7 +16,7 @@ final class ImportOneCContragent extends ImportOneCBase
      * @param UserImportBase[] $items
      * @return Result
      */
-    protected function import(array $items)
+    protected function import(array $items): Result
     {
         $result = new Result();
         $contragent = new EnteregoContragentExchange();
@@ -33,8 +30,8 @@ final class ImportOneCContragent extends ImportOneCBase
             $contragent->DATE_INSERT = $dateInsertUpdate;
             $contragent->STATUS_VIEW = $items['СтатусКонтрагента'] == 'true' ? 'Активен' : 'Ожидает подтверждения';
             $contragent->TYPE = $items['ТипКонтрагента'] ?? 'fiz';
-            $contragent->NAME_ORGANIZATION = (string)$items['ПолноеНаименование'] ?? '';
-            $contragent->INN = (string)$items['ИНН'] ?? null;
+            $contragent->NAME_ORGANIZATION = $items['ПолноеНаименование'] ?? 'Имя не заполнено';
+            $contragent->INN = $items['ИНН'] ?? 'ИНН не заполнено';
             $contragent->ADDRESS = (string)$items['АдресРегистрации']['Представление'][0]['#'] ?? '';
             $contragent->EMAIL = (string)$items['Контакты']['Контакт'][0]['#'] ?? '';
 
@@ -56,7 +53,7 @@ final class ImportOneCContragent extends ImportOneCBase
                     $contragent->BIC = $bank['#']['Банк'][0]['#']['БИК'][0]['#'] ?? '';
                 }
             }
-            $contragent->XML_ID = (string)$items['Ид'];
+            $contragent->XML_ID = $items['Ид'];
             $contragent->saveContragentDB();
         }
 
@@ -69,7 +66,7 @@ final class ImportOneCContragent extends ImportOneCBase
      */
     protected function resolveOwnerEntityTypeId($typeId): int
     {
-        return OneC\DocumentType::UNDEFINED;
+        return  EntityType::UNDEFINED;
     }
 
     /**

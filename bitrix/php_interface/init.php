@@ -40,6 +40,7 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\ORM\EnteregoORMContragentsTable' => '/bitrix/php_interface/enterego_class/ORM/EnteregoORMContragentsTable.php',
     '\Enterego\ORM\EnteregoORMRelationshipUserContragentsTable' => '/bitrix/php_interface/enterego_class/ORM/EnteregoORMRelationshipUserContragentsTable.php',
     '\Enterego\contragents\EnteregoContragents' => '/bitrix/php_interface/enterego_class/contragents/EnteregoContragents.php',
+    '\Enterego\contragents\EnteregoTreatmentContrAgents' => '/bitrix/php_interface/enterego_class/contragents/EnteregoTreatmentContrAgents.php',
 ));
 
 //redefine sale  basket condition

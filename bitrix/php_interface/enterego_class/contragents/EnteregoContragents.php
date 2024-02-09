@@ -11,16 +11,6 @@ use Enterego\ORM\EnteregoORMRelationshipUserContragentsTable;
 
 class EnteregoContragents
 {
-    /**
-     * @param int $user_id
-     * @return array
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
-     */
-
-    public const typeUric = 'uric';
-    public const typeIp = 'ip';
 
     /**
      * @param int $user_id
@@ -228,7 +218,6 @@ class EnteregoContragents
 
         return $result;
     }
-
 
     /**
      * @param int $user_id
