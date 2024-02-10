@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import OshishaDoorDelivery from './OshishaDoorDelivery';
 import OshishaPvzDelivery from './OshishaPvzDelivery';
 import axios from 'axios';
-import { ajaxDeliveryUrl } from '../OrderMain';
-import OshishaDaDataAddress from './OshishaDaDataAddress';
+import {ajaxDeliveryUrl} from '../OrderMain';
 import OrderProp from '../OrderProp';
 import OshishaInfoDelivery from './OshishaInfoDelivery';
 import OrderPropLocationCustom from "../order_page_properties/OrderPropLocationCustom";
@@ -27,8 +26,6 @@ export const listOshDeliveryProp = ['ADDRESS'
     , 'LONGITUDE'
     , 'TYPE_PVZ']
 
-const addressDeliveryPropCode = 'ADDRESS'
-const addressPvzDeliveryPropCode = 'ADDRESS_PVZ'
 const dateDeliveryPropCode = 'DATE_DELIVERY'
 const deliveryIntervalPropCode = 'DELIVERYTIME_INTERVAL'
 
@@ -42,6 +39,9 @@ export const deliveryProp = {
     typeDelivery: {
         code: 'TYPE_DELIVERY'
     },
+    address: {
+        code: 'ADDRESS'
+    },
     addressPvz: {
         code: 'ADDRESS_PVZ'
     },
@@ -50,21 +50,17 @@ export const deliveryProp = {
     },
 }
 
-function OrderOshishaDelivery({ result, params, sendRequest }) {
+function OrderOshishaDelivery({result, params, sendRequest}) {
 
     const curDelivery = result.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
-    const [typePvzList, setTypePvzList] = useState('map')
     const [showHideBlockWithDelivery, setShowHideBlockWithDelivery] = useState(false)
-
-    const listOshDelivery = curDelivery === null || curDelivery.CALCULATE_DESCRIPTION === ''
-        ? [] : JSON.parse(curDelivery.CALCULATE_DESCRIPTION)
-
     const propLocation = result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')
 
-    const propAddress = result.ORDER_PROP.properties.find(prop => prop.CODE === addressDeliveryPropCode)
-    const propAddressPvz = result.ORDER_PROP.properties.find(prop => prop.CODE === addressPvzDeliveryPropCode)
+    const propAddress = result.ORDER_PROP.properties.find(prop => prop.CODE === deliveryProp.address.code)
+    const propAddressPvz = result.ORDER_PROP.properties.find(prop => prop.CODE === deliveryProp.addressPvz.code)
     const propDateDelivery = result.ORDER_PROP.properties.find(prop => prop.CODE === dateDeliveryPropCode)
     const propDeliveryInterval = result.ORDER_PROP.properties.find(prop => prop.CODE === deliveryIntervalPropCode)
+    const typeDelivery = result.ORDER_PROP.properties.find(prop => prop.CODE === deliveryProp.typeDelivery.code)
 
     const [currentLocation, setCurrentLocation] = useState(null)
 
@@ -72,19 +68,19 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
         axios.post("/bitrix/components/bitrix/sale.location.selector.search/get.php",
             {
                 sessid: BX.bitrix_sessid(),
-                select: { 1: "CODE", 2: "TYPE_ID", VALUE: "ID", DISPLAY: "NAME.NAME" },
-                additionals: { 1: "PATH" },
-                filter: { "=CODE": propLocation.VALUE[0] ?? '0000073738', "=NAME.LANGUAGE_ID": "ru", "=SITE_ID": "N2" },
+                select: {1: "CODE", 2: "TYPE_ID", VALUE: "ID", DISPLAY: "NAME.NAME"},
+                additionals: {1: "PATH"},
+                filter: {"=CODE": propLocation.VALUE[0] ?? '0000073738', "=NAME.LANGUAGE_ID": "ru", "=SITE_ID": "N2"},
                 version: 2,
                 PAGE_SIZE: 1,
                 PAGE: 0
             },
-            { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
             const locations = eval("(" + response.data + ")")
             if (locations.result && locations.data.ITEMS.length > 0) {
                 const pathInfo = locations.data.ITEMS[0].PATH.map(path => locations.data.ETC.PATH_ITEMS[path])
-                setCurrentLocation({ ...locations.data.ITEMS[0], PATH: pathInfo })
+                setCurrentLocation({...locations.data.ITEMS[0], PATH: pathInfo})
             } else {
                 setCurrentLocation(null)
             }
@@ -105,7 +101,7 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                 address: currentLocation.DISPLAY,
                 action: 'getDaDataSuggestLocation'
             },
-            { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
             if (response.data.length > 0) {
                 //todo not found  деревня, может найти округ или край (надо использовать гранулярные подсказки)
@@ -155,19 +151,22 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
             },
             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(response => {
                 if (response.data) {
-        
                     sendRequest('refreshOrderAjax', {}, additionalData);
                 } else {
                     const sendSaveDelivery = (params) => {
-                        axios.post(
-                            ajaxDeliveryUrl,
-                            {
-                                sessid: BX.bitrix_sessid(),
-                                params: params,
-                                action: 'saveOshishaDelivery'
-                            },
-                            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-                        ).then(sendRequest('refreshOrderAjax', {}, additionalData))
+                        if (params === null) {
+                            sendRequest('refreshOrderAjax', {}, additionalData)
+                        } else {
+                            axios.post(
+                                ajaxDeliveryUrl,
+                                {
+                                    sessid: BX.bitrix_sessid(),
+                                    params: params,
+                                    action: 'saveOshishaDelivery'
+                                },
+                                {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+                            ).then(sendRequest('refreshOrderAjax', {}, additionalData))
+                        }
                     }
 
                     window.commonDelivery.oshMkadDistance.init(params.OSH_DELIVERY.deliveryOptions).then(oshMkad => {
@@ -180,16 +179,11 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
         )
     }
 
-    const onSelectTypePvzList = (e) => {
-        setTypePvzList(e.target.value)
-    }
-
     return (
         <div>
             <OshishaInfoDelivery
-                listOshDelivery={listOshDelivery}
+                typeDelivery={typeDelivery?.VALUE[0]}
                 curDelivery={curDelivery}
-                showHide={showHideBlockWithDelivery}
                 setShowHide={setShowHideBlockWithDelivery}
                 date={propDateDelivery.VALUE[0]}
                 address={curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
@@ -208,23 +202,23 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                                 dark:font-medium uppercase md:text-md text-sm">Способ получения</p>
                                 <div className='flex items-center mb-1'>
                                     <input checked={curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId} type='radio'
-                                           name='delivery_type' value='Самовывоз'
+                                           name='DELIVERY_ID' value={params.OSH_DELIVERY.pvzDeliveryId}
                                            className="ring-0 focus:ring-0 focus:ring-hover-red
                                                    dark:focus:ring-white dark:focus:ring-offset-white
                                                    focus:ring-offset-hover-red focus:outline-none form-check-input"
                                            onChange={() => {
-                                               sendRequest('refreshOrderAjax', {}, {DELIVERY_ID: params.OSH_DELIVERY.pvzDeliveryId});
+                                               sendRequest('refreshOrderAjax', {});
                                            }}/>
                                     <span className='ml-2 text-sm'>Самовывоз</span>
                                 </div>
                                 <div className='flex items-center'>
                                     <input checked={curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId} type='radio'
-                                           name='delivery_type' value='Доставка курьером'
+                                           name='DELIVERY_ID' value={params.OSH_DELIVERY.doorDeliveryId}
                                            className="ring-0 focus:ring-0 focus:ring-hover-red
                                                    dark:focus:ring-white dark:focus:ring-offset-white
                                                    focus:ring-offset-hover-red focus:outline-none form-check-input"
                                            onChange={() => {
-                                               sendRequest('refreshOrderAjax', {}, {DELIVERY_ID: params.OSH_DELIVERY.doorDeliveryId});
+                                               sendRequest('refreshOrderAjax', {});
                                            }}/>
                                     <span className='ml-2 text-sm'>Доставка курьером</span>
                                 </div>
@@ -247,29 +241,6 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                             }
                             {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
                                 ? <>
-                                    <div className='flex-1 flex flex-col'>
-                                        <p className="mb-2 text-textLight dark:text-textDarkLightGray font-semibold
-                                        dark:font-medium uppercase md:text-md text-sm">Показать</p>
-                                        <div className="flex items-center mb-1">
-                                            <input className="ring-0 focus:ring-0 focus:ring-hover-red
-                                                   dark:focus:ring-white dark:focus:ring-offset-white
-                                                   focus:ring-offset-hover-red focus:outline-none form-check-input"
-                                                   name='TYPE_PVZ_LIST' value='map' type="radio"
-                                                   onChange={onSelectTypePvzList} checked={typePvzList === 'map'}
-                                            />
-                                            <span className='ml-2 text-sm'>На карте</span>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <input className="ring-0 focus:ring-0 focus:ring-hover-red
-                                                   dark:focus:ring-white dark:focus:ring-offset-white
-                                                   focus:ring-offset-hover-red focus:outline-none form-check-input"
-                                                   name='TYPE_PVZ_LIST' value='list'
-                                                   type="radio"
-                                                   onChange={onSelectTypePvzList} checked={typePvzList === 'list'}
-                                            />
-                                            <span className='ml-2 text-sm'>Списком</span>
-                                        </div>
-                                    </div>
                                     <div className='flex-1 flex flex-col'>
                                         <p className="mb-2 text-textLight dark:text-textDarkLightGray font-semibold
                                 dark:font-medium uppercase md:text-md text-sm">Фильтрация</p>
@@ -297,7 +268,6 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                                 result={result}
                                 params={params}
                                 sendRequest={sendRequest}
-                                typePvzList={typePvzList}
                                 setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
                             />
                             : null
@@ -313,7 +283,7 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                         }
 
                         return <div className="hidden" key={code}>
-                            <OrderProp key={code} property={property} disabled={false} /></div>
+                            <OrderProp key={code} property={property} disabled={false}/></div>
                     })}
                 </div>
             </div>

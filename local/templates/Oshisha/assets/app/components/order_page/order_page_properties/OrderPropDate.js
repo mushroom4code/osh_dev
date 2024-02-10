@@ -25,7 +25,7 @@ function OrderPropDate({ property, className, disabled, minDate = null, handleOn
                 displayFormat={"DD.MM.YYYY"}
                 inputName={`ORDER_PROP_${property.ID}`}
                 inputClassName='relative w-full text-sm rounded-lg cursor-text border-grey-line-order ring:grey-line-order dark:border-darkBox dark:bg-grayButton absolute' 
-                containerClassName='relative w-48'
+                containerClassName='relative w-48 z-50'
                 value={currentDate} 
                 onChange={onChageValueChange} 
             />

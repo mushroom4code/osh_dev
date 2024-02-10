@@ -1,9 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-export default function OshishaInfoDelivery({curDelivery, listOshDelivery, address, date, showHide, setShowHide}) {
-
-    const oshDelivery = listOshDelivery.find(item => item.checked)
+export default function OshishaInfoDelivery({curDelivery, typeDelivery, address, date, setShowHide}) {
 
     return (
         <div
@@ -18,7 +16,7 @@ export default function OshishaInfoDelivery({curDelivery, listOshDelivery, addre
                             <p className="text-textLight dark:text-textDarkLightGray md:text-md text-sm mb-2">
                                 <span className='font-semibold dark:font-normal'>Способ доставки:</span>
                                 <span
-                                    className='ml-2 md:text-md text-sm dark:font-light'>{oshDelivery?.name ?? 'Не выбран'}</span>
+                                    className='ml-2 md:text-md text-sm dark:font-light'>{typeDelivery ?? 'Не выбран'}</span>
                             </p>
                             <p className="text-textLight dark:text-textDarkLightGray md:text-md text-sm  mb-2">
                                 <span className='font-semibold dark:font-normal'>Стоимость:</span>
@@ -41,7 +39,7 @@ export default function OshishaInfoDelivery({curDelivery, listOshDelivery, addre
                         </div>
                     }
                 </div>
-                <div onClick={() => (setShowHide(!showHide))}
+                <div onClick={() => (setShowHide((prev) => !prev))}
                      className='inline-block underline text-light-red dark:text-white font-semibold dark:font-medium cursor-pointer text-sm'>
                     Выбрать адрес
                 </div>
@@ -52,7 +50,8 @@ export default function OshishaInfoDelivery({curDelivery, listOshDelivery, addre
 
 OshishaInfoDelivery.propTypes = {
     curDelivery: PropTypes.object.isRequired,
-    listOshDelivery: PropTypes.array.isRequired,
+    typeDelivery: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired
+    date: PropTypes.string.isRequired,
+    setShowHide: PropTypes.func.isRequired
 }
