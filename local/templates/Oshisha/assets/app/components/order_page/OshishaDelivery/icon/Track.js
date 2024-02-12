@@ -15,16 +15,16 @@ export default function Track() {
                                  13.691 26.725 13.691C25.9223 13.691 25.1526 13.9882 24.585 14.517C24.0174 15.0459
                                  23.6986 15.7632 23.6986 16.5112C23.6986 17.2591 24.0174 17.9765 24.585
                                  18.5053C25.1526 19.0342 25.9223 19.3313 26.725 19.3313Z" stroke="#CD1D1D"
-                strokeWidth="1.5" strokeMiterlimit="1.5" strokeLinecap="round"
+                strokeWidth="1" strokeMiterlimit="1" strokeLinecap="round"
                 strokeLinejoin="round" /><path className="stroke-light-red dark:stroke-grayLight"
                     d="M14.6946 16.5108H22.185V1.84604C22.185
                                  1.62166 22.0894 1.40647 21.9191 1.2478C21.7488 1.08914 21.5179 1 21.2771
                                  1H1M8.03646 16.5108H4.93436C4.81513 16.5108 4.69707 16.4889
                                  4.58691 16.4464C4.47676 16.4039 4.37667 16.3416 4.29236 16.263C4.20805
  16.1845 4.14117 16.0912 4.09554 15.9885C4.04992 15.8859 4.02643 15.7759
-                                 4.02643 15.6648V8.75541" stroke="#CD1D1D" strokeWidth="1.5" strokeLinecap="round" />
+                                 4.02643 15.6648V8.75541" stroke="#CD1D1D" strokeWidth="1" strokeLinecap="round" />
             <path className="stroke-light-red dark:stroke-grayLight" d="M2.51758 5.23016H8.57044"
-                stroke="#CD1D1D" strokeWidth="1.5"
+                stroke="#CD1D1D" strokeWidth="1"
                 strokeLinecap="round" strokeLinejoin="round" /><path className="stroke-light-red
                                  dark:stroke-grayLight" d="M22.1836
                                  5.23016H30.6727C30.8482 5.2302 31.02 5.27764 31.1671 5.36673C31.3143 5.45582
@@ -32,7 +32,7 @@ export default function Track() {
                                  11.6365 34.2893 11.7546V15.6647C34.2893 15.7758 34.2658 15.8858 34.2202
                                  15.9885C34.1746 16.0911 34.1077 16.1844 34.0234 16.263C33.9391 16.3415
                                  33.839 16.4038 33.7288 16.4464C33.6187 16.4889 33.5006 16.5108 33.3814
-                                 16.5108H30.5063M22.1836 16.5108H23.6968" stroke="#CD1D1D" strokeWidth="1.5"
+                                 16.5108H30.5063M22.1836 16.5108H23.6968" stroke="#CD1D1D" strokeWidth="1"
                     strokeLinecap="round" /></svg>
     )
 }

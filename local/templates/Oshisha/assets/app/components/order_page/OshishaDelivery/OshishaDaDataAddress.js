@@ -166,13 +166,16 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
 
     return (
         <div className='my-2'>
-            <div className='title font-medium mb-1 uppercase'>
+            <div className='title font-medium mb-2 uppercase'>
                 Введите адрес:
             </div>
             <div className='relative'>
                 <div className='flex w-full'>
                     <button
-                        className="flex-shrink-0 z-10 inline-flex items-center py-2 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+                        className="flex-shrink-0 z-10 inline-flex items-center py-2 px-4 text-sm font-medium text-center
+                         text-white bg-light-red border border-light-red rounded-s-lg hover:bg-hover-red focus:ring-4
+                         focus:outline-none focus:ring-[#f55150] dark:bg-dark-red dark:hover:bg-hoverRedDark
+                          dark:focus:ring-hoder-red dark:border-hover-red"
                         type="button">
                         {currentLocation?.DISPLAY}
                     </button>
@@ -183,7 +186,7 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
                             onChange={onChangeDaDataString}
                             onBlur={() => dispatch({type: 'cancel_suggest'})}
                             autoComplete="nope"
-                            className='form-control w-full text-sm cursor-text
+                            className='form-control w-full text-sm cursor-text p-2.5
                         border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-r-lg dark:bg-grayButton'
                         />
                         {

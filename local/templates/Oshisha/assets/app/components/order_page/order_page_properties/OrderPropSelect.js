@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 function OrderPropSelect({ property, className, disabled }) {
     return (<div className={className === '' ? "flex justify-between" : className}>
-        <label className="pb-3.5 relative text-black dark:text-white font-bold dark:font-normal text-sm">{property?.NAME}</label>
+        <label className="pb-3.5 relative text-black dark:text-white font-semibold dark:font-normal text-sm">{property?.NAME}</label>
         {Object.keys(property.OPTIONS).map(key => <div key={'order_prop_enum_' + key}>
             <label className="font-semibold dark:font-normal">
                 <input className="form-check-input ring-0 focus:ring-0 focus:ring-transparent

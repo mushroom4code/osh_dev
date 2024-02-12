@@ -15,7 +15,7 @@ function OrderPropDate({ property, className, disabled, minDate = null, handleOn
 
     return (
         <div className={className === '' ? "flex justify-between" : className}>
-            <label className="pb-3.5 relative text-black dark:text-white font-bold dark:font-normal text-sm">{property?.NAME}</label>
+            <label className="pb-3.5 relative text-black dark:text-white font-semibold dark:font-normal text-sm">{property?.NAME}</label>
             <Datepicker 
                 disabled={disabled} 
                 useRange={false} 

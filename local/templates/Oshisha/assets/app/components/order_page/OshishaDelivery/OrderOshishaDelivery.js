@@ -227,7 +227,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                                 ? <div className='flex flex-row flex-1'>
                                     {propDateDelivery !== undefined
                                         ?
-                                        <OrderPropDate property={propDateDelivery} className=' basis-1/2 flex flex-col'
+                                        <OrderPropDate property={propDateDelivery} className='flex flex-col'
                                                        minDate={dayjs().add(1, 'day').toDate()}/>
                                         : null
                                     }
@@ -239,17 +239,8 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                                 </div>
                                 : null
                             }
-                            {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
-                                ? <>
-                                    <div className='flex-1 flex flex-col'>
-                                        <p className="mb-2 text-textLight dark:text-textDarkLightGray font-semibold
-                                dark:font-medium uppercase md:text-md text-sm">Фильтрация</p>
-                                    </div>
-                                </>
-                                : null
-                            }
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-3 mt-4">
                             <OrderPropLocationCustom currentLocation={currentLocation} propLocation={propLocation}
                                                      setCurrentLocation={setCurrentLocation}/>
                         </div>
