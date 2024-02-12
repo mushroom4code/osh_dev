@@ -138,7 +138,9 @@ class DoorDeliveryProfile extends Base
                         'checked' => !empty($checked),
                         'name' => $delivery->delivery_name,
                         'price' => $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
-                        'noMarkup' => $delivery->delivery_code == 'oshisha' ? $price['noMarkup'] : false
+                        'noMarkup' => $delivery->delivery_code == 'oshisha' ? $price['noMarkup'] : false,
+                        'deliveryIntervals' => $delivery->delivery_code == OshishaDelivery::$code
+                            ? $price['deliveryIntervals'] : []
                     ];
                 } else {
                     $resDescription[] = [

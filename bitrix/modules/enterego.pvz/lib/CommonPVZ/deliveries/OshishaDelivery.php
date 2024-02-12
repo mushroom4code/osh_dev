@@ -24,6 +24,8 @@ class OshishaDelivery extends CommonPVZ
     static public string $code = 'oshisha';
     private $oshisha_cache_id = 'oshisha_delivery_prices';
 
+    private static $_current_region = null;
+
     static $oshisha_fields = array(
         'active',
         'pvzStrict',
@@ -198,13 +200,17 @@ class OshishaDelivery extends CommonPVZ
      */
     public function getOshishaDeliveryRegions(): array
     {
+        if (self::$_current_region !== null) {
+            return self::$_current_region;
+        }
+
         $regionsContent = file_get_contents(__DIR__ . "/../../../data/regions.json");
         $regions = json_decode($regionsContent);
 
         //todo site id and settings
         if (SITE_ID === 'RZ') {
             $regionName = 'ryzan';
-            return [
+            self::$_current_region = [
                 'center_point' => $regions->{$regionName}->center_point,
                 'locations' => [['region'=> "Московская"], ['region'=> "Рязанская"]],
                 'regions' => [
@@ -215,6 +221,7 @@ class OshishaDelivery extends CommonPVZ
                             'cost' => 0
                         ],
                         'template' => '{delivery_address} - {delivery_price} руб.',
+                        'delivery_intervals' => $regions->{$regionName}->delivery_intervals,
                         'points' => $regions->{$regionName}->points,
                         'property' => [
                             'fillColor' => 'rgba(255,94,89,0.12)',
@@ -229,7 +236,7 @@ class OshishaDelivery extends CommonPVZ
             ];
         } elseif (SITE_ID === 'IA') {
             $regionName = 'yaroslavl';
-            return [
+            self::$_current_region = [
                 'center_point' => $regions->{$regionName}->center_point,
                 'locations' => [['region'=> "Ярославская"]],
                 'regions' => [
@@ -240,6 +247,7 @@ class OshishaDelivery extends CommonPVZ
                             'cost' => 0
                         ],
                         'template' => '{delivery_address} - {delivery_price} руб.',
+                        'delivery_intervals' => $regions->{$regionName}->delivery_intervals,
                         'points' => $regions->{$regionName}->points,
                         'property' => [
                             'fillColor' => 'rgba(255,94,89,0.12)',
@@ -254,7 +262,7 @@ class OshishaDelivery extends CommonPVZ
             ];
         } else {
             $regionName = 'MKAD';
-            return [
+            self::$_current_region = [
                 'center_point' => $regions->{$regionName}->center_point,
                 'locations' => [['region'=> "Московская"], ['region'=> "Москва"]],
                 'regions' => [
@@ -265,6 +273,7 @@ class OshishaDelivery extends CommonPVZ
                             'cost' => OshishaDelivery::getOshishaStartCost(),
                         ],
                         'template' => 'В пределах МКАД - {delivery_price} руб.',
+                        'delivery_intervals' => $regions->{$regionName}->delivery_intervals,
                         'points' => $regions->{$regionName}->points,
                         'property' => [
                             'fillColor' => 'rgba(255,94,89,0.12)',
@@ -283,6 +292,7 @@ class OshishaDelivery extends CommonPVZ
                             'costKm' => OshishaDelivery::getOshishaCost()
                         ],
                         'no_markup_days' => explode(',', $this->configs['southwestdays']),
+                        'delivery_intervals' => $regions->SOUTHWEST->delivery_intervals,
                         'points' => $regions->SOUTHWEST->points,
                         'property' => [
                             'fillColor' => 'rgba(245, 20, 39, 0.15)',
@@ -302,6 +312,7 @@ class OshishaDelivery extends CommonPVZ
                             'costKm' => OshishaDelivery::getOshishaCost()
                         ],
                         'no_markup_days' => explode(',', $this->configs['southeastdays']),
+                        'delivery_intervals' => $regions->SOUTHEAST->delivery_intervals,
                         'points' => $regions->SOUTHEAST->points,
                         'property' => [
                             'fillColor' => 'rgba(0, 195, 250, 0.11)',
@@ -321,6 +332,7 @@ class OshishaDelivery extends CommonPVZ
                             'costKm' => OshishaDelivery::getOshishaCost()
                         ],
                         'no_markup_days' => explode(',', $this->configs['northdays']),
+                        'delivery_intervals' => $regions->NORTH->delivery_intervals,
                         'points' => $regions->NORTH->points,
                         'property' => [
                             // цвет заливки.
@@ -339,6 +351,8 @@ class OshishaDelivery extends CommonPVZ
                 ]
             ];
         }
+
+        return self::$_current_region;
     }
 
     public static function getOshishaPersonTypes(){
@@ -685,6 +699,11 @@ class OshishaDelivery extends CommonPVZ
                             $this->errors[] = 'Не корректный формат расчетов';
                             return array('errors' => $this->errors);
                         }
+
+                        $priceArr = array('price' => $delivery_price, 'noMarkup' => $nextNoMarkup,
+                            'deliveryIntervals'=>$region['delivery_intervals']);
+
+                        break;
                     }
                 }
 
@@ -692,8 +711,6 @@ class OshishaDelivery extends CommonPVZ
                     $this->errors[] = 'Не удалось рассчитать стоимость доставки';
                     return array('errors' => $this->errors);
                 }
-
-                $priceArr = array('price' => $delivery_price, 'noMarkup' => $nextNoMarkup);
 
                 $cache->forceRewriting(true);
                 if ($cache->startDataCache()) {

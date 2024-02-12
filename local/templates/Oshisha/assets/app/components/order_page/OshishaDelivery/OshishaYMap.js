@@ -1,10 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import axios from "axios";
+import {ajaxDeliveryUrl} from "../OrderMain";
 
 function OshishaYMap({ cityName, features,
-    getRequestGetPvzPrice, getPointData, handleSelectPvz }) {
+    getPointData, handleSelectPvz }) {
 
     const [pvzMap, setPvzMap] = useState(null)
+
+    async function getRequestGetPvzPrice(data) {
+        const response = await axios.post(ajaxDeliveryUrl, {
+            sessid: BX.bitrix_sessid(),
+            'dataToHandler': data,
+            'action': 'getPVZPrice'
+        }, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+
+        if (response.data.status === "success") {
+            return response.data.data
+        } else {
+            return []
+        }
+    }
 
     function getSelectPvzPrice(objectManager, points, clusterId = undefined) {
         const data = points.reduce((result, point) => {
@@ -65,6 +81,7 @@ function OshishaYMap({ cityName, features,
 
     function selectPvzOnMap(objectManager, itemId) {
         const point = objectManager.objects.getById(itemId);
+        objectManager.objects.balloon.close()
         handleSelectPvz(point)
     }
 
@@ -78,12 +95,16 @@ function OshishaYMap({ cityName, features,
                 const firstGeoObject = res.geoObjects.get(0);
                 const coords = firstGeoObject.geometry.getCoordinates();
 
-                const yMap = new ymaps.Map('map_for_delivery_react', {
-                    center: [coords[0], coords[1]],
-                    zoom: 12,
-                    controls: ['fullscreenControl']
-                });
-                setPvzMap(yMap);
+                if (pvzMap === null) {
+                    const yMap = new ymaps.Map('map_for_delivery_react', {
+                        center: [coords[0], coords[1]],
+                        zoom: 12,
+                        controls: ['fullscreenControl']
+                    })
+                    setPvzMap(yMap)
+                } else {
+                    pvzMap.setCenter([coords[0], coords[1]])
+                }
             })
         })
     }, [cityName])
@@ -138,7 +159,6 @@ function OshishaYMap({ cityName, features,
 OshishaYMap.propTypes = {
     cityName: PropTypes.string,
     features: PropTypes.array,
-    getRequestGetPvzPrice: PropTypes.func,
     getPointData: PropTypes.func,
     handleSelectPvz: PropTypes.func
 }

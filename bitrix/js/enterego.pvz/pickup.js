@@ -243,7 +243,7 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
      * @param selectGeo - координаты точки для расчета
      * @param saveDelivery
      */
-    selfObj.getDistance = function (selectGeo, deliveryDate = '', address = '', onGetDistance = null) {
+     selfObj.getDistance = function (selectGeo, deliveryDate = '', address = '', onGetDistance) {
         collection.removeAll();
         selectGeo[0] = Number('' + selectGeo[0]).toPrecision(6);
         selectGeo[1] = Number('' + selectGeo[1]).toPrecision(6);
@@ -280,6 +280,9 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
                 }
             }
         })
+        if (!isCalculate && onGetDistance!==undefined ) {
+            onGetDistance(null)
+        }
         selfObj.removeDisabled();
     };
 
@@ -297,7 +300,7 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
                 distKm = 0
                 delivery_price = this.calculateCost(region, 0);
                 selfObj.showResultPolygon(selectGeo, delivery_address, region.template);
-                if (onGetDistance !== null) {
+                if (onGetDistance !== undefined) {
                     onGetDistance({
                         date_delivery: selfObj.date_delivery,
                         latitude: selectGeo[0],
@@ -336,7 +339,7 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
                         }
                         selfObj.showResultPath(selfObj.getDistanceCache[selectGeo], selectGeo, delivery_address,
                             noMarkupMessage);
-                        if (onGetDistance !== null) {
+                        if (onGetDistance !== undefined) {
                             onGetDistance({
                                 date_delivery: selfObj.date_delivery,
                                 latitude: selectGeo[0],
