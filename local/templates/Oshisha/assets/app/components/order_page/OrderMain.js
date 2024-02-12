@@ -5,7 +5,7 @@ import OrderDelivery from "./OrderDelivery";
 import OrderPaySystems from "./OrderPaySystems";
 import OrderUserAgreements from "./OrderUserAgreements";
 import OrderComments from "./OrderComments";
-import OrderTotal from "./OrderTotal";
+import OrderTotal from "./OrderTotal/OrderTotal";
 import {OrderContextProvider} from "./Context/OrderContext";
 
 OrderMain.propTypes = {};

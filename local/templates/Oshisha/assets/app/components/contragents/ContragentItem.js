@@ -11,7 +11,7 @@ function StatusContr(status) {
             ? 'bg-yellowSt text-black font-medium'
             : 'bg-grayLight text-white font-normal'
 
-    return `${statusColor} py-2 px-4 rounded-bl-xl rounded-tr-xl w-fit text-xs flex self-end max-w-[250px] 
+    return `${statusColor} py-2 px-4 rounded-bl-2xl rounded-tr-2xl w-fit text-xs flex self-end max-w-[250px] 
     md:min-w-[200px] w-full flex justify-center items-center`;
 }
 
@@ -30,7 +30,7 @@ function ContragentItem({contragent}) {
 
     return (
         <div
-            className={"mr-0 xl:mr-5 mb-5 dark:bg-darkBox bg-textDark xl:w-5/12 w-full flex flex-col h-fit " + (!initBoxInfo ? 'rounded-lg' : 'rounded-t-lg')}>
+            className={"mr-0 xl:mr-5 mb-5 dark:bg-darkBox bg-textDark xl:w-5/12 w-full flex flex-col h-fit rounded-2xl"}>
             <p className={colorClass}>{contragent?.STATUS_VIEW}</p>
             <div className={"md:pr-8 md:pl-8 pl-4 pr-4 dark:text-textDarkLightGray text-textLight " +
                 (!initHideBox ? ' md:pb-8 pb-4 ' : 'pb-3')}>
@@ -53,7 +53,7 @@ function ContragentItem({contragent}) {
                     </p>
                 </div>
             </div>
-            <div className={!initHideBox ? 'hidden' : 'dark:text-textDarkLightGray text-textLight relative pr-8 pl-8'}>
+            <div className={!initHideBox ? 'hidden' : 'dark:text-textDarkLightGray text-textLight relative'}>
                 {
                     initHideBox ?
                         <p className={"p-2 mt-1 mb-2 w-full cursor-pointer flex items-center justify-center" +
@@ -71,7 +71,7 @@ function ContragentItem({contragent}) {
                 {
                     <div className={!initBoxInfo ?
                         'hidden' :
-                        'pt-4 dark:bg-darkBox bg-textDark w-full pb-4 pr-8 pl-8 left-0 rounded-b-lg shadow-lg'}>
+                        'pt-4 dark:bg-darkBox bg-textDark w-full pb-4 pr-8 pl-8 left-0 rounded-b-2xl shadow-lg'}>
                         {
                             arData?.map((item, i) => {
                                 if (item.value !== '' && item.value !== null) {
