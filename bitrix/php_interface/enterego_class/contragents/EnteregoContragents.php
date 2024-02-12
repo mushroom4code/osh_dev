@@ -50,7 +50,7 @@ class EnteregoContragents
                 'ID_CONTRAGENT' => $contragent_id,
                 'USER_ID' => $user_id,
             ));
-
+// TODO обновить дату связи
             $user = new CUser();
             $user->Update($user_id, ['PERSONAL_NOTES' => 'Обновлена связь между пользователем и контр-том '
                     . ConvertTimeStamp(false, "FULL")]

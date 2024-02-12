@@ -1,12 +1,15 @@
 <?php namespace Enterego\contragents;
 
-
 use Bitrix\Main\Type\DateTime;
 use Bitrix\Sale\Exchange\EnteregoContragentExchange;
-
+use CDataXML;
 use COption;
+use CUser;
+use Enterego\ORM\EnteregoORMContragentsTable;
+use Enterego\ORM\EnteregoORMRelationshipUserContragentsTable;
 
-class EnteregoTreatmentContrAgents {
+class EnteregoTreatmentContrAgents
+{
     public function import(array $items)
     {
         $result = false;
@@ -46,12 +49,105 @@ class EnteregoTreatmentContrAgents {
             }
 
             $contragent->XML_ID = $items["Ид"][0]['#'];
-            $contragent->saveContragentDB();
-            // TODO - обработка на связь с юзерами
+            $resContr = $contragent->saveContragentDB();
+
+            if ($resContr) {
+                $user = new CUser();
+                $getUser = $user->GetById($contragent->XML_ID)->Fetch();
+                $userIdRelation = $getUser['ID'];
+                $contr[$contragent->XML_ID] = [
+                    'ID_CONTRAGENT' => $contragent->XML_ID,
+                    'INN' => $contragent->INN,
+                    'STATUS' => $contragent->STATUS_CONTRAGENT
+                ];
+
+                if (empty($userIdRelation)) {
+                    $userOnXml = $user->GetList('', '', ['XML_ID' => $contragent->XML_ID], ['FIELDS' => ['ID']])->Fetch();
+                    $userIdRelation = $userOnXml['ID'];
+
+                    if (empty($userOnXml)) {
+                        $userOnXml = $user->GetList('', '', ['EMAIL' => $contragent->EMAIL], ['FIELDS' => ['ID']])->Fetch();
+                        $userIdRelation = $userOnXml['ID'];
+                    }
+                }
+                $this->setRoleUserContragent($userIdRelation, $contr);
+            }
 
             $result = true;
         }
 
         return $result;
     }
+
+    protected function setRoleUserContragent($user_id, $contrIds)
+    {
+        $idsContr = [];
+        if(!empty($user_id)){
+            $resultContragents = EnteregoORMContragentsTable::getList(
+                array(
+                    'select' => array(
+                        'ID_CONTRAGENT', 'XML_ID'
+                    ),
+                    'filter' => array(
+                        '@XML_ID' => array_keys($contrIds)
+                    ),
+                )
+            )->fetchAll();
+
+            if (!empty($resultContragents)) {
+                foreach ($resultContragents as $contr) {
+                    $idsContr[$contr['ID_CONTRAGENT']] = $contr;
+                }
+
+                $resultUserRelationships = EnteregoORMRelationshipUserContragentsTable::getList(
+                    array(
+                        'select' => array(
+                            'ID_CONTRAGENT', 'ID'
+                        ),
+                        'filter' => array(
+                            'USER_ID' => $user_id,
+                            '@ID_CONTRAGENT' => array_keys($idsContr)
+                        ),
+                    )
+                )->fetchAll();
+
+                if (!empty($resultUserRelationships)) {
+
+                    foreach ($resultUserRelationships as $relation) {
+
+                        $xml_id = $idsContr[$relation['ID_CONTRAGENT']]['XML_ID'];
+                        EnteregoORMRelationshipUserContragentsTable::update(
+                            $relation['ID'],
+                            ['STATUS' => $contrIds[$xml_id]['STATUS']]
+                        );
+
+                    }
+                } else {
+                    foreach ($idsContr as $contr) {
+                        if ($contrIds[$contr['XML_ID']]) {
+                            EnteregoORMRelationshipUserContragentsTable::add([
+                                'USER_ID' => $user_id,
+                                'ID_CONTRAGENT' => $contr['ID_CONTRAGENT'],
+                                'STATUS' => $contrIds[$contr['XML_ID']]['STATUS']
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+function startExport(){
+//    $xml = new CDataXML();
+//    $xml->Load($_SERVER['DOCUMENT_ROOT'].'/bitrix/php_interface/enterego_class/contragents/parseContarget.xml');
+//    $contrs = $xml->GetArray()['КоммерческаяИнформация']['#']['Контрагенты'][0]['#']['Контрагент'];
+//    foreach ($contrs as $item){
+//        $value = $item["#"];
+//        $writeContr = new EnteregoTreatmentContrAgents();
+//        $writeContr->import($value);
+//    }
+//$time = !empty($_SESSION['START_DATETIME_EXPORT']) ? $_SESSION['START_DATETIME_EXPORT'] : ConvertTimeStamp(false, "FULL");
+//COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS', $time);
 }
