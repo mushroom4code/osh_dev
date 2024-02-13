@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import {ajaxDeliveryUrl} from '../OrderMain';
 import OrderPropLocationCustom from "../order_page_properties/OrderPropLocationCustom";
 import Spinner from '../../elements/Spinner';
+import MapMarker from "./icon/MapMarker";
 
 function reducer(state, action) {
 
@@ -165,19 +166,19 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
     }
 
     return (
-        <div className='my-2'>
+        <div className='my-4'>
             <div className='title font-medium mb-2 uppercase md:text-sm text-xs'>
-                Введите адрес:
+                Адрес
             </div>
             <div className='relative'>
                 <div className='flex w-full'>
                     <button
                         className="flex-shrink-0 z-10 inline-flex items-center py-2 px-4 text-sm font-medium text-center
-                         text-white bg-light-red border border-light-red rounded-s-lg hover:bg-hover-red focus:ring-4
-                         focus:outline-none focus:ring-[#f55150] dark:bg-dark-red dark:hover:bg-hoverRedDark
-                          dark:focus:ring-hoder-red dark:border-hover-red"
+                         text-dark bg-zinc-100 border border-zinc-300 rounded-s-lg hover:bg-zinc-200 focus:ring-4
+                         focus:outline-none focus:ring-zinc-100 dark:ring-zinc-700 dark:hover:bg-zinc-600  dark:bg-zinc-700
+                         dark:focus:ring-zinc-700 dark:text-white dark:border-zinc-600"
                         type="button">
-                        {currentLocation?.DISPLAY}
+                        <MapMarker/>  {currentLocation?.DISPLAY}
                     </button>
                     <div className="relative flex-1">
                         <input
