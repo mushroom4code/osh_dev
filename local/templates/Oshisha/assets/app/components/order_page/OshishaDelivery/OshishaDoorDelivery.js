@@ -32,7 +32,8 @@ function OshishaDoorDelivery({result, params, sendRequest, currentLocation, hand
                 </div>
             </div>
             <div
-                className='w-full px-[15px] pt-3 mx-auto lg:max-h-96 overflow-auto max-h-60 my-2 border-t border-grey-line-order dark:border-grayLight'>
+                className='w-full md:px-3.5 px-1 pt-3 mx-auto max-h-96 overflow-auto my-2 border-t
+                border-grey-line-order dark:border-grayLight'>
                 {deliveryInfo.map(delivery => {
 
                     const isChecked = delivery.code === propTypeDelivery?.VALUE[0]

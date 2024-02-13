@@ -15,8 +15,8 @@ function OrderPropDate({ property, className, disabled, minDate = null, handleOn
 
     return (
         <div className={className === '' ? "flex justify-between" : className}>
-            <label className="pb-3.5 relative text-black dark:text-white font-semibold dark:font-normal text-sm">{property?.NAME}</label>
-            <Datepicker 
+            <label className="relative mb-2 text-textLight dark:text-textDarkLightGray font-medium uppercase md:text-sm text-xs">{property?.NAME}</label>
+            <Datepicker
                 disabled={disabled} 
                 useRange={false} 
                 asSingle={true} 
@@ -25,7 +25,7 @@ function OrderPropDate({ property, className, disabled, minDate = null, handleOn
                 displayFormat={"DD.MM.YYYY"}
                 inputName={`ORDER_PROP_${property.ID}`}
                 inputClassName='relative w-full text-sm rounded-lg cursor-text border-grey-line-order ring:grey-line-order dark:border-darkBox dark:bg-grayButton absolute' 
-                containerClassName='relative w-48 z-50'
+                containerClassName='relative z-50'
                 value={currentDate} 
                 onChange={onChageValueChange} 
             />

@@ -166,7 +166,7 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
 
     return (
         <div className='my-2'>
-            <div className='title font-medium mb-2 uppercase'>
+            <div className='title font-medium mb-2 uppercase md:text-sm text-xs'>
                 Введите адрес:
             </div>
             <div className='relative'>

@@ -195,11 +195,11 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                 md:flex block justify-center items-center">
                     <div
                         className="flex flex-col md:max-w-5xl md:top-auto top-0 relative md:h-4/5 max-w-auto
-                         overflow-hidden w-full bg-white dark:bg-darkBox md:p-7 p-4 md:rounded-xl rounded-0 h-full">
-                        <div className='flex flex-row mb-5'>
-                            <div className='flex-col flex-wrap flex-1'>
-                                <p className="mb-2 text-textLight dark:text-textDarkLightGray font-semibold
-                                dark:font-medium uppercase md:text-base text-sm">Способ получения</p>
+                         overflow-hidden w-full bg-white dark:bg-darkBox py-7 md:px-7 px-4 md:rounded-xl rounded-0 h-full">
+                        <div className='flex md:flex-row flex-col mb-3'>
+                            <div className='flex-col flex-wrap flex-1 mb-6'>
+                                <p className="mb-2 text-textLight dark:text-textDarkLightGray
+                                font-medium uppercase md:text-sm text-xs">Способ получения</p>
                                 <div className='flex items-center mb-1'>
                                     <input checked={curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId} type='radio'
                                            name='DELIVERY_ID' value={params.OSH_DELIVERY.pvzDeliveryId}
@@ -209,7 +209,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                                            onChange={() => {
                                                sendRequest('refreshOrderAjax', {});
                                            }}/>
-                                    <span className='ml-2 text-sm'>Самовывоз</span>
+                                    <span className='ml-2 font-light text-sm'>Самовывоз</span>
                                 </div>
                                 <div className='flex items-center'>
                                     <input checked={curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId} type='radio'
@@ -220,7 +220,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                                            onChange={() => {
                                                sendRequest('refreshOrderAjax', {});
                                            }}/>
-                                    <span className='ml-2 text-sm'>Доставка курьером</span>
+                                    <span className='ml-2 font-light text-sm'>Доставка курьером</span>
                                 </div>
                             </div>
                             {curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId

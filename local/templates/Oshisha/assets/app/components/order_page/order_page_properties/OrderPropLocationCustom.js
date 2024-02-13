@@ -183,22 +183,22 @@ function OrderPropLocationCustom({ currentLocation, setCurrentLocation, propLoca
 
     return (
         <div>
-            <div className='title font-medium mb-[0.8em] uppercase'>
+            <div className='title mb-2 text-textLight dark:text-textDarkLightGray font-medium uppercase md:text-sm text-xs'>
                 Выберите город:
             </div>
-            <div className='relative' onBlur={onLostFocus}>
+            <div className='relative md:w-1/2 w-full' onBlur={onLostFocus}>
                 <input value={currentLocation?.CODE ?? ''} type={"hidden"} name='ORDEP_PROP_' />
                 <div className='relative'>
-                    <div className='relative min-h-[40px]'>
+                    <div className='relative min-h-[40px] '>
                         <input value={state.fullCityPath} readOnly={true}
                             autoComplete="nope"
-                            className='form-control absolute z-[5] w-full text-gray-400 min-width-600 text-sm
+                            className='form-control absolute z-[5] p-3 w-full text-gray-400 min-width-600 text-sm
                             cursor-text border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg
                              dark:bg-grayButton'/>
                         <input value={state.cityName} onKeyDown={onKeyDownLocation}
                             onChange={onChangeLocationString}
                             autoComplete="nope"
-                            className='form-control absolute z-10 w-full bg-transparent min-width-600 text-sm
+                            className='form-control absolute z-10 w-full bg-transparent min-width-600 text-sm p-3
                             cursor-text border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg
                             dark:bg-grayButton'/>
                         {
