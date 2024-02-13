@@ -141,7 +141,7 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                              className="bx-soa-section mb-14  bx-active"
                              style={!result['DELIVERY'] ? {display: "none"} : {display: "block"}}>
                             <div
-                                className="bx-soa-section-title-container mt-2 mb-4 overflow-hidden flex
+                                className="bx-soa-section-title-container mt-2 mb-5 overflow-hidden flex
                             justify-between items-center flex-nowrap">
                                 <div className="bx-soa-section-title text-textLight dark:text-textDarkLightGray
                                      md:text-2xl text-xl font-medium dark:font-normal"

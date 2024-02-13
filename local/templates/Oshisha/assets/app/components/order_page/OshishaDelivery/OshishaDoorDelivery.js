@@ -40,7 +40,7 @@ function OshishaDoorDelivery({result, params, sendRequest, currentLocation, hand
                         return null
                     }
 
-                    return <div key={delivery.name} className={`mt-3 p-3 flex items-center rounded-xl border border-grey-line-order
+                    return <div key={delivery.name} className={`mt-3 p-5 flex items-center rounded-xl border border-grey-line-order
                      dark:bg-lightGrayBg ${isChecked ? 'dark:border-white border-hover-red' : 'dark:border-0'} `}>
                         <div className='basis-1/2 flex'>
                             <input type='radio' name='delivery' className='form-check-input radio-field form-check-input ring-0 focus:ring-0
@@ -51,7 +51,7 @@ function OshishaDoorDelivery({result, params, sendRequest, currentLocation, hand
                                     [`ORDER_PROP_${propTypeDelivery.ID}`]: delivery.code
                                 });
                             }}/>
-                            <div className='ml-2 text-textLight text-lg font-medium dark:font-normal dark:text-white '>
+                            <div className='ml-2 text-textLight text- font-medium dark:font-normal dark:text-white '>
                                 {delivery.name} -
                                 <span className="text-hover-red dark:text-white">{delivery.price}</span>
                             </div>

@@ -199,7 +199,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                         <div className='flex flex-row mb-5'>
                             <div className='flex-col flex-wrap flex-1'>
                                 <p className="mb-2 text-textLight dark:text-textDarkLightGray font-semibold
-                                dark:font-medium uppercase md:text-md text-sm">Способ получения</p>
+                                dark:font-medium uppercase md:text-base text-sm">Способ получения</p>
                                 <div className='flex items-center mb-1'>
                                     <input checked={curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId} type='radio'
                                            name='DELIVERY_ID' value={params.OSH_DELIVERY.pvzDeliveryId}

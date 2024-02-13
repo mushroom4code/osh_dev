@@ -3,7 +3,7 @@ import React from "react";
 function TotalInfo({result, params, options, getSelectedDelivery}) {
 
     const total = result.TOTAL;
-    const className = 'bx-soa-cart-total-line mb-4 overflow-hidden flex justify-between text_filter_basket text-md ' +
+    const className = 'bx-soa-cart-total-line mb-4 overflow-hidden flex justify-between text_filter_basket text-base ' +
         'text-textLight dark:text-textDarkLightGray font-normal dark:font-light';
 
     let priceHtml = total.ORDER_PRICE_FORMATED;
@@ -58,8 +58,8 @@ function TotalInfo({result, params, options, getSelectedDelivery}) {
             key: 'total_price_formated',
             name: BX.message('SOA_SUM_IT'),
             className: "bx-soa-cart-total-line-total border-t pt-4 border-borderColor dark:border-gray-slider-arrow " +
-                "text_filter_basket text-md text-textLight dark:text-white text_filter_basket my-6" +
-                " bx-soa-cart-total-line overflow-hidden flex justify-between text-md",
+                "text_filter_basket text-base text-textLight dark:text-white text_filter_basket my-6" +
+                " bx-soa-cart-total-line overflow-hidden flex justify-between text-base",
             value: total.ORDER_TOTAL_PRICE_FORMATED,
             html: true,
             total: true,

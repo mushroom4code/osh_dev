@@ -21,7 +21,7 @@ $strNavQueryStringFull = ($arResult["NavQueryString"] != "" ? "?" . $arResult["N
                     <?php if ($arResult["bSavePage"]): ?>
                         <li class="bx-pag-prev">
                             <a href="<?= $arResult["sUrlPath"] ?>?<?= $strNavQueryString ?>PAGEN_<?= $arResult["NavNum"] ?>=<?= ($arResult["NavPageNomer"] + 1) ?>">
-                                <span class="font-medium dark:font-light text-md mr-2">Назад</span></a>
+                                <span class="font-medium dark:font-light text-base mr-2">Назад</span></a>
                         </li>
                         <li class="px-3.5 py-2 rounded-full text-sm font-medium mx-1 bg-textDarkLightGray dark:bg-darkBox">
                             <a href="<?= $arResult["sUrlPath"] ?>?<?= $strNavQueryString ?>PAGEN_<?= $arResult["NavNum"] ?>=<?= ($arResult["NavPageNomer"] + 1) ?>">
@@ -31,12 +31,12 @@ $strNavQueryStringFull = ($arResult["NavQueryString"] != "" ? "?" . $arResult["N
                         <?php if (($arResult["NavPageNomer"] + 1) == $arResult["NavPageCount"]): ?>
                             <li class="bx-pag-prev">
                                 <a href="<?= $arResult["sUrlPath"] ?><?= $strNavQueryStringFull ?>">
-                                    <span class="font-medium dark:font-light text-md mr-2">Назад</span></a>
+                                    <span class="font-medium dark:font-light text-base mr-2">Назад</span></a>
                             </li>
                         <?php else: ?>
                             <li class="bx-pag-prev">
                                 <a href="<?= $arResult["sUrlPath"] ?>?<?= $strNavQueryString ?>PAGEN_<?= $arResult["NavNum"] ?>=<?= ($arResult["NavPageNomer"] + 1) ?>">
-                                    <span class="font-medium dark:font-light text-md mr-2">Назад</span></a>
+                                    <span class="font-medium dark:font-light text-base mr-2">Назад</span></a>
                             </li>
                         <?php endif ?>
                         <li class="px-3.5 py-2 rounded-full text-sm font-medium mx-1 bg-textDarkLightGray dark:bg-darkBox">
@@ -74,7 +74,7 @@ $strNavQueryStringFull = ($arResult["NavQueryString"] != "" ? "?" . $arResult["N
                     <?php endif ?>
                     <li class="bx-pag-next">
                         <a href="<?= $arResult["sUrlPath"] ?>?<?= $strNavQueryString ?>PAGEN_<?= $arResult["NavNum"] ?>=<?= ($arResult["NavPageNomer"] - 1) ?>">
-                            <span class="font-medium dark:font-light text-md ml-2">Далее</span></a>
+                            <span class="font-medium dark:font-light text-base ml-2">Далее</span></a>
                     </li>
                 <?php else: ?>
                     <?php if ($arResult["NavPageCount"] > 1): ?>
@@ -87,7 +87,7 @@ $strNavQueryStringFull = ($arResult["NavQueryString"] != "" ? "?" . $arResult["N
                     <?php if ($arResult["bSavePage"]): ?>
                         <li class="bx-pag-prev">
                             <a href="<?= $arResult["sUrlPath"] ?>?<?= $strNavQueryString ?>PAGEN_<?= $arResult["NavNum"] ?>=<?= ($arResult["NavPageNomer"] - 1) ?>">
-                                <span class="font-medium dark:font-light text-md mr-2">Назад</span></a>
+                                <span class="font-medium dark:font-light text-base mr-2">Назад</span></a>
                         </li>
                         <li class="px-3.5 py-2 rounded-full text-sm font-medium mx-1 bg-textDarkLightGray dark:bg-darkBox">
                             <a href="<?= $arResult["sUrlPath"] ?>?<?= $strNavQueryString ?>PAGEN_<?= $arResult["NavNum"] ?>=1">
@@ -97,12 +97,12 @@ $strNavQueryStringFull = ($arResult["NavQueryString"] != "" ? "?" . $arResult["N
                         <?php if ($arResult["NavPageNomer"] > 2): ?>
                             <li class="bx-pag-prev">
                                 <a href="<?= $arResult["sUrlPath"] ?>?<?= $strNavQueryString ?>PAGEN_<?= $arResult["NavNum"] ?>=<?= ($arResult["NavPageNomer"] - 1) ?>">
-                                    <span class="font-medium dark:font-light text-md mr-2">Назад</span></a>
+                                    <span class="font-medium dark:font-light text-base mr-2">Назад</span></a>
                             </li>
                         <?php else: ?>
                             <li class="bx-pag-prev">
                                 <a href="<?= $arResult["sUrlPath"] ?><?= $strNavQueryStringFull ?>">
-                                    <span class="font-medium dark:font-light text-md mr-2">Назад</span>
+                                    <span class="font-medium dark:font-light text-base mr-2">Назад</span>
                                 </a>
                             </li>
                         <?php endif ?>
@@ -140,7 +140,7 @@ $strNavQueryStringFull = ($arResult["NavQueryString"] != "" ? "?" . $arResult["N
                     <?php endif ?>
                     <li class="bx-pag-next">
                         <a href="<?= $arResult["sUrlPath"] ?>?<?= $strNavQueryString ?>PAGEN_<?= $arResult["NavNum"] ?>=<?= ($arResult["NavPageNomer"] + 1) ?>">
-                            <span class="font-medium dark:font-light text-md ml-2">Далее</span></a>
+                            <span class="font-medium dark:font-light text-base ml-2">Далее</span></a>
                     </li>
                 <?php else: ?>
                     <?php if ($arResult["NavPageCount"] > 1): ?>

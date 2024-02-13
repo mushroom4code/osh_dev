@@ -101,7 +101,7 @@ $userData = EnteregoUser::getInstance();
                          border-iconGray  dark:text-white cursor-pointer font-normal rounded-full text-light-red
                          checked:focus:bg-grayButton mr-2 input_lk_notification" type="checkbox" checked="checked">
             <span class="main-profile-form-label_notification dark:text-textDarkLightGray dark:font-light
-                    font-normal md:text-md text-sm">Подтверждаю свое согласие с
+                    font-normal md:text-base text-sm">Подтверждаю свое согласие с
                     <a href="/about/politics/"
                        target="_blank" class="font-medium text-hover-red dark:text-white underline">положением об обработке персональных данных</a></span>
         </label>

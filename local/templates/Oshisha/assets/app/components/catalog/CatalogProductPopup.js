@@ -201,7 +201,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                         <div className="product-item-amount-field-block">
                                             <input className="product-item-amount card_element inputBasketOpenWindow
                                              dark:bg-tagFilterGray bg-textDarkLightGray focus:border-none text-center
-                                              border-none text-md shadow-none py-2.5 px-3 md:mx-2 mx-1 outline-none
+                                              border-none text-base shadow-none py-2.5 px-3 md:mx-2 mx-1 outline-none
                                               rounded-md md:w-14 w-16"
                                                    type="number"
                                                    max={state.maxQuantity}
