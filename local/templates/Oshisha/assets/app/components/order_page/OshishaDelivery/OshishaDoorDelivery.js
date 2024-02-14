@@ -4,7 +4,14 @@ import MapMarker from './icon/MapMarker';
 import Track from './icon/Track';
 import OshishaDaDataAddress from './OshishaDaDataAddress';
 
-function OshishaDoorDelivery({result, params, sendRequest, currentLocation, handleSelectSuggest, propAddress}) {
+function OshishaDoorDelivery({
+                                 result,
+                                 params,
+                                 sendRequest,
+                                 currentLocation,
+                                 handleSelectSuggest,
+                                 propAddress
+                             }) {
 
     const doorDelivery = result.DELIVERY.find(delivery =>
         delivery.ID === params.OSH_DELIVERY.doorDeliveryId && delivery.CHECKED === 'Y'
@@ -32,7 +39,7 @@ function OshishaDoorDelivery({result, params, sendRequest, currentLocation, hand
                 </div>
             </div>
             <div
-                className='w-full md:px-3.5 px-1 pt-3 mx-auto max-h-96 overflow-auto my-2 border-t
+                className='w-full md:px-3.5 px-1 mx-auto max-h-96 overflow-auto my-2 border-t
                 border-grey-line-order dark:border-grayLight'>
                 {deliveryInfo.map(delivery => {
 
@@ -41,23 +48,29 @@ function OshishaDoorDelivery({result, params, sendRequest, currentLocation, hand
                         return null
                     }
 
-                    return <div key={delivery.name} className={`mt-3 p-5 flex items-center rounded-xl border border-grey-line-order
-                     dark:bg-lightGrayBg ${isChecked ? 'dark:border-white border-light-red' : 'dark:border-0'} `}>
-                        <div className='basis-1/2 flex items-center'>
-                            <input type='radio' name='delivery' className='form-check-input radio-field form-check-input ring-0 focus:ring-0
+                    return <div key={delivery.name} className={`mt-3 md:p-5 p-3 flex items-center md:flex-row flex-col
+                     rounded-xl border border-grey-line-order dark:bg-lightGrayBg 
+                     ${isChecked ? 'dark:border-white border-light-red' : 'dark:border-0'} `}>
+                        <div className='md:w-1/2 w-full flex md:items-center md:mb-0 mb-1'>
+                            <input type='radio' name='delivery'
+                                   className='form-check-input radio-field form-check-input ring-0 focus:ring-0
                             focus:ring-transparent focus:ring-offset-transparent focus:shadow-none focus:outline-none'
                                    checked={isChecked} onChange={() => {
                                 sendRequest('refreshOrderAjax', {}, {
                                     DELIVERY_ID: params.OSH_DELIVERY.doorDeliveryId,
                                     [`ORDER_PROP_${propTypeDelivery.ID}`]: delivery.code
                                 });
+
                             }}/>
-                            <div className='ml-2 text-textLight font-semibold dark:font-medium dark:text-white'>
-                                {delivery.name} -
-                                <span className="text-light-red font-semibold dark:font-medium dark:text-white ml-2 ">{delivery.price}₽</span>
+                            <div className='ml-2 text-textLight flex md:flex-row flex-col font-semibold dark:font-medium dark:text-white'>
+                                {delivery.name} <span className="md:block hidden">-</span>
+                                <span
+                                    className="text-light-red font-semibold dark:font-medium dark:text-white md:ml-2 md:mt-0 mt-1">
+                                    {delivery.price}₽
+                                </span>
                             </div>
                         </div>
-                        <div className='basis-1/2'>
+                        <div className='md:w-1/2 w-full md:text-auto text-end'>
                             от 2 дней
                         </div>
                     </div>

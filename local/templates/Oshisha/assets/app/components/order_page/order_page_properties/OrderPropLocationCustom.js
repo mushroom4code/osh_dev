@@ -182,11 +182,11 @@ function OrderPropLocationCustom({ currentLocation, setCurrentLocation, propLoca
     }
 
     return (
-        <div>
+        <div className="md:w-1/2 w-full">
             <div className='title mb-2 text-textLight dark:text-textDarkLightGray font-medium uppercase md:text-sm text-xs'>
                 Город
             </div>
-            <div className='relative md:w-1/2 w-full' onBlur={onLostFocus}>
+            <div className='relative' onBlur={onLostFocus}>
                 <input value={currentLocation?.CODE ?? ''} type={"hidden"} name='ORDEP_PROP_' />
                 <div className='relative'>
                     <div className='relative min-h-[40px] '>

@@ -263,7 +263,19 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                             />
                             : null
                         }
-
+                        {
+                            curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId ?
+                                <div className="md:mt-5 mt-3 w-full flex justify-center">
+                                    <a className='text-white text-center w-fit px-10 dark:text-textDark shadow-md
+                                    dark:bg-dark-red bg-light-red py-2 lg:px-16 md:px-16 rounded-5 font-normal'
+                                       onClick={() => {
+                                           setShowHideBlockWithDelivery(false)
+                                       }}>
+                                        Подтвердить
+                                    </a>
+                                </div>
+                                : false
+                        }
                         <Close showHide={showHideBlockWithDelivery}
                                setShowHide={setShowHideBlockWithDelivery}/>
                     </div>
