@@ -28,7 +28,7 @@ if (isset($arParams['USE_COMMON_SETTINGS_BASKET_POPUP']) && $arParams['USE_COMMO
 
 $isSidebar = ($arParams['SIDEBAR_DETAIL_SHOW'] == 'Y' && !empty($arParams['SIDEBAR_PATH']));
 $isSidebarLeft = isset($arParams['SIDEBAR_SECTION_POSITION']) && $arParams['SIDEBAR_SECTION_POSITION'] === 'left';
-
+$fUser = CSaleBasket::GetBasketUserID();
 $arBasketItems = [];
 $dbBasketItems = CSaleBasket::GetList(
     array("NAME" => "ASC", "ID" => "ASC"),
@@ -52,7 +52,6 @@ while ($arItems = $dbBasketItems->Fetch()) {
 
 GLOBAL $arrFilterTop;
 $arrFilterTop = array();
-$fUser = CSaleBasket::GetBasketUserID();
 $basketUserId = (int)$fUser;
 if ($basketUserId <= 0)
 {

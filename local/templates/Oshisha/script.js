@@ -429,7 +429,7 @@ $(document).ready(function () {
 
             let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="' + product_id + '"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
-                if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
+                if (product_data?.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
                     if (!$(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
                         $(detailCardBasketAddButton).attr({'onclick': "location.href='/personal/cart/'"});
                         $(detailCardBasketAddButton).removeClass('btn_basket').addClass('addProductDetailButton').fadeIn(100);

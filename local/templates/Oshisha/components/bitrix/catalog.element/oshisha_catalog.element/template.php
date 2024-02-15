@@ -514,15 +514,17 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 </span>
                                 </p>
                             </div>
-                            <div class="flex flex-row items-center xl:p-5 p-3 justify-between relative">
+                            <div class="flex md:flex-row flex-col items-center xl:p-5 p-3 justify-between relative">
                                 <?php if ($USER->IsAuthorized()) {
                                     if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price && $arResult['ADD_TO_BASKET']) { ?>
-                                        <div>
-                                            <div class="mb-lg-3 mb-md-3 mb-4 flex flex-row items-center bx_catalog_item bx_catalog_item_controls"
+                                        <div class="md:w-auto w-full relative">
+                                            <div class="mb-lg-3 mb-md-3 mb-4 flex flex-row items-center md:justify-start justify-between bx_catalog_item bx_catalog_item_controls"
                                                 <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
                                                  data-entity="quantity-block">
                                                 <div class="product-item-amount-field-contain mr-3 flex flex-row items-center">
-                                    <span class="btn-minus no-select minus_icon add2basket basket_prod_detail cursor-pointer h-full"
+                                    <span class="btn-minus rounded-full md:py-0 md:px-0 py-3.5 px-1.5
+                                                dark:bg-dark md:dark:bg-darkBox bg-none no-select add2basket
+                                                cursor-pointer flex items-center justify-center md:h-full h-auto md:w-full w-auto"
                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                           data-product_id="<?= $arResult['ID']; ?>"
                                           id="<?= $itemIds['QUANTITY_DOWN_ID'] ?>"
@@ -546,7 +548,10 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                                data-product_id="<?= $arResult['ID']; ?>"
                                                                data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
                                                     </div>
-                                                    <span class="btn-plus no-select plus_icon add2basket basket_prod_detail cursor-pointer"
+                                                    <span class=" cursor-pointer flex items-center justify-center
+                                                    rounded-full md:p-0 p-3 dark:bg-dark md:dark:bg-darkBox
+                                                    bg-none md:h-full h-auto md:w-full w-auto btn-plus no-select
+                                                     plus_icon add2basket basket_prod_detail"
                                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                                           data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
                                                           data-product_id="<?= $arResult['ID']; ?>"
@@ -578,7 +583,9 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 <div id="result_box"></div>
                                                 <div id="popup_mess"></div>
                                             </div>
-                                            <div class="alert_quantity" data-id="<?= $arResult['ID'] ?>"></div>
+                                            <div class="alert_quantity absolute md:p-4 p-2 text-xs left-0 top-12
+                                                 bg-filterGray dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20 hidden"
+                                                 data-id="<?= $arResult['ID'] ?>"></div>
                                         </div>
                                         <div class="ganerate_price_wrap mb-0 <?= ($priceBasket > 0) ? 'flex flex-row' : 'hidden' ?>">
                                             <div class="flex flex-row">
@@ -590,8 +597,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php }
-                                    else if (!$item['ADD_TO_BASKET']) { ?>
+                                    <?php } else if (!$item['ADD_TO_BASKET']) { ?>
                                         <div>
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
                                 dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 open-popup md:w-auto w-full"
@@ -606,14 +612,17 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                         <circle cx="12" cy="12" r="11" stroke-width="2"/>
                                                         <line x1="12" y1="11" x2="12" y2="18" stroke-width="2"
                                                               stroke-linecap="round" stroke-linejoin="round"/>
-                                                        <line x1="12" y1="7" x2="12" y2="6" stroke-width="2" stroke-linecap="round"
+                                                        <line x1="12" y1="7" x2="12" y2="6" stroke-width="2"
+                                                              stroke-linecap="round"
                                                               stroke-linejoin="round"/>
                                                     </svg>
                                                 </p>
-                                                У вас нет активных контрагентов для совершения покупок на этом сайте!<br>
+                                                У вас нет активных контрагентов для совершения покупок на этом
+                                                сайте!<br>
                                                 Вы можете
                                                 <a href="/personal/contragents/"
-                                                   class="text-light-red dark:text-white font-medium">Создать контрагента</a>
+                                                   class="text-light-red dark:text-white font-medium">Создать
+                                                    контрагента</a>
                                                 и обратиться к менеджеру <br>
                                                 или перейти на наш
                                                 <a href="https://oshisha.net"
@@ -683,11 +692,11 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         </div>
                                     <?php }
                                 } else { ?>
-                                    <div class="text-center text-base font-medium text-lightGrayBg dark:text-textDarkLightGray
-                                    dark:font-normal w-full">
+                                    <div class="text-center md:text-base text-sm font-medium text-lightGrayBg dark:text-textDarkLightGray
+                                    dark:font-normal w-full box_with_basket_login">
                                         Для покупки товара вам необходимо
-                                        <a href="/auth/"
-                                           class="text-light-red underline font-semibold dark:text-white">
+                                        <a href="javascript:void(0)"
+                                           class="text-light-red underline font-semibold dark:text-white ink_header link_header_box ">
                                             Авторизоваться
                                         </a>
                                     </div>
@@ -756,103 +765,108 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 </div>
             <?php }
         } ?>
-        <ul class="nav nav-fill flex flex-row flex-wrap justify-content-between mb-3 mt-5" role="tablist">
-            <?php if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
-                <li class="nav-item  text-center w-1/3">
-                    <a class="nav-link text-center tab-product <? if (!$showDescription): ?>active<? endif; ?>"
-                       id="pills-profile-tab"
-                       data-toggle="pill" href="#pills-profile"
-                       role="tab" aria-controls="pills-profile" aria-selected="false">
-                        <span><?= $arParams['MESS_PROPERTIES_TAB'] ?></span>
-                    </a>
-                </li>
-                <?php
-            }
-            if ($showDescription) { ?>
-                <li class="nav-item link text-center w-1/3">
-                    <a class="nav-link active text-center tab-product" id="pills-home-tab" data-toggle="pill"
-                       href="#pills-home"
-                       role="tab" aria-controls="pills-home" aria-selected="true">
-                        <span><?= $arParams['MESS_DESCRIPTION_TAB'] ?></span></a>
-                </li>
-                <?php
-            }
-            if ($arParams['USE_COMMENTS'] === 'Y') { ?>
-                <li class="nav-item text-center w-1/3">
-                    <a class="nav-link tab-product" id="pills-contact-tab" data-toggle="pill" href="#pills-contact"
-                       role="tab" aria-controls="pills-contact" aria-selected="false">
-                        <i class="fa fa-comment-o" aria-hidden="true"></i>
-                        <span><?= $arParams['MESS_COMMENTS_TAB'] ?></span>
-                    </a>
-                </li>
-            <?php } ?>
-        </ul>
-        <div class="tab-content mt-5">
-            <?php if ($showDescription) { ?>
-                <div class="tab-pane block active" id="pills-home">
-                    <?php if ($arResult['DETAIL_TEXT'] != '') {
-                        echo $arResult['DETAIL_TEXT_TYPE'] === 'html' ? $arResult['DETAIL_TEXT'] : '<p>' . $arResult['DETAIL_TEXT'] . '</p>';
-                    } ?>
-                </div>
-                <?php
-            }
+        <div class="tab-box">
+            <ul class="nav nav-fill flex flex-row flex-wrap justify-content-between mb-3 mt-5"
+                role="tablist">
+                <?php if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
+                    <li class="nav-item text-center w-1/3 md:p-4 p-2 border-b-2 border-light-red dark:border-white pointer">
+                        <a class="nav-link text-center tab-product active" id="pills-profile"
+                           onclick="openTabContent(this)" href="javascript:void(0)">
+                        <span class="xl:text-xl text-xs mb-4 text-lightGrayBg font-normal dark:font-light
+                        dark:text-textDarkLightGray"><?= $arParams['MESS_PROPERTIES_TAB'] ?></span>
+                        </a>
+                    </li>
+                    <?php
+                }
+                if ($showDescription) { ?>
+                    <li class="nav-item link text-center w-1/3 border-b-2 border-grey-line-order md:p-4 p-2
+                dark:border-grayButton pointer">
+                        <a class="nav-link text-center tab-product" id="pills-home" href="javascript:void(0)"
+                           onclick="openTabContent(this)">
+                        <span class="xl:text-xl text-xs mb-4 text-lightGrayBg font-normal dark:font-light
+                        dark:text-textDarkLightGray"><?= $arParams['MESS_DESCRIPTION_TAB'] ?></span></a>
+                    </li>
+                    <?php
+                }
+                if ($arParams['USE_COMMENTS'] === 'Y') { ?>
+                    <li class="nav-item link text-center w-1/3 border-b-2 border-grey-line-order md:p-4 p-2
+                dark:border-grayButton pointer">
+                        <a class="nav-link tab-product" id="pills-contact"
+                           href="javascript:void(0)" onclick="openTabContent(this)">
+                            <i class="fa fa-comment-o" aria-hidden="true"></i>
+                            <span class="xl:text-xl text-xs mb-4 text-lightGrayBg font-normal dark:font-light
+                        dark:text-textDarkLightGray"><?= $arParams['MESS_COMMENTS_TAB'] ?></span>
+                        </a>
+                    </li>
+                <?php } ?>
+            </ul>
+            <div class="tab-content mt-5">
+                <?php if ($showDescription) { ?>
+                    <div class="tab-pane block md:mt-8 mt-5" id="pills-home">
+                        <?php if ($arResult['DETAIL_TEXT'] != '') {
+                            echo $arResult['DETAIL_TEXT_TYPE'] === 'html' ? $arResult['DETAIL_TEXT'] : '<p>' . $arResult['DETAIL_TEXT'] . '</p>';
+                        } ?>
+                    </div>
+                    <?php
+                }
 
-            if (!empty($arResult['PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) {
-                include(__DIR__ . '/props/template.php');
-            }
-            if ($arParams['USE_COMMENTS'] === 'Y') { ?>
-                <div class="tab-pane hidden" id="pills-contact">
-                    <?php $componentCommentsParams = array(
-                        'ELEMENT_ID' => $arResult['ID'],
-                        'ELEMENT_CODE' => '',
-                        'IBLOCK_ID' => $arParams['IBLOCK_ID'],
-                        'SHOW_DEACTIVATED' => $arParams['SHOW_DEACTIVATED'],
-                        'URL_TO_COMMENT' => '',
-                        'WIDTH' => '',
-                        'COMMENTS_COUNT' => '5',
-                        'BLOG_USE' => $arParams['BLOG_USE'],
-                        'FB_USE' => $arParams['FB_USE'],
-                        'FB_APP_ID' => $arParams['FB_APP_ID'],
-                        'VK_USE' => $arParams['VK_USE'],
-                        'VK_API_ID' => $arParams['VK_API_ID'],
-                        'CACHE_TYPE' => $arParams['CACHE_TYPE'],
-                        'CACHE_TIME' => $arParams['CACHE_TIME'],
-                        'CACHE_GROUPS' => $arParams['CACHE_GROUPS'],
-                        'BLOG_TITLE' => '',
-                        'BLOG_URL' => $arParams['BLOG_URL'],
-                        'PATH_TO_SMILE' => '',
-                        'EMAIL_NOTIFY' => $arParams['BLOG_EMAIL_NOTIFY'],
-                        'AJAX_POST' => 'Y',
-                        'SHOW_SPAM' => 'Y',
-                        'SHOW_RATING' => 'N',
-                        'FB_TITLE' => '',
-                        'FB_USER_ADMIN_ID' => '',
-                        'FB_COLORSCHEME' => 'light',
-                        'FB_ORDER_BY' => 'reverse_time',
-                        'VK_TITLE' => '',
-                        'TEMPLATE_THEME' => $arParams['~TEMPLATE_THEME']
-                    );
-                    if (isset($arParams["USER_CONSENT"])) {
-                        $componentCommentsParams["USER_CONSENT"] = $arParams["USER_CONSENT"];
-                    }
-                    if (isset($arParams["USER_CONSENT_ID"])) {
-                        $componentCommentsParams["USER_CONSENT_ID"] = $arParams["USER_CONSENT_ID"];
-                    }
-                    if (isset($arParams["USER_CONSENT_IS_CHECKED"])) {
-                        $componentCommentsParams["USER_CONSENT_IS_CHECKED"] = $arParams["USER_CONSENT_IS_CHECKED"];
-                    }
-                    if (isset($arParams["USER_CONSENT_IS_LOADED"])) {
-                        $componentCommentsParams["USER_CONSENT_IS_LOADED"] = $arParams["USER_CONSENT_IS_LOADED"];
-                    }
-                    $APPLICATION->IncludeComponent(
-                        'bitrix:catalog.comments',
-                        'oshisha_catalog.commets',
-                        $componentCommentsParams,
-                        $component,
-                        array('HIDE_ICONS' => 'Y')
-                    ); ?>
-                </div>
-            <?php } ?>
+                if (!empty($arResult['PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) {
+                    include(__DIR__ . '/props/template.php');
+                }
+                if ($arParams['USE_COMMENTS'] === 'Y') { ?>
+                    <div class="tab-pane hidden md:mt-8 mt-5" id="pills-contact">
+                        <?php $componentCommentsParams = array(
+                            'ELEMENT_ID' => $arResult['ID'],
+                            'ELEMENT_CODE' => '',
+                            'IBLOCK_ID' => $arParams['IBLOCK_ID'],
+                            'SHOW_DEACTIVATED' => $arParams['SHOW_DEACTIVATED'],
+                            'URL_TO_COMMENT' => '',
+                            'WIDTH' => '',
+                            'COMMENTS_COUNT' => '5',
+                            'BLOG_USE' => $arParams['BLOG_USE'],
+                            'FB_USE' => $arParams['FB_USE'],
+                            'FB_APP_ID' => $arParams['FB_APP_ID'],
+                            'VK_USE' => $arParams['VK_USE'],
+                            'VK_API_ID' => $arParams['VK_API_ID'],
+                            'CACHE_TYPE' => $arParams['CACHE_TYPE'],
+                            'CACHE_TIME' => $arParams['CACHE_TIME'],
+                            'CACHE_GROUPS' => $arParams['CACHE_GROUPS'],
+                            'BLOG_TITLE' => '',
+                            'BLOG_URL' => $arParams['BLOG_URL'],
+                            'PATH_TO_SMILE' => '',
+                            'EMAIL_NOTIFY' => $arParams['BLOG_EMAIL_NOTIFY'],
+                            'AJAX_POST' => 'Y',
+                            'SHOW_SPAM' => 'Y',
+                            'SHOW_RATING' => 'N',
+                            'FB_TITLE' => '',
+                            'FB_USER_ADMIN_ID' => '',
+                            'FB_COLORSCHEME' => 'light',
+                            'FB_ORDER_BY' => 'reverse_time',
+                            'VK_TITLE' => '',
+                            'TEMPLATE_THEME' => $arParams['~TEMPLATE_THEME']
+                        );
+                        if (isset($arParams["USER_CONSENT"])) {
+                            $componentCommentsParams["USER_CONSENT"] = $arParams["USER_CONSENT"];
+                        }
+                        if (isset($arParams["USER_CONSENT_ID"])) {
+                            $componentCommentsParams["USER_CONSENT_ID"] = $arParams["USER_CONSENT_ID"];
+                        }
+                        if (isset($arParams["USER_CONSENT_IS_CHECKED"])) {
+                            $componentCommentsParams["USER_CONSENT_IS_CHECKED"] = $arParams["USER_CONSENT_IS_CHECKED"];
+                        }
+                        if (isset($arParams["USER_CONSENT_IS_LOADED"])) {
+                            $componentCommentsParams["USER_CONSENT_IS_LOADED"] = $arParams["USER_CONSENT_IS_LOADED"];
+                        }
+                        $APPLICATION->IncludeComponent(
+                            'bitrix:catalog.comments',
+                            'oshisha_catalog.commets',
+                            $componentCommentsParams,
+                            $component,
+                            array('HIDE_ICONS' => 'Y')
+                        ); ?>
+                    </div>
+                <?php } ?>
+            </div>
         </div>
     </div>
 <?php if ($arParams['BRAND_USE'] === 'Y') { ?>

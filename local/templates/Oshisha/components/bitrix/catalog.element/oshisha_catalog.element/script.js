@@ -2993,4 +2993,24 @@ $(document).on('click', '.offer-link .offer-box', function () {
 
 });
 
+function openTabContent(item) {
+    const tabBox = document.querySelector('.tab-box')
+    const oldItemTab = tabBox.querySelector('a.tab-product.active')
+    if (oldItemTab.id !== item.id) {
 
+        tabBox.querySelector('.tab-pane[id="'+oldItemTab.id+'"]').classList.add('hidden')
+        tabBox.querySelector('.tab-pane[id="'+oldItemTab.id+'"]').classList.remove('block')
+        oldItemTab.classList.remove('active')
+
+        const liOld = oldItemTab.closest('li')
+        liOld.classList.remove('border-light-red', 'dark:border-white')
+        liOld.classList.add('border-grey-line-order', 'dark:border-grayButton')
+
+        const liNew =  item.closest('li');
+        item.classList.add('active')
+        liNew.classList.add('border-light-red', 'dark:border-white')
+        liNew.classList.remove('border-grey-line-order', 'dark:border-grayButton')
+        tabBox.querySelector('.tab-pane[id="'+item.id+'"]').classList.add('block')
+        tabBox.querySelector('.tab-pane[id="'+item.id+'"]').classList.remove('hidden')
+    }
+}
