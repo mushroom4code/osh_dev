@@ -28,11 +28,6 @@ if ($arResult['FOLDER'] === '/diskont/') {
     while ($arSection = $rsSections->GetNext()) {
         $arSection['TEXT'] = $arSection['NAME'];
         $arSection['LINK'] = $arSection['CODE'];
-        if ($arSection['DEPTH_LEVEL'] > 1) {
-            $arSection['DEPTH_LEVEL'] = $arSection['DEPTH_LEVEL'] - 1;
-
-        }
-
         $arSections[$arSection['ID']] = $arSection;
     }
 
@@ -41,11 +36,11 @@ if ($arResult['FOLDER'] === '/diskont/') {
             $sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']] = $arSection;
             $sectionLinc[$arSection['ID']] = &$sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']];
         } else {
-            $sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILD'][$arSection['ID']] = $arSection;
-            $sectionLinc[$arSection['ID']] = &$sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILD'][$arSection['ID']];
+            $sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']] = $arSection;
+            $sectionLinc[$arSection['ID']] = &$sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']];
         }
 
     }
 
-    $arResult['SECTION_LIST'] = $sectionLinc[0]['CHILD'];
+    $arResult['SECTION_LIST'] = $sectionLinc[0]['CHILDS'];
 }

@@ -2452,6 +2452,7 @@ $(document).ready(function () {
     $('.smart-filter-tog').on('click', function () {
         var code_vis = $(this).data('code-vis');
         $('.catalog-section-list-item-sub[data-code="' + code_vis + '"]').toggleClass('active');
+        $('.catalog-section-list-item-l[data-code="' + code_vis + '"]').toggleClass('d-none');
         $(this).toggleClass('smart-filter-angle-up');
     });
 
