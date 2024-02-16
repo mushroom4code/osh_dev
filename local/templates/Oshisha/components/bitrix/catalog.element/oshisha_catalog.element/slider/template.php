@@ -23,7 +23,7 @@
                     }
                 } ?>
             </div>
-            <div class="xl:max-h-[550px] md:max-h-[460px] md:min-h-[460px] xl:min-h-[550px] min-h-[300px]
+            <div class="xl:max-h-[650px] md:max-h-[460px] md:min-h-[460px] xl:min-h-[650px] min-h-[300px]
             max-h-[320px] h-full bg-white rounded-xl flex justify-center items-center border-borderColor border dark:border-0">
                 <span class="product-item-detail-slider-left carousel_elem_custom absolute top-1/2 md:-left-5 -left-3
                 md:py-4 md:px-5 px-3.5 py-3 rounded-full bg-lightGrayBg hover:bg-light-red dark:hover:bg-dark-red z-10 cursor-pointer"
