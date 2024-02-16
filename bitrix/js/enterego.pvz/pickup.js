@@ -202,6 +202,7 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
         d.events.add("resultselect", function (a) {
             a = a.get("index");
 
+            //TODO update reverseGeocode
             d.getResult(a).then(function (e) {
                 const coordinates = e.geometry.getCoordinates()
                 BX.SaleCommonPVZ.reverseGeocodeAddress(coordinates)
@@ -938,30 +939,31 @@ window.commonDelivery.bxPopup = {
         let tomorrow    = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
 
-        let curDate = (BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propDateDeliveryId))
-        if (isNaN(curDate)) {
-            curDate = tomorrow
-        }
-        const datepicker =  $(dateDeliveryNodeOsh).datepicker({
-            minDate: tomorrow,
-            selectedDates: curDate,
-            onSelect: function (date, opts, datepicker) {
-                let datepicker_main_input = $('input.datepicker_order.date_delivery_main');
-                if (datepicker_main_input.length !== 0) {
-                    datepicker_main_input.val(date);
-                }
-                BX.SaleCommonPVZ.updateValueProp(BX.SaleCommonPVZ.propDateDeliveryId, date)
-                window.commonDelivery.oshMkadDistance.init(BX.SaleCommonPVZ.oshishaDeliveryOptions).then(oshMkad => {
-                    oshMkad.afterSave = null;
-                    oshMkad.getDistance([BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propLatitudeId),
-                            BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propLongitudeId)],
-                        BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propDateDeliveryId),
-                        BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propAddressId), true);
-                })
-                BX.Sale.OrderAjaxComponent.sendRequest()
-            }.bind(this)
-        });
-        datepicker.data('datepicker').selectDate(curDate);
+        //TODO date pciker on pickup
+        // let curDate = (BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propDateDeliveryId))
+        // if (isNaN(curDate)) {
+        //     curDate = tomorrow
+        // }
+        // const datepicker =  $(dateDeliveryNodeOsh).datepicker({
+        //     minDate: tomorrow,
+        //     selectedDates: curDate,
+        //     onSelect: function (date, opts, datepicker) {
+        //         let datepicker_main_input = $('input.datepicker_order.date_delivery_main');
+        //         if (datepicker_main_input.length !== 0) {
+        //             datepicker_main_input.val(date);
+        //         }
+        //         BX.SaleCommonPVZ.updateValueProp(BX.SaleCommonPVZ.propDateDeliveryId, date)
+        //         window.commonDelivery.oshMkadDistance.init(BX.SaleCommonPVZ.oshishaDeliveryOptions).then(oshMkad => {
+        //             oshMkad.afterSave = null;
+        //             oshMkad.getDistance([BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propLatitudeId),
+        //                     BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propLongitudeId)],
+        //                 BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propDateDeliveryId),
+        //                 BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propAddressId), true);
+        //         })
+        //         BX.Sale.OrderAjaxComponent.sendRequest()
+        //     }.bind(this)
+        // });
+        //datepicker.data('datepicker').selectDate(curDate);
 
         nodeYaMapContainer.prepend(nodeYaAction);
         nodeYaMapContainer.append(nodeYaDescription);
@@ -971,25 +973,26 @@ window.commonDelivery.bxPopup = {
 
         this.instance = nodeOshOverlay;
 
-        $('#osh_delivery_ya_map_address').suggestions({
-            token: deliveryOptions.DA_DATA_TOKEN,
-            type: "ADDRESS",
-            hint: false,
-            floating: false,
-            triggerSelectOnEnter: true,
-            autoSelectFirst: true,
-            onSelect: function (suggestion) {
-                if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                    document.querySelector(`input#user-address`).value = suggestion?.value ?? '';
-                    BX.SaleCommonPVZ.updatePropsFromDaData(suggestion);
-                    var latitude = Number('' + suggestion.data.geo_lat).toPrecision(6),
-                        longitude = Number('' + suggestion.data.geo_lon).toPrecision(6)
-                    this.oshMkadDelivery.getDistance([latitude, longitude], ((BX.SaleCommonPVZ.propDateDelivery)
-                        ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propDateDelivery + '"]').value)
-                        : ''), suggestion.value, true);
-                }
-            }.bind(this),
-        })
+        //TODO change on react suggest
+        // $('#osh_delivery_ya_map_address').suggestions({
+        //     token: deliveryOptions.DA_DATA_TOKEN,
+        //     type: "ADDRESS",
+        //     hint: false,
+        //     floating: false,
+        //     triggerSelectOnEnter: true,
+        //     autoSelectFirst: true,
+        //     onSelect: function (suggestion) {
+        //         if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+        //             document.querySelector(`input#user-address`).value = suggestion?.value ?? '';
+        //             BX.SaleCommonPVZ.updatePropsFromDaData(suggestion);
+        //             var latitude = Number('' + suggestion.data.geo_lat).toPrecision(6),
+        //                 longitude = Number('' + suggestion.data.geo_lon).toPrecision(6)
+        //             this.oshMkadDelivery.getDistance([latitude, longitude], ((BX.SaleCommonPVZ.propDateDelivery)
+        //                 ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propDateDelivery + '"]').value)
+        //                 : ''), suggestion.value, true);
+        //         }
+        //     }.bind(this),
+        // })
     },
 
     showNoMarkupBlock: function () {

@@ -4,6 +4,15 @@ import React from "react";
 
 BX.namespace('BX.OrderPageComponents');
 
+//FIX global handler hook
+BX.reactHandler = {
+
+    onSelectPvz: [],
+    selectPvz: function (itemId) {
+        this.onSelectPvz.forEach(item => item(itemId))
+    }
+}
+
 BX.OrderPageComponents = {
     ajaxUrl: null,
     result: null,

@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types'
 import Datepicker from "react-tailwindcss-datepicker";
+import dayjs from "dayjs";
 
-function OrderPropDate({ property, className, disabled, minDate = null, handleOnSelect }) {
+function OrderPropDate({ property, className, disabled, minDate, handleOnSelect }) {
 
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const onChageValueChange = (newValue) => {
         setCurrentDate(newValue)
+        const formatDate = dayjs(newValue.startDate).format('DD.MM.YYYY')
         if (handleOnSelect!==undefined) {
-            handleOnSelect(newValue)
+            handleOnSelect(formatDate)
         }
     }
 
@@ -23,10 +25,11 @@ function OrderPropDate({ property, className, disabled, minDate = null, handleOn
                 i18n={"ru"} 
                 minDate={minDate}
                 displayFormat={"DD.MM.YYYY"}
+
                 inputName={`ORDER_PROP_${property.ID}`}
                 inputClassName='relative w-full text-sm rounded-lg cursor-text border-grey-line-order ring:grey-line-order dark:border-darkBox dark:bg-grayButton absolute' 
                 containerClassName='relative z-50'
-                value={currentDate} 
+                value={currentDate}
                 onChange={onChageValueChange} 
             />
         </div>

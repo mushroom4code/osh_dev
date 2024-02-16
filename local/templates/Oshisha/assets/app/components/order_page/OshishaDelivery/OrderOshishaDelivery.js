@@ -138,6 +138,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
         setAdditionalData(additionalData, 'LONGITUDE', longitude)
         additionalData[`ORDER_PROP_${propLocation.ID}`] = currentLocation.CODE
 
+
         //TODO get value for osh distanse delivery
         const dateDelivery = document.querySelector(`input[name="ORDER_PROP_${propDateDelivery.ID}"]`)?.value ?? ''
 
@@ -227,8 +228,15 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                                 ? <div className='flex flex-row flex-1'>
                                     {propDateDelivery !== undefined
                                         ?
-                                        <OrderPropDate property={propDateDelivery} className='flex flex-col'
-                                                       minDate={dayjs().add(1, 'day').toDate()}/>
+                                        <OrderPropDate
+                                            className='flex flex-col'
+                                            property={propDateDelivery}
+                                            minDate={dayjs().add(1, 'day').toDate()}
+                                            handleOnSelect={
+                                                 value => sendRequest('refreshOrderAjax', {},
+                                                     {[`ORDER_PROP_${propDateDelivery.ID}`]: value})
+                                            }
+                                        />
                                         : null
                                     }
                                     {propDeliveryInterval !== undefined

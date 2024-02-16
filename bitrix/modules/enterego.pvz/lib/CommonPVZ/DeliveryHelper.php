@@ -440,26 +440,14 @@ class DeliveryHelper
             Asset::getInstance()->addJs('///api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey . '&lang=' . $locale);
         }
 
-        $cAsset->addJs('/bitrix/modules/enterego.pvz/lib/CommonPVZ/script.js', true);
+         //$cAsset->addJs('/bitrix/modules/enterego.pvz/lib/CommonPVZ/script.js', true);
+        //$cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
         $cAsset->addJs('/bitrix/js/enterego.pvz/jquery.suggestions.min.js', true);
         $cAsset->addJs('/bitrix/js/enterego.pvz/async.js', true);
-        $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
+
         $cAsset->addCss('/bitrix/modules/enterego.pvz/install/css/suggestions.css', true);
         \CJSCore::Init(array("saved_delivery_profiles"));
         \CJSCore::Init(array("common_delivery"));
-        $cAsset->addString(
-            "<script id='' data-params=''>
-//                    window.addEventListener('load', function () {
-//                        BX.SaleCommonPVZ.init({
-//                            params: " . CUtil::PhpToJSObject($params) . "
-//                        });
-//                        
-//                        if (typeof BX !== 'undefined' && BX.addCustomEvent)
-//                            BX.addCustomEvent('onAjaxSuccess', BX.SaleCommonPVZ.update);
-//                        });
-                </script>",
-            true
-        );
 
         $arParams['OSH_DELIVERY'] = $params;
     }

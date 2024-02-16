@@ -2,15 +2,6 @@ BX.namespace('BX.SaleCommonPVZ');
 
 const typeDisplayPVZ = {map: 'map', list: 'list'}
 
-//FIX global handler hook
-BX.reactHandler = {
-
-    onSelectPvz: [],
-    selectPvz: function (itemId) {
-        this.onSelectPvz.forEach(item => item(itemId))
-    }
-}
-
 BX.SaleCommonPVZ = {
     curCityCode: null,
     curCityName: null,
