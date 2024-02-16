@@ -1,5 +1,6 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
+use Bitrix\Conversion\Internals\MobileDetect;
 use Bitrix\Main\Loader;
 use Bitrix\Main\ModuleManager;
 
@@ -16,7 +17,7 @@ if (isset($arParams['USE_COMMON_SETTINGS_BASKET_POPUP']) && $arParams['USE_COMMO
 } else {
     $basketAction = isset($arParams['SECTION_ADD_TO_BASKET_ACTION']) ? $arParams['SECTION_ADD_TO_BASKET_ACTION'] : '';
 }
-
+$mobile = new MobileDetect();
 $sort = [
     'by' => [
         'by' => 'SERVICE_FIELD_POPULARITY', // 'PROPERTY_MINIMUM_PRICE',//'CATALOG_PRICE_'.$GLOBALS['PRICE_TYPE_ID'],
@@ -135,23 +136,24 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
 // Категории с иерархией
 $arCategory = [];
-require_once($_SERVER["DOCUMENT_ROOT"].'/local/templates/Oshisha/include/catalogMenu.php');
+require_once($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/include/catalogMenu.php');
 ?>
 <div class="row mb-4 box_with_prod">
     <?php if ($isFilter) : ?>
         <div class=" box_filter_catalog
         <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
-            <div class="row">
-                <div class="catalog-section-list-tile-list">
-                    <?php foreach ($arResult['SECTION_LIST'] as $arSection) {
-                        if ($showUserContent || !$showUserContent && $arSection['NAME'] === 'Чай') {
-                            createNewItemsChild($arSection, $smartFil, $arCategory);
-                        }
-                    } ?>
+            <?php if (!$mobile->isMobile()) { ?>
+                <div class="row">
+                    <div class="catalog-section-list-tile-list">
+                        <?php foreach ($arResult['SECTION_LIST'] as $arSection) {
+                            if ($showUserContent || !$showUserContent && $arSection['NAME'] === 'Чай') {
+                                createNewItemsChild($arSection, $smartFil, $arCategory);
+                            }
+                        } ?>
+                    </div>
                 </div>
-            </div>
-            <?php
+            <?php }
 
             //region Filter
             if ($isFilter): ?>
