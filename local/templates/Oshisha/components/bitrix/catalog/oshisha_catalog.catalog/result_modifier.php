@@ -26,9 +26,13 @@ if ($arResult['FOLDER'] === '/diskont/') {
     $sectionLinc[0] = &$arResult['ROOT'];
     $arSections = [];
     while ($arSection = $rsSections->GetNext()) {
-        $arSection['TEXT'] = $arSection['NAME'];
-        $arSection['LINK'] = $arSection['CODE'];
-        $arSections[$arSection['ID']] = $arSection;
+        if ($arSection['DEPTH_LEVEL'] <= 4) {
+            if(CIBlockSection::GetSectionElementsCount($arSection['ID'], ['CNT_ACTIVE' => 'Y']) > 0){
+                $arSection['TEXT'] = $arSection['NAME'];
+                $arSection['LINK'] = $arSection['CODE'];
+                $arSections[$arSection['ID']] = $arSection;
+            }
+        }
     }
 
     foreach ($arSections as $arSection) {
