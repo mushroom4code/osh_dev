@@ -46,12 +46,7 @@ $(document).ready(function () {
         line = $('#basket-line'),
         bool_basket = $(div).is('#basket-items-list-container');
     //CATALOG
-    let checkInput = $(inputItem).is(checkProductOrdersReady),
-        box_for_tasted = $(body).find('.box_for_tasted'),
-        icon = $('#icon'),
-        main_menu = $('.main_menu');
-    // HIDE
-    $(main_menu).hide();
+    let checkInput = $(inputItem).is(checkProductOrdersReady);
     $(boxAddress).hide();
     $('.content_for_box_delivery').hide();
     // SELECT

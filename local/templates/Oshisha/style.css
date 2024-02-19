@@ -98,7 +98,7 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .box_with_basket_l
     align-content: start;
 }
 
-.mobile_lk, .box_with_properties, .box_for_banner_footer, .banners_container, .main_menu, .title_home,
+.mobile_lk, .box_with_properties, .box_for_banner_footer, .banners_container, .title_home,
 .title_footer, .flex_header, .by-card .box_with_titles,
 .sort-panel__view-buttons-list, .view-buttons-list, .box_with_prod, .box_footer_with_boxes, .banner_small,
 .form_company, .cart_box_black, .bx_catalog_item .bx_catalog_item_container, .basket-checkout-container,
@@ -1697,25 +1697,12 @@ span > i.header_icon {
     margin-bottom: -2px;
 }
 
-.main_menu {
-    filter: drop-shadow(0px -4px 30px rgba(196, 196, 196, 0.2));
-    border-radius: 20px;
-    top: 58px;
-    z-index: 900;
-    max-width: 1270px;
-    min-width: 1000px;
-}
-
 .box_with_menu_header .ul_menu {
     position: relative;
 }
 
 .active_item_menu {
     background: rgba(255, 255, 255, 0.7);
-}
-
-.link_menu {
-    padding: 12px 0 0 10px;
 }
 
 .parent_category_menu {
@@ -1726,11 +1713,6 @@ span > i.header_icon {
     min-height: 30px;
     background-position: center;
     margin-right: 12px;
-}
-
-
-.menu_items {
-    padding: 15px;
 }
 
 .open_menu .span_2 {
@@ -3141,8 +3123,8 @@ label.radio_input {
     }
 
     .main_menu {
-        max-width: 960px;
-        height: 375px;
+        max-width: 90vw;
+        height: 70vh;
     }
 
     .link_banner {
