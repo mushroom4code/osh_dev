@@ -28,7 +28,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         $HAS_CHILD = 1;
 
     if ($showUserContent || !$showUserContent && $arResult["ALL_ITEMS"][$itemID]['TEXT'] === 'Чай') {
-        if ($arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/diskont/'
+        if ($arResult["ALL_ITEMS"][$itemID]["TEXT"] !== 'Дисконт'
             && $arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/hit/' && !empty($arResult["ALL_ITEMS"][$itemID]['TEXT'])) {
             if ($arResult["ALL_ITEMS"][$itemID]['DEPTH_LEVEL'] == '1') {
                 $menu_for_JS['MAIN'][] = [
