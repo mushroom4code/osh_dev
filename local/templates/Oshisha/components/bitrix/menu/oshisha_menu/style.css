@@ -90,10 +90,3 @@
     background-color: #f0f0f0;
     border: 1px solid white;
 }
-
-/*.menu_items .box, .menu_items_child .box {*/
-/*    display: grid;*/
-/*    grid-template-columns: repeat(2, 1fr);*/
-/*    gap: 0 22px;*/
-/*    padding: 5px;*/
-/*}*/
