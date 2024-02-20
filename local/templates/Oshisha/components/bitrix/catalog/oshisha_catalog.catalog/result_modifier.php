@@ -26,7 +26,7 @@ if ($arResult['FOLDER'] === '/diskont/') {
     $sectionLinc[0] = &$arResult['ROOT'];
     $arSections = [];
     while ($arSection = $rsSections->GetNext()) {
-        if ($arSection['DEPTH_LEVEL'] <= 4) {
+        if ($arSection['DEPTH_LEVEL'] <= 2) {
             if(CIBlockSection::GetSectionElementsCount($arSection['ID'], ['CNT_ACTIVE' => 'Y']) > 0){
                 $arSection['TEXT'] = $arSection['NAME'];
                 $arSection['LINK'] = $arSection['CODE'];

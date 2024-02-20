@@ -143,12 +143,16 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             openButton.addClass('open_menu')
 
             if (Object.keys(menu_items_array?.MAIN)?.length > 0) {
+                let href = '';
+                let name = '';
                 $(menu_items_array.MAIN).each(function (key, value) {
                     let print_strelka = '';
                     let class_active = '';
 
                     if (value.TEXT === 'Кальяны') {
                         class_active = 'active_item_menu';
+                        href = value.TEXT;
+                        name = 'Кальяны'
                     }
 
                     if (value.HAS_CHILD == 1)
@@ -157,12 +161,16 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
                     if (value.LINK !== '' && value.LINK !== null && value.TEXT !== '' && value.TEXT !== null
                         && value.TEXT !== ' ') {
                         $('.parent_menu').append('<li class="li_menu_header none_mobile link_js ' + class_active + '" ' +
-                            'data-role="bx-menu-item" data-href="'+value.LINK+'"> <span class="parent_category_menu"></span>' +
+                            'data-role="bx-menu-item" data-href="' + value.LINK + '"> <span class="parent_category_menu"></span>' +
                             '<a class="link_menu_header parent_category" id="' + value.ID + '" href="javascript:void(0)">' +
                             '<span class="text_catalog_link">' +
                             '' + value.TEXT + '</span></a>' + print_strelka + '</li>');
                     }
                 });
+                $('.menu_items .title').empty().html(
+                    name + ' <div class="sendToCategoryMain cursor-pointer" ' +
+                    'onclick="location.href=\'' + href + '\'"> ' +
+                    'Все <i class="fa_icon fa fa-angle-right ml-2" aria-hidden="true"></i></div>');
 
                 $.each(menu_items_array.ELEMENT, function (key_item, value_item) {
                     $('.parent_menu').find('li.active_item_menu').each(
@@ -188,9 +196,9 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 
             $('.menu_items').addClass('hide');
             $('.menu_items .title').empty().html(
-                $(li).find('.text_catalog_link').text()+ ' <div class="sendToCategoryMain cursor-pointer" ' +
-            'onclick="location.href=\'' + li.attr('data-href') +'\'"> ' +
-            'Все <i class="fa_icon fa fa-angle-right ml-2" aria-hidden="true"></i></div>');
+                $(li).find('.text_catalog_link').text() + ' <div class="sendToCategoryMain cursor-pointer" ' +
+                'onclick="location.href=\'' + li.attr('data-href') + '\'"> ' +
+                'Все <i class="fa_icon fa fa-angle-right ml-2" aria-hidden="true"></i></div>');
 
             $('.menu_items .box').empty();
             $('.menu_items_child').addClass('hide');
@@ -214,7 +222,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             '<div class="backToTheMenu cursor-pointer" ' +
             'onclick="backToMenu()"><i class="fa_icon fa fa-angle-left mr-2" aria-hidden="true"></i>Назад</div>'
             + $(that).find('.text_catalog_link').text() + ' <div class="sendToCategory cursor-pointer" ' +
-            'onclick="location.href=\'' + that.attr('data-href') +'\'"> ' +
+            'onclick="location.href=\'' + that.attr('data-href') + '\'"> ' +
             'Все <i class="fa_icon fa fa-angle-right ml-2" aria-hidden="true"></i></div>'
         );
         $('.menu_items_child .box').empty();
@@ -256,24 +264,55 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
     }
 
     function createItemMenu(value_item, menu_items, parentId = 0, parent) {
-        $.each(value_item, function (i, val) {
-            let down = '';
-            let classChild = '';
-            let href = val?.LINK;
-            if (typeof val.ELEMENT === "object" && Object.keys(val.ELEMENT)?.length > 0) {
-                down = '<i class="fa_icon fa fa-angle-right child_js" aria-hidden="true"></i>';
-                classChild = 'child_js';
-                href = 'javascript:void(0)'
+
+        let res = Object.entries(value_item).sort((a, b) => {
+            if (a[1].TEXT < b[1].TEXT) return -1;
+            if (a[1].TEXT > b[1].TEXT) return 1;
+            return 0;
+        });
+
+        let listLength = res.length;
+        let classItem = 'col-7';
+        const maxLength = 14;
+
+        if (res.length > maxLength) {
+            listLength = Math.ceil(res.length / 2);
+            classItem = 'col-6';
+        }
+
+        for (let i = 0; i < listLength; i++) {
+
+            let itemList = res[i]
+            createItem(itemList, menu_items, parentId,classItem)
+
+            if (res.length > maxLength) {
+                let newIndex = (Math.floor(res.length / 2) + i) + 1;
+                if ((res.length - 1) >= newIndex) {
+                    itemList = res[newIndex];
+                    createItem(itemList, menu_items, parentId, classItem)
+                }
             }
+        }
 
-            const item = '<div class="menu-item-line col-6">' +
-                '<a class="link_menu_header link_menu d-flex align-items-center justify-content-between ' + classChild + '" ' +
-                'href="' + href + '" data-parent-id="' + parentId + '" id="' + i + '" data-href="'+val?.LINK+'"> ' +
-                '<span class="text_catalog_link">' + val.TEXT + '</span> ' + down + ' </a>' +
-                '</div>';
+        $(parent).removeClass('hide');
+    }
 
-            $(menu_items).append(item)
-            $(parent).removeClass('hide');
-        })
+    function createItem(itemList, menu_items, parentId, classItem) {
+        let down = '';
+        let classChild = '';
+        let val = itemList[1];
+        let href = val?.LINK;
+        if (typeof val.ELEMENT === "object" && Object.keys(val.ELEMENT)?.length > 0) {
+            down = '<i class="fa_icon fa fa-angle-right child_js" aria-hidden="true"></i>';
+            classChild = 'child_js';
+            href = 'javascript:void(0)'
+        }
+        let item = '<div class="menu-item-line h-auto '+classItem+'">' +
+            '<a class="link_menu_header link_menu d-flex align-items-center justify-content-between ' + classChild + '" ' +
+            'href="' + href + '" data-parent-id="' + parentId + '" id="' + itemList[0] + '" data-href="' + val?.LINK + '"> ' +
+            '<span class="text_catalog_link">' + val.TEXT + '</span> ' + down + ' </a>' +
+            '</div>';
+
+        $(menu_items).append(item)
     }
 </script>
