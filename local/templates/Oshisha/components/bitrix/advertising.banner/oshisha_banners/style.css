@@ -8,3 +8,24 @@
     width: 100%;
     border-radius: 0.5rem;
 }
+
+html:not(.dark) .swiper-pagination-bullet-active {
+    background: #313131;
+}
+
+html.dark .swiper-pagination-bullet-active {
+    background: white;
+}
+
+html:not(.dark) .swiper-pagination-bullet:not(.swiper-pagination-bullet-active) {
+    background: #f0f0f0;
+}
+
+html.dark .swiper-pagination-bullet:not(.swiper-pagination-bullet-active) {
+    background: #555555;
+    opacity: 1;
+}
+
+.slick-dotted.slick-slider {
+    margin-bottom: 0 !important;
+}

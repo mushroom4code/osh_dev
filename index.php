@@ -82,6 +82,24 @@ if (IsModuleInstalled("advertising")):?>
                 ); ?>
             </div>
         </div>
+
+        <?php
+
+        $SectionRes = CIBlockElement::GetList(array(),
+            array('ACTIVE' => 'Y', 'IBLOCK_ID' => 21),
+            false, array("CODE", 'NAME', 'ID', 'PREVIEW_PICTURE', 'DESCRIPTION')
+        );
+        if (!empty($SectionRes)) {
+            while ($arSection = $SectionRes->GetNext()) { ?>
+                <div>
+                    <h5 class="text-2xl font-semibold dark:font-medium text-textLight mb-8 dark:text-textDarkLightGray"><?= $arSection['NAME'] ?></h5>
+                    <div class="mb-5">
+                        <?= $arSection['NAME']?>
+                    </div>
+                </div>
+            <?php }
+        }
+        ?>
     </div>
 <?php endif;
 if (SITE_ID !== SITE_EXHIBITION) { ?>
