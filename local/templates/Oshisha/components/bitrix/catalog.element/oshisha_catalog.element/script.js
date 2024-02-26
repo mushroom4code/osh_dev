@@ -662,11 +662,11 @@
                 if (this.params.PRODUCT.SLIDER_COUNT) {
                     this.product.sliderCount = parseInt(this.params.PRODUCT.SLIDER_COUNT, 10) || 0;
 
-                    if (this.product.sliderCount > 0 && this.params.PRODUCT.SLIDER.length) {
+                    if (this.product.sliderCount > 1 && this.params.PRODUCT.SLIDER.length) {
                         for (j = 0; j < this.params.PRODUCT.SLIDER.length; j++) {
                             this.product.useSlider = true;
-                            this.params.PRODUCT.SLIDER[j].WIDTH = parseInt(this.params.PRODUCT.SLIDER[j].WIDTH, 10);
-                            this.params.PRODUCT.SLIDER[j].HEIGHT = parseInt(this.params.PRODUCT.SLIDER[j].HEIGHT, 10);
+                            this.params.PRODUCT.SLIDER[j].WIDTH = parseInt(this.params.PRODUCT.SLIDER[j]?.WIDTH, 10) ?? 200;
+                            this.params.PRODUCT.SLIDER[j].HEIGHT = parseInt(this.params.PRODUCT.SLIDER[j]?.HEIGHT, 10) ?? 200;
                         }
 
                         this.product.sliderPict = this.params.PRODUCT.SLIDER;

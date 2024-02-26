@@ -24,7 +24,8 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
         BX.message({'BPC_ERROR_NO_TEXT': '<?=GetMessage("BPC_ERROR_NO_TEXT")?>'});
     });
 </script>
-<div class="blog-comments" id="blg-comment-<?= $arParams["ID"] ?>">
+
+<div class="blog-comments md:w-2/3 w-full" id="blg-comment-<?= $arParams["ID"] ?>">
     <?
     if ($arResult["is_ajax_post"] != "Y") {
         include($_SERVER["DOCUMENT_ROOT"] . $templateFolder . "/script.php");
@@ -148,10 +149,8 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
 
                         echo makeInputsFromParams($arParams["PARENT_PARAMS"]);
                         echo bitrix_sessid_post(); ?>
-                        <div class="blog-comment-fields">
-                            <?
-                            if (empty($arResult["User"])) {
-                                ?>
+                        <div class="rounded-xl bg-white  border border-textDark border-b-0 dark:border-0 dark:bg-dark mb-8">
+                            <?php if (empty($arResult["User"])) { ?>
                                 <div class="blog-comment-field blog-comment-field-user">
                                     <div class="blog-comment-field blog-comment-field-author">
                                         <div class="blog-comment-field-text"><label
@@ -172,9 +171,7 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                 </div>
                                 <?
                             }
-                            ?>
-                            <? if ($arParams["NOT_USE_COMMENT_TITLE"] != "Y") {
-                                ?>
+                            if ($arParams["NOT_USE_COMMENT_TITLE"] != "Y") { ?>
                                 <div class="blog-comment-field blog-comment-field-title">
                                     <div class="blog-comment-field">
                                         <div class="blog-comment-field-text"><label
@@ -184,13 +181,11 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                         <div class="blog-clear-float"></div>
                                     </div>
                                 </div>
-                                <?
+                                <?php
                             }
 
                             include($_SERVER["DOCUMENT_ROOT"] . $templateFolder . "/neweditor.php");
-
-                            if ($arResult["COMMENT_PROPERTIES"]["SHOW"] == "Y") {
-                                ?><br/><?
+                            if ($arResult["COMMENT_PROPERTIES"]["SHOW"] == "Y") { ?><br/><?php
                                 $eventHandlerID = false;
                                 $eventHandlerID = AddEventHandler('main', 'system.field.edit.file', array('CBlogTools', 'blogUFfileEdit'));
                                 foreach ($arResult["COMMENT_PROPERTIES"]["DATA"] as $FIELD_NAME => $arPostField) {
@@ -201,21 +196,20 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                     ?>
                                     <div
                                     id="blog-comment-user-fields-<?= $FIELD_NAME ?>"><?= ($FIELD_NAME == 'UF_BLOG_COMMENT_DOC' ? "" : $arPostField["EDIT_FORM_LABEL"] . ":") ?>
-                                    <? $APPLICATION->IncludeComponent(
+                                    <?php $APPLICATION->IncludeComponent(
                                         "bitrix:system.field.edit",
                                         $arPostField["USER_TYPE"]["USER_TYPE_ID"],
                                         array("arUserField" => $arPostField), null, array("HIDE_ICONS" => "Y")); ?>
-                                    </div><?
+                                    </div><?php
                                 }
                                 if ($eventHandlerID !== false && (intval($eventHandlerID) > 0))
                                     RemoveEventHandler('main', 'system.field.edit.file', $eventHandlerID);
                             }
-
                             if ($arResult["NoCommentReason"] <> '') {
                                 ?>
                                 <div id="nocommentreason"
                                      style="display:none;"><?= $arResult["NoCommentReason"] ?></div>
-                                <?
+                                <?php
                             }
                             if ($arResult["use_captcha"] === true) {
                                 ?>
@@ -234,10 +228,7 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                         </div>
                                     </div>
                                 </div>
-                                <?
-                            }
-                            ?>
-
+                            <?php } ?>
                             <?php
                             //					only for not registered users
                             if ($arResult['userID'] == null && $arParams['USER_CONSENT'] == 'Y') {
@@ -260,9 +251,10 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                 );
                             }
                             ?>
-
-                            <div class="blog-comment-buttons">
-                                <input tabindex="10" value="Добавить" type="button" class="btn_basket"
+                            <div class="w-full">
+                                <input tabindex="10" value="Отправить" type="button"
+                                       class="btn_basket w-full shadow-md text-white font-normal dark:font-light
+                                       text-base dark:bg-dark-red bg-light-red py-2.5 px-4 rounded-b-xl"
                                        name="sub-post" id="post-button" onclick="submitCommentNew()">
                             </div>
                         </div>
@@ -271,7 +263,7 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                 </div>
             </div>
         </div>
-    <?
+    <?php
     }
 
     $prevTab = 0;
@@ -335,8 +327,8 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                     $aditStyle .= " blog-comment-preview";
                 ?>
                 <div class="blog-comment-cont">
-                    <div class="blog-comment-cont-white">
-                        <div class="blog-comment-info">
+                    <div class="blog-comment-cont-white rounded-lg">
+                        <div class="blog-comment-info mb-3">
                             <div>
                                 <? if ($arParams["SHOW_RATING"] == "Y"): ?>
                                     <div class="blog-post-rating rating_vote_graphic">
@@ -381,7 +373,7 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
 
                                 if ($comment["urlToBlog"] <> '') {
                                     ?>
-                                    <div class="blog-author">
+                                    <div class="blog-author text-textLight dark:text-textDarkLightGray text-lg">
                                         <?
 
                                         $GLOBALS["APPLICATION"]->IncludeComponent("bitrix:main.user.link",
@@ -418,7 +410,7 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                     <?
                                 } elseif ($comment["urlToAuthor"] <> '') {
                                     ?>
-                                    <div class="blog-author">
+                                    <div class="blog-author text-textLight dark:text-textDarkLightGray text-lg">
                                         <? if ($arParams["SEO_USER"] == "Y"): ?>
                                         <noindex>
                                             <?endif;
@@ -461,7 +453,7 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                     <?
                                 } else {
                                     ?>
-                                    <div class="blog-author"><?= $comment["AuthorName"] ?></div>
+                                    <div class="blog-author text-textLight dark:text-textDarkLightGray text-lg"><?= $comment["AuthorName"] ?></div>
                                     <?
                                 }
 
@@ -474,7 +466,7 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                 $date = explode(' ', $comment["DateFormated"]);
                                 $dateNews = explode(':', $date[1]);
                                 ?>
-                                <div class="blog-comment-date"><span><?= $date[0] ?></span>
+                                <div class="blog-comment-date text-"><span><?= $date[0] ?></span>
                                     <span><?= $dateNews[0] . ':' . $dateNews[1] ?></span></div>
                                 <?
                                 if ($comment["ON_MODERATION"] == 'Y') { ?>
@@ -482,46 +474,9 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                     <?
                                 } ?>
                             </div>
-                            <!--                            --><?php
-                            //                            /**
-                            //                             * @var CAllMain|CMain $APPLICATION
-                            //                             */
-                            //                            $item_id = [];
-                            //                            $id_USER = $comment["arUser"]["ID"];
-                            //                            $FUser_id = Fuser::getId($id_USER);
-                            //
-                            //                            $item_id[] = $comment['ID'];
-                            //                            $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
-                            //                            foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
-                            //                                if ($keyLike == $comment['ID']) {
-                            //                                    $comment['COUNT_LIKES'] = $count;
-                            //                                }
-                            //                            }
-                            //                            foreach ($count_likes['USER'] as $keyFav => $count) {
-                            //                                if ($keyFav == $comment['ID']) {
-                            //                                    $comment['COUNT_LIKE'] = $count['Like'][0];
-                            //                                    $comment['COUNT_FAV'] = $count['Fav'][0];
-                            //                                }
-                            //                            }
-                            //                            $APPLICATION->IncludeComponent('bitrix:Like_Favorites',
-                            //                                'templates',
-                            //                                array(
-                            //                                    'ID_PROD' => $comment['ID'],
-                            //                                    'F_USER_ID' => $FUser_id,
-                            //                                    'LOOK_LIKE' => true,
-                            //                                    'LOOK_FAVORITE' => true,
-                            //                                    'COUNT_LIKE' => $comment['COUNT_LIKE'],
-                            //                                    'COUNT_FAV' => $comment['COUNT_FAV'],
-                            //                                    'COUNT_LIKES' => $comment['COUNT_LIKES'],
-                            //                                )
-                            //                                ,
-                            //                                $component,
-                            //                                array('HIDE_ICONS' => 'Y')
-                            //                            );
-                            ?>
                         </div>
                         <div class="blog-clear-float"></div>
-                        <div class="blog-comment-content">
+                        <div class="blog-comment-content font-normal dark:font-light">
                             <? if ($comment["TitleFormated"] <> '') {
                                 ?>
                                 <b><?= $comment["TitleFormated"] ?></b><br/>
@@ -679,10 +634,11 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                 }
                 ?>
             </div>
-            <div id="err_comment_<?= $comment['ID'] ?>"></div>
-            <div id="form_comment_<?= $comment['ID'] ?>"></div>
-            <div id="new_comment_cont_<?= $comment['ID'] ?>" style="padding-left:<?= $paddingSizeNew ?>em;"></div>
-            <div id="new_comment_<?= $comment['ID'] ?>" style="display:none;"></div>
+            <div id="err_comment_<?= $comment['ID'] ?>" class="mb-5"></div>
+            <div id="form_comment_<?= $comment['ID'] ?>" class="mb-5"></div>
+            <div id="new_comment_cont_<?= $comment['ID'] ?>" style="padding-left:<?= $paddingSizeNew ?>em;"
+                 class="mb-5"></div>
+            <div id="new_comment_<?= $comment['ID'] ?>" style="display:none;" class="mb-5"></div>
             <!-- placeholder for past editor -->
             <div id="record-<?= $arParams["ENTITY_XML_ID"] ?>-<?= $comment["ID"] ?>-placeholder"
                  class="blog-comment-edit feed-com-add-block blog-post-edit" style="display:none;"></div>
@@ -781,26 +737,26 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
     if ($arParams["NOT_USE_COMMENT_TITLE"] != "Y")
         $postTitle = "RE: " . CUtil::JSEscape($arResult["Post"]["TITLE"]);
     ?>
-        <div class="blog-add-comment">
-            <a class=" text-lightGrayBg dark:text-white bg-textDarkLightGray dark:bg-grayButton dark:font-normal md:mb-0 mb-8
-              px-7 md:py-3.5 py-3 text-sm md:rounded-lg rounded-md font-semibold md:shadow-md shadow-sm shadow-shadowDark"
-               href="javascript:void(0)" onclick="return editCommentNew('0',
-            <?= $arParams["ID"] ?>)" id="<?= $arParams["ID"] ?>">
-                <svg width="28" height="26" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7.34447 20.4322L7.38421 20.0318L7.13547 19.7154C5.98172 18.248 5.3906 16.5763 5.3906 14.8683C5.3906 10.0257 10.2767 5.76416 16.715 5.76416C23.1533 5.76416 28.0394 10.0257 28.0394 14.8683C28.0394 19.7109 23.1533 23.9724 16.715 23.9724C15.0772 23.9724 13.5034 23.6961 12.0304 23.1547L11.6133 23.0014L11.22 23.2082C9.59156 24.0645 7.5452 24.5787 6.18939 24.8504C6.35764 24.5312 6.50542 24.1877 6.63471 23.8273C6.98043 22.8635 7.21729 21.7137 7.34447 20.4322Z" stroke="#1C1C1C" stroke-width="2"/>
+        <div class="mb-5">
+            <a class="text-lightGrayBg dark:text-white bg-textDark dark:bg-grayButton dark:font-normal md:mb-0 mb-8
+              px-5 md:py-3 py-3 text-xl md:rounded-lg rounded-md w-fit font-semibold flex flex-row items-center justify-start"
+               href="javascript:void(0)"
+               onclick="return editCommentNew('0',<?= $arParams["ID"] ?>)" id="<?= $arParams["ID"] ?>">
+                <svg width="28" height="26" viewBox="0 0 33 31" class="stroke-dark dark:stroke-white mr-1" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.34447 20.4322L7.38421 20.0318L7.13547 19.7154C5.98172 18.248 5.3906 16.5763 5.3906 14.8683C5.3906 10.0257 10.2767 5.76416 16.715 5.76416C23.1533 5.76416 28.0394 10.0257 28.0394 14.8683C28.0394 19.7109 23.1533 23.9724 16.715 23.9724C15.0772 23.9724 13.5034 23.6961 12.0304 23.1547L11.6133 23.0014L11.22 23.2082C9.59156 24.0645 7.5452 24.5787 6.18939 24.8504C6.35764 24.5312 6.50542 24.1877 6.63471 23.8273C6.98043 22.8635 7.21729 21.7137 7.34447 20.4322Z"
+                          stroke-width="2"/>
                 </svg>
-                Добавить комментарий
+                +
             </a>
         </div>
 
-        <?
-    if ($arResult["COMMENT_ERROR"] <> '' && mb_strlen($_POST["parentId"]) < 2
-        && intval($_POST["parentId"]) == 0 && intval($_POST["edit_id"]) <= 0) {
-        ?>
+        <?php if ($arResult["COMMENT_ERROR"] <> '' && mb_strlen($_POST["parentId"]) < 2
+        && intval($_POST["parentId"]) == 0 && intval($_POST["edit_id"]) <= 0) { ?>
         <div class="blog-errors blog-note-box blog-note-error">
             <div class="blog-error-text"><?= $arResult["COMMENT_ERROR"] ?></div>
         </div>
-    <?
+    <?php
     }
     }
     } else { ?>
@@ -820,7 +776,7 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
             <div class="flex md:flex-row flex-col items-center xl:p-5 p-3 justify-between relative">
                 <div class="text-center md:text-base text-sm font-medium text-lightGrayBg dark:text-textDarkLightGray
                                     dark:font-normal w-full box_with_basket_login">
-                    Для написания комментария вам необходимо Авторизоваться
+                    Для написания комментария вам необходимо
                     <a href="javascript:void(0)"
                        class="text-light-red underline font-semibold dark:text-white ink_header link_header_box ">
                         Авторизоваться

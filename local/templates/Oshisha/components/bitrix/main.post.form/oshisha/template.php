@@ -77,7 +77,7 @@ foreach($arParams["BUTTONS"] as $val)
 			<span class="feed-add-post-dnd-text"><?=GetMessage("MPF_DRAG_ATTACHMENTS")?></span>
 		</div>
 	</div><?
-	?><div class="feed-add-post-form feed-add-post-edit-form">
+	?><div class="feed-add-post-edit-form">
 		<?= $arParams["~HTML_BEFORE_TEXTAREA"]?>
 		<div class="feed-add-post-text">
 			<script type="text/javascript">

@@ -64,8 +64,16 @@ if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
 
             $basket->save();
         }
-        $answer['QUANTITY'] = round(array_sum($basket->getQuantityList())??0);
-        $answer['SUM_PRICE'] = round($basket->getPrice()??0);
+        try {
+            $answer['QUANTITY'] = round(array_sum($basket->getQuantityList()));
+        } catch (\Bitrix\Main\ArgumentNullException $e) {
+            $answer['QUANTITY'] = 0;
+        }
+        try {
+            $answer['SUM_PRICE'] = round($basket->getPrice() ?? 0);
+        } catch (\Bitrix\Main\ArgumentNullException $e) {
+            $answer['SUM_PRICE']= 0;
+        }
         $answer['STATUS'] = 'success';
     }
 }
