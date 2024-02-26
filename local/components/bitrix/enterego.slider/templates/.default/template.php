@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\Loader;
+use Enterego\contragents\EnteregoContragents;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var array $arParams */
@@ -24,6 +25,8 @@ Loader::includeModule('catalog');
 $this->setFrameMode(true);
 
 if (isset($arParams['SECTIONS_ITEMS'])) {
+    // CONTRAGENT Есть ли контрагент у пользователя или нет - зависит возможность покупки
+    $userViewPrice = EnteregoContragents::getActiveContragentForUser($USER->GetID());
     $positionClassMap = array(
         'left' => 'product-item-label-left',
         'center' => 'product-item-label-center',
@@ -139,6 +142,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
                                         'BIG_BUTTONS' => 'Y',
                                         'SCALABLE' => 'N',
                                         'AR_BASKET' => $arParams['BASKET_ITEMS'],
+                                        'ADD_TO_BASKET' => $userViewPrice,
                                         'F_USER_ID' => $arResult['F_USER_ID'],
                                         'ID_PROD' => $arItem['ID'],
                                         'COUNT_LIKE' => $arItem['COUNT_LIKE'],
@@ -183,10 +187,14 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             arrows: true,
             infinite: false,
             variableWidth: variableWidth,
-            prevArrow: '<span class="text-6xl cursor-pointer text-gray-slider-arrow flex items-center absolute inset-y-0 left-0"  aria-hidden="true"><i class="fa fa-angle-left"'
-                + ' aria-hidden="true"></i></span>',
-            nextArrow: '<span class="text-6xl cursor-pointer inset-y-0 right-0 flex items-center absolute dark:text-white" aria-hidden="true"><i class="fa fa-angle-right"'
-                + ' aria-hidden="true"></i></span>',
+            prevArrow: '<span class="text-6xl cursor-pointer text-gray-slider-arrow flex items-center absolute inset-y-0 left-0"  aria-hidden="true">' +
+                '<svg width="15" height="25" viewBox="0 0 15 25" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+                '<path d="M12.6665 23.3333L1.99984 12.6667L12.6665 2" stroke="#D9D9D9" stroke-width="3" ' +
+                'stroke-linecap="round" stroke-linejoin="round"/></svg></span>',
+            nextArrow: '<span class="text-6xl cursor-pointer inset-y-0 right-0 flex items-center absolute dark:text-white" aria-hidden="true">' +
+                '<svg width="15" height="25" viewBox="0 0 15 25" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+                '<path d="M2 23.3333L12.6667 12.6667L2 2" stroke="#1C1C1C" stroke-width="3" stroke-linecap="round" ' +
+                'stroke-linejoin="round"/></svg></span>',
         })
     }
 </script>

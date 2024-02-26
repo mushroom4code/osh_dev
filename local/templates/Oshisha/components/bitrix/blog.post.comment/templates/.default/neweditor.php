@@ -51,7 +51,7 @@ if(array_key_exists("EDITOR_USE_IMAGE", $arResult["Blog"]) && $arResult["Blog"][
 
 $APPLICATION->IncludeComponent(
 	"bitrix:main.post.form",
-	"",
+	"oshisha",
 	$postFormParams,
 	$component,
 	array("HIDE_ICONS" => "Y")

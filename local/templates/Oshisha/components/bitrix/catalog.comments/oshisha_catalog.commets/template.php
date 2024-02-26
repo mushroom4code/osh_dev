@@ -21,8 +21,8 @@ $templateData = array(
 	'BLOG' => array(
 		'BLOG_FROM_AJAX' => $arResult['BLOG_FROM_AJAX'],
 	),
-	'TEMPLATE_THEME' => $this->GetFolder().'/themes/'.$arParams['TEMPLATE_THEME'].'/style.css',
-	'TEMPLATE_CLASS' => 'bx_'.$arParams['TEMPLATE_THEME']
+//	'TEMPLATE_THEME' => $this->GetFolder().'/themes/'.$arParams['TEMPLATE_THEME'].'/style.css',
+//	'TEMPLATE_CLASS' => 'bx_'.$arParams['TEMPLATE_THEME']
 );
 
 if (!$templateData['BLOG']['BLOG_FROM_AJAX'])

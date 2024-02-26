@@ -802,9 +802,11 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             </ul>
             <div class="tab-content mt-5">
                 <?php if ($showDescription) { ?>
-                    <div class="tab-pane block md:mt-8 mt-5" id="pills-home">
+                    <div class="tab-pane hidden md:mt-8 mt-5" id="pills-home">
                         <?php if ($arResult['DETAIL_TEXT'] != '') {
-                            echo $arResult['DETAIL_TEXT_TYPE'] === 'html' ? $arResult['DETAIL_TEXT'] : '<p>' . $arResult['DETAIL_TEXT'] . '</p>';
+                            echo $arResult['DETAIL_TEXT_TYPE'] === 'html' ? $arResult['DETAIL_TEXT'] :
+                                '<p class="xl:text-sm text-xs mb-4 text-lightGrayBg font-normal dark:font-light
+                        dark:text-textDarkLightGray">' . $arResult['DETAIL_TEXT'] . '</p>';
                         } ?>
                     </div>
                     <?php
@@ -843,7 +845,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                             'FB_COLORSCHEME' => 'light',
                             'FB_ORDER_BY' => 'reverse_time',
                             'VK_TITLE' => '',
-                            'TEMPLATE_THEME' => $arParams['~TEMPLATE_THEME']
                         );
                         if (isset($arParams["USER_CONSENT"])) {
                             $componentCommentsParams["USER_CONSENT"] = $arParams["USER_CONSENT"];
