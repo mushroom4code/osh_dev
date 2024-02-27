@@ -21,6 +21,12 @@ if (defined('IS_MERCH_PROPERTY')) {
         '!=PROPERTY_'.IS_MERCH_PROPERTY.'_VALUE' => 'Да'
     );
 }
+//TODO local redirect for category 18+
+if (CATEGORY_DISABLED) {
+    $GLOBALS['ArFilter'] = array(
+        '!=PROPERTY_SEE_PRODUCT_AUTH_VALUE' => 'Нет'
+    );
+}
 
 $parameters = EnteregoHelper::getDefaultCatalogParameters();
 $parameters['FILTER_NAME'] = 'ArFilter';
