@@ -29,9 +29,8 @@ if (SITE_ID !== SITE_EXHIBITION) {
         ));
     }
 
-    //TODO local redirect for category 18+
     if (CATEGORY_DISABLED) {
-        $GLOBALS['ArFilter']['!=PROPERTY_SEE_PRODUCT_AUTH_VALUE'] = 'Нет';
+        LocalRedirect('/404.php');
     }
 
     $GLOBALS['ArPreFilter'] = array(
