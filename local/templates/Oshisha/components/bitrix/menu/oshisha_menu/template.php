@@ -88,7 +88,14 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         }
 
         $result = json_encode($menu_for_JS);
-        if ($showUserContent) { ?>
+        if ($showUserContent) {
+            if (!CATEGORY_DISABLED) { ?>
+                <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+                    <a class="link_menu_header" href="/diskont/">
+                        <span class="text_catalog_link">Дисконт</span>
+                    </a>
+                </li>
+                <?php } ?>
             <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
                 <a class="link_menu_header" href="/catalog_new/">
                     <span class="text_catalog_link">Новинки</span>
@@ -278,7 +285,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         for (let i = 0; i < listLength; i++) {
 
             let itemList = res[i]
-            createItem(itemList, menu_items, parentId,classItem)
+            createItem(itemList, menu_items, parentId, classItem)
 
             if (res.length > maxLength) {
                 let newIndex = (Math.floor(res.length / 2) + i) + 1;
@@ -302,7 +309,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             classChild = 'child_js';
             href = 'javascript:void(0)'
         }
-        let item = '<div class="menu-item-line h-auto '+classItem+'">' +
+        let item = '<div class="menu-item-line h-auto ' + classItem + '">' +
             '<a class="link_menu_header link_menu d-flex align-items-center justify-content-between ' + classChild + '" ' +
             'href="' + href + '" data-parent-id="' + parentId + '" id="' + itemList[0] + '" data-href="' + val?.LINK + '"> ' +
             '<span class="text_catalog_link">' + val.TEXT + '</span> ' + down + ' </a>' +
