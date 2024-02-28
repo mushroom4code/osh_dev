@@ -90,11 +90,6 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         $result = json_encode($menu_for_JS);
         if ($showUserContent) { ?>
             <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
-                <a class="link_menu_header" href="/diskont/">
-                    <span class="text_catalog_link">Дисконт</span>
-                </a>
-            </li>
-            <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
                 <a class="link_menu_header" href="/catalog_new/">
                     <span class="text_catalog_link">Новинки</span>
                 </a>
