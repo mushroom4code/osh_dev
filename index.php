@@ -86,7 +86,7 @@ if (IsModuleInstalled("advertising")):?>
         <?php
 
         $SectionRes = CIBlockElement::GetList(array(),
-            array('ACTIVE' => 'Y', 'IBLOCK_CODE' => 'brandsOnMain', 'IBLOCK_ID' => 21),
+            array('ACTIVE' => 'Y', 'IBLOCK_CODE' => 'brandsOnMain'),
             false, false, array("CODE", 'NAME', 'ID', 'PREVIEW_PICTURE', 'PROPERTY_LINK_ON_BRAND_MAIN_VALUE')
         );
         if (!empty($SectionRes)) { ?>
