@@ -86,7 +86,7 @@ if (IsModuleInstalled("advertising")):?>
         <?php
 
         $SectionRes = CIBlockElement::GetList(array(),
-            array('ACTIVE' => 'Y', 'IBLOCK_ID' => 21),
+            array('ACTIVE' => 'Y', 'IBLOCK_CODE' => 'brandsOnMain'),
             false, array("CODE", 'NAME', 'ID', 'PREVIEW_PICTURE', 'DESCRIPTION')
         );
         if (!empty($SectionRes)) {
@@ -95,8 +95,8 @@ if (IsModuleInstalled("advertising")):?>
                 Популярные бренды
             </div>
             <?php
-            while ($arSection = $SectionRes->GetNext()) { ?>
-                <div>
+            while ($arSection = $SectionRes->Fetch()) { ?>
+                <div class="md:w-1/4 w-full p-5 bg-textDark dark:bg-darkBox rounded-xl">
                     <h5 class="text-2xl font-semibold dark:font-medium text-textLight mb-8 dark:text-textDarkLightGray"><?= $arSection['NAME'] ?></h5>
                     <div class="mb-5">
                         <?= $arSection['NAME']?>
