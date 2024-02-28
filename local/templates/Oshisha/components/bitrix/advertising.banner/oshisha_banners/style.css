@@ -29,3 +29,12 @@ html.dark .swiper-pagination-bullet:not(.swiper-pagination-bullet-active) {
 .slick-dotted.slick-slider {
     margin-bottom: 0 !important;
 }
+
+.box_with_banner_dop .carousel-item-elems a {
+    max-height: 550px
+}
+
+.box_with_banner_dop .carousel-item-elems a img {
+    max-height: inherit;
+    object-fit: cover;
+}

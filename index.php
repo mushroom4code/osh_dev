@@ -90,6 +90,11 @@ if (IsModuleInstalled("advertising")):?>
             false, array("CODE", 'NAME', 'ID', 'PREVIEW_PICTURE', 'DESCRIPTION')
         );
         if (!empty($SectionRes)) {
+            ?>
+            <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight text-5xl mb-10 mt-16">
+                Популярные бренды
+            </div>
+            <?php
             while ($arSection = $SectionRes->GetNext()) { ?>
                 <div>
                     <h5 class="text-2xl font-semibold dark:font-medium text-textLight mb-8 dark:text-textDarkLightGray"><?= $arSection['NAME'] ?></h5>
@@ -107,7 +112,7 @@ if (SITE_ID !== SITE_EXHIBITION) { ?>
     </div>
     </div>
     </div>
-    <div class="box_with_banner_dop mb-7 w-full left-0 right-0">
+    <div class="box_with_banner_dop mb-7 w-full max-h-[550px] left-0 right-0">
         <?php $APPLICATION->IncludeComponent(
             "bitrix:advertising.banner",
             "oshisha_banners",
