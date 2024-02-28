@@ -152,7 +152,7 @@ function GroupedProductsProp({
 
         return (
             selectPropValue.length > 0 ?
-                <div className="flex flex-row mb-4">
+                <div className="flex flex-row mb-4 overflow-auto">
                     {dataProps.map((group, g_key) => {
                         const select = selectPropValue.find(item => arrayDiff(item.group, group) && item.prop === props[0]) !== undefined
                         return <GroupedProductsPropValue

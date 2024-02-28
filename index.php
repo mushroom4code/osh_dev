@@ -6,7 +6,7 @@ if (IsModuleInstalled("advertising")):?>
     <div class="mt-3 xl:container container">
         <div class="flex lg:flex-row flex-col-reverse justify-between w-full relative mb-10">
             <div class="banner_small lg:w-1/4 flex lg:flex-col flex-row justify-between lg:mr-8 mr-0">
-                <div class="w-full mb-5 rounded-lg lg:max-h-auto max-h-64">
+                <div class="w-full mb-3 rounded-lg lg:max-h-auto max-h-64 h-full">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:advertising.banner",
                         "oshisha_banners",
@@ -30,7 +30,7 @@ if (IsModuleInstalled("advertising")):?>
                         false
                     ); ?>
                 </div>
-                <div class="w-full rounded-lg lg:max-h-auto max-h-64">
+                <div class="w-full rounded-lg lg:max-h-auto max-h-64 h-full">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:advertising.banner",
                         "oshisha_banners",
@@ -55,7 +55,7 @@ if (IsModuleInstalled("advertising")):?>
                     ); ?>
                 </div>
             </div>
-            <div class="max-w-6xl lg:w-3/4 w-full lg:mb-0 mb-5 rounded-lg relative flex justify-center items-center overflow-hidden">
+            <div class="max-w-6xl lg:w-3/4 w-full lg:mb-0 mb-5 rounded-lg relative flex justify-center items-center overflow-visible">
                 <?php $APPLICATION->IncludeComponent(
                     "bitrix:advertising.banner",
                     "oshisha_banners",
@@ -90,13 +90,14 @@ if (IsModuleInstalled("advertising")):?>
             false, false, array("CODE", 'NAME', 'ID', 'PREVIEW_PICTURE', 'PROPERTY_LINK_ON_BRAND_MAIN_VALUE')
         );
         if (!empty($SectionRes)) { ?>
-            <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight text-5xl mb-10 mt-20">
+            <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight md:text-5xl text-2xl md:mb-10 mb-5 mt-5 md:mt-20">
                 Популярные бренды
             </div>
             <div class="flex md:flex-row flex-wrap flex-col mb-10">
                 <?php while ($arSection = $SectionRes->Fetch()) { ?>
                     <div class="xl:w-1/4 lg:w-1/3 md:w-1/2 w-full h-fit">
-                        <div class="w-auto h-full px-5 py-12 bg-textDark dark:bg-darkBox shadow-lg rounded-xl mr-5 mb-5 flex justify-center items-center">
+                        <div class="w-auto h-full px-5 py-12 bg-textDark dark:bg-darkBox shadow-lg rounded-xl md:mr-5
+                         mr-0 mb-5 flex justify-center items-center">
                             <a href="<?= !empty($arSection['PROPERTY_LINK_ON_BRAND_MAIN_VALUE'])
                                 ? $arSection['PROPERTY_LINK_ON_BRAND_MAIN_VALUE'] : 'javascript:void(0)' ?>">
                                 <img src="<?= CFile::GetByID($arSection['PREVIEW_PICTURE'])->Fetch()['SRC'] ?>"
@@ -230,7 +231,7 @@ if (SITE_ID !== SITE_EXHIBITION) { ?>
     </div>
 
     <?php if (defined('PROPERTY_USE_ON_MAIN_PAGE')) { ?>
-        <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight text-5xl mb-4">Распродажа
+        <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight md:text-5xl text-2xl mb-4">Распродажа
         </div>
         <div class="by-card mb-7">
             <?php

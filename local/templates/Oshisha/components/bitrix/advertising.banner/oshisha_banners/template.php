@@ -37,18 +37,11 @@
                 <div class="carousel-inner carousel-inner-main" role="listbox">
                     <div class="slick-wrap mb-0">
                         <?php foreach ($arResult["BANNERS"] as $k => $banner): ?>
-
                             <div class=" carousel-item-elems <?php if ($k == 0) echo 'active'; ?>">
-                                <?php if ($arParams['TYPE'] === 'MAIN') { ?>
-                                    <div class="link_banner" style="display:none;">
-                                        <a href="javascript:void(0);">Новинка</a>
-                                    </div>
-                                <?php } ?>
                                 <?= $banner ?>
                             </div>
                         <?php endforeach; ?>
                     </div>
-
                 </div>
                 <div class="carousel-indicators absolute inset-x-0 top-full"></div>
             <?php } else { ?>
@@ -65,7 +58,7 @@
                     <a href="#carousel-<?= $arResult['ID'] ?>"
                        class="carousel-nav-<?= $arParams['TYPE'] ?>-prev
                    carousel_custom absolute inset-y-0 -left-4 flex items-center z-5" role="button" data-slide="prev">
-                    <span class="text-white hover:bg-white bg-light-red dark:bg-dark-red py-3 px-4 text-3xl rounded-full hover:text-dark">
+                    <span class="text-white hover:bg-lightGrayBg bg-light-red dark:bg-dark-red py-3 px-4 text-3xl rounded-full hover:text-dark">
                         <svg width="18" height="25" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M8 14.3333L1.33333 7.66667L8 1" stroke="white" stroke-width="2"
                                   stroke-linecap="round"
@@ -76,7 +69,7 @@
                     <a href="#carousel-<?= $arResult['ID'] ?>"
                        class="carousel-nav-<?= $arParams['TYPE'] ?>-next carousel_custom_next  absolute inset-y-0 -right-4 z-5
                    flex items-center" role="button" data-slide="next">
-                    <span class="text-white hover:bg-white bg-light-red dark:bg-dark-red py-3 px-4 text-3xl rounded-full hover:text-dark">
+                    <span class="text-white hover:bg-lightGrayBg bg-light-red dark:bg-dark-red py-3 px-4 text-3xl rounded-full hover:text-dark">
                          <svg width="18" height="25" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1 14.3333L7.66667 7.66667L1 1" stroke="white" stroke-width="2"
                                   stroke-linecap="round"
@@ -110,42 +103,22 @@
                         slidesToShow: 1,
                         arrows: true,
                         infinite: true,
-                        autoplay: true,
-                        autoplaySpeed: 2000,
+                        // autoplay: true,
+                        // autoplaySpeed: 2000,
                         dots: true,
-                        prevArrow: '<span class="absolute inset-y-0 -left-4 flex items-center z-20"  aria-hidden="true">' +
-                            '<span class="text-white hover:bg-white bg-light-red dark:bg-dark-red py-3 px-4 text-3xl rounded-full hover:text-dark"> ' +
+                        prevArrow: '<span class="absolute inset-y-0 -left-4 flex items-center z-20 cursor-pointer"  aria-hidden="true">' +
+                            '<span class="text-white hover:bg-lightGrayBg transition hover:transition bg-light-red' +
+                            '  dark:bg-dark-red md:py-2.5 md:px-3.5 py-1.5 px-2.5 rounded-full hover:text-dark"> ' +
                             '<svg width="18" height="25" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg"> ' +
                             '<path d="M8 14.3333L1.33333 7.66667L8 1" stroke="white" stroke-width="2" stroke-linecap="round" ' +
                             'stroke-linejoin="round"/> </svg> </span></span>',
-                        nextArrow: '<span class="absolute inset-y-0 -right-4 20 flex items-center" aria-hidden="true">' +
-                            '    <span class="text-white hover:bg-white bg-light-red dark:bg-dark-red py-3 px-4 text-3xl rounded-full hover:text-dark"> ' +
+                        nextArrow: '<span class="absolute inset-y-0 -right-4 20 flex items-center cursor-pointer" aria-hidden="true">' +
+                            '    <span class="text-white hover:bg-lightGrayBg transition bg-light-red dark:bg-dark-red' +
+                            ' md:py-2.5 md:px-3.5 py-1.5 px-2.5 rounded-full hover:text-dark hover:transition"> ' +
                             '<svg width="18" height="25" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg"> ' +
                             '<path d="M1 14.3333L7.66667 7.66667L1 1" stroke="white" stroke-width="2"' +
-                            'stroke-linecap="round"stroke-linejoin="round"/> </svg> </span></span>',
+                            ' stroke-linecap="round" stroke-linejoin="round"/> </svg> </span></span>',
                     })
-
-                    // var swiper = new Swiper('.carousel-inner-main', {
-                    //     slidesPerView: 1,
-                    //     adaptiveHeight: true,
-                    //     spaceBetween: 0,
-                    //     speed: 1500,
-                    //
-                    //     autoplay: {
-                    //         enabled: true,
-                    //         delay: 4000,
-                    //     },
-                    //     pagination: {
-                    //         el: '.swiper-pagination-block',
-                    //         clickable: true,
-                    //     },
-                    //     loop: true,
-                    //     navigation: {
-                    //         prevEl: '.carousel-nav-MAIN-prev',
-                    //         nextEl: '.carousel-nav-MAIN-next'
-                    //     },
-                    //
-                    // });
                 </script>
             <?php }else{ ?>
                 <script>

@@ -768,7 +768,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
         <div class="tab-box">
             <ul class="nav nav-fill flex flex-row flex-wrap justify-content-between mb-3 mt-5"
                 role="tablist">
-                <?php if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
                     <li class="nav-item text-center w-1/3 md:p-4 p-2 border-b-2 border-light-red dark:border-white pointer">
                         <a class="nav-link text-center tab-product active" id="pills-profile"
                            onclick="openTabContent(this)" href="javascript:void(0)">
@@ -777,7 +776,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                         </a>
                     </li>
                     <?php
-                }
                 if ($showDescription) { ?>
                     <li class="nav-item link text-center w-1/3 border-b-2 border-grey-line-order md:p-4 p-2
                 dark:border-grayButton pointer">

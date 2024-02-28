@@ -38,3 +38,7 @@ html.dark .swiper-pagination-bullet:not(.swiper-pagination-bullet-active) {
     max-height: inherit;
     object-fit: cover;
 }
+
+.slick-dots li button:before{
+    font-size: 12px;
+}
