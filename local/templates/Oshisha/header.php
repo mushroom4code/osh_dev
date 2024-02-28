@@ -138,48 +138,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 <div class="flex-row items-center md:flex hidden">
                     <span class="flex flex-row items-center">
                         <div class="dark:bg-dark-red bg-light-red p-1 w-2 h-2 mr-0.5 rounded-full"></div>
-                         <div class="dark:bg-dark-red bg-light-red p-1 w-2 h-2 mr-1.5 rounded-full"></div>
-                        <a href="#" class="leading-3">
-                            <div class="place">
-                                <?php $styleNone = '';
-                                if (strripos($_SERVER['REQUEST_URI'], '/personal/order/make') !== false) {
-                                    $styleNone = 'style="display:none;"';
-                                } ?>
-                                 <button type="button" data-toggle="modal" data-target="#placeModal"  <?= $styleNone ?>>
-                            <?php
-                            // отключение композитного кеша вне компонента
-                            Bitrix\Main\Page\Frame::getInstance()->startDynamicWithID("city-title");
-                            // динамический контент
-                            $code_region = $_SESSION["code_region"];
-
-                            if (empty($_SESSION["code_region"])) {
-
-                                $user_id = $USER->GetID();
-
-                                if (!empty($user_id)) {
-                                    if (!CModule::IncludeModule('sale')) {
-                                        return;
-                                    }
-                                    $UserPropsTable = Bitrix\Sale\Internals\UserPropsTable::getList(array('filter' => ['USER_ID' => $user_id,]));
-
-                                    $result = Bitrix\Sale\Internals\UserPropsValueTable::getList(array('filter' => ['USER_PROPS_ID' => $UserPropsTable->fetch()['ID'],
-                                        'NAME' => 'Город']));
-
-                                    $code_region = $result->fetch()['VALUE'];
-                                }
-                            } ?>
-                            <span id="city-title" class="dark:text-textDarkLightGray text-white lg:text-13 text-xs font-medium"
-                                  data-city="<?= $code_region ?>">
-                                        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
-                                        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_select.php") ?>
-                            </span>
-                            <?php Bitrix\Main\Page\Frame::getInstance()->finishDynamicWithID("city-title", ""); ?>
-                        </button>
-                            </div>
-                        </a>
+                         <div class="dark:bg-dark-red bg-light-red p-1 w-2 h-2 rounded-full"></div>
                     </span>
                     <a href="https://oshisha.net"
-                       class="dark:text-textDarkLightGray text-white lg:text-13 text-xs ml-5 mr-2 font-normal dark:hover:text-white
+                       class="dark:text-textDarkLightGray text-white lg:text-13 text-xs mx-2 font-normal dark:hover:text-white
              hover:text-hover-red">
                         Розничный сайт</a>
                 </div>
@@ -273,22 +235,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     </div>
                     <div class="ul_menu ul_menu_2 mt-5">
                         <div class="box_top_panel flex flex-col">
-                            <div class="box_with_contact py-4 w-screen dark:bg-grayButton bg-textDarkLightGray mb-4">
-                                <div class="px-4 flex flex-row items-center">
-                                    <span class="w-1 rounded-full bg-light-red p-1 header_icon mr-1"></span>
-                                    <span class="w-1 rounded-full bg-light-red p-1 header_icon mr-2"></span>
-                                    <a href="#" class="">
-                                        <div class="place">
-                                            <button type="button" class="place__button" data-toggle="modal"
-                                                    data-target="#placeModal">
-                                                <span class="text_catalog_link text-dark dark:text-white font-medium">
-                                                    <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
                             <div class="px-4 flex flex-col">
                                 <a href="/about/o-nas/" class="mb-4">
                                     <span class="font-normal dark:text-textDarkLightGray text-lightGrayBg mb-3 text-sm">
