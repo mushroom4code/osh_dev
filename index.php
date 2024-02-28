@@ -86,25 +86,27 @@ if (IsModuleInstalled("advertising")):?>
         <?php
 
         $SectionRes = CIBlockElement::GetList(array(),
-            array('ACTIVE' => 'Y', 'IBLOCK_CODE' => 'brandsOnMain'),
-            false, array("CODE", 'NAME', 'ID', 'PREVIEW_PICTURE', 'DESCRIPTION')
+            array('ACTIVE' => 'Y', 'IBLOCK_CODE' => 'brandsOnMain', 'IBLOCK_ID' => 21),
+            false, false, array("CODE", 'NAME', 'ID', 'PREVIEW_PICTURE', 'PROPERTY_LINK_ON_BRAND_MAIN_VALUE')
         );
-        if (!empty($SectionRes)) {
-            ?>
-            <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight text-5xl mb-10 mt-16">
+        if (!empty($SectionRes)) { ?>
+            <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight text-5xl mb-10 mt-20">
                 Популярные бренды
             </div>
-            <?php
-            while ($arSection = $SectionRes->Fetch()) { ?>
-                <div class="md:w-1/4 w-full p-5 bg-textDark dark:bg-darkBox rounded-xl">
-                    <h5 class="text-2xl font-semibold dark:font-medium text-textLight mb-8 dark:text-textDarkLightGray"><?= $arSection['NAME'] ?></h5>
-                    <div class="mb-5">
-                        <?= $arSection['NAME']?>
+            <div class="flex md:flex-row flex-wrap flex-col mb-10">
+                <?php while ($arSection = $SectionRes->Fetch()) { ?>
+                    <div class="xl:w-1/4 lg:w-1/3 md:w-1/2 w-full h-fit">
+                        <div class="w-auto h-full px-5 py-12 bg-textDark dark:bg-darkBox shadow-lg rounded-xl mr-5 mb-5 flex justify-center items-center">
+                            <a href="<?= !empty($arSection['PROPERTY_LINK_ON_BRAND_MAIN_VALUE'])
+                                ? $arSection['PROPERTY_LINK_ON_BRAND_MAIN_VALUE'] : 'javascript:void(0)' ?>">
+                                <img src="<?= CFile::GetByID($arSection['PREVIEW_PICTURE'])->Fetch()['SRC'] ?>"
+                                     class="object-contain h-14 invert-0 dark:invert"/>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            <?php }
-        }
-        ?>
+                <?php } ?>
+            </div>
+        <?php } ?>
     </div>
 <?php endif;
 if (SITE_ID !== SITE_EXHIBITION) { ?>
