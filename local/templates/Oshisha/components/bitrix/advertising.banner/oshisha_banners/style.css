@@ -39,6 +39,28 @@ html.dark .swiper-pagination-bullet:not(.swiper-pagination-bullet-active) {
     object-fit: cover;
 }
 
-.slick-dots li button:before{
+.slick-dots li button:before {
     font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .item-mobile-none {
+        display: none !important;
+    }
+
+    .slick-dots {
+        bottom: -16px;
+    }
+
+    .slick-dots li button:before {
+        font-size: 11px;
+    }
+
+    .slick-dots li button {
+        padding: 2px;
+    }
+
+    .slick-dots li {
+        margin: 0;
+    }
 }

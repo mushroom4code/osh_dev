@@ -103,19 +103,21 @@
                         slidesToShow: 1,
                         arrows: true,
                         infinite: true,
-                        // autoplay: true,
-                        // autoplaySpeed: 2000,
+                        autoplay: true,
+                        autoplaySpeed: 5000,
                         dots: true,
-                        prevArrow: '<span class="absolute inset-y-0 -left-4 flex items-center z-20 cursor-pointer"  aria-hidden="true">' +
+                        prevArrow: '<span class="absolute inset-y-0 -left-4 flex items-center z-20 cursor-pointer ' +
+                            'item-mobile-none"  aria-hidden="true">' +
                             '<span class="text-white hover:bg-lightGrayBg transition hover:transition bg-light-red' +
-                            '  dark:bg-dark-red md:py-2.5 md:px-3.5 py-1.5 px-2.5 rounded-full hover:text-dark"> ' +
-                            '<svg width="18" height="25" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg"> ' +
+                            '  dark:bg-dark-red py-2.5 px-3.5 rounded-full hover:text-dark"> ' +
+                            '<svg class="md:h-6 h-4 md:w-5 w-3.5" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg"> ' +
                             '<path d="M8 14.3333L1.33333 7.66667L8 1" stroke="white" stroke-width="2" stroke-linecap="round" ' +
                             'stroke-linejoin="round"/> </svg> </span></span>',
-                        nextArrow: '<span class="absolute inset-y-0 -right-4 20 flex items-center cursor-pointer" aria-hidden="true">' +
+                        nextArrow: '<span class="absolute inset-y-0 -right-4 20 flex items-center cursor-pointer ' +
+                            'item-mobile-none" aria-hidden="true">' +
                             '    <span class="text-white hover:bg-lightGrayBg transition bg-light-red dark:bg-dark-red' +
-                            ' md:py-2.5 md:px-3.5 py-1.5 px-2.5 rounded-full hover:text-dark hover:transition"> ' +
-                            '<svg width="18" height="25" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg"> ' +
+                            ' py-2.5 px-3.5 rounded-full hover:text-dark hover:transition"> ' +
+                            '<svg class="md:h-6 h-4 md:w-5 w-3.5" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg"> ' +
                             '<path d="M1 14.3333L7.66667 7.66667L1 1" stroke="white" stroke-width="2"' +
                             ' stroke-linecap="round" stroke-linejoin="round"/> </svg> </span></span>',
                     })
