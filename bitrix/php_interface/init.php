@@ -15,7 +15,7 @@ define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
-    '\PriceList' => '/bitrix/php_interface/enterego_class/PriceList.php',
+    '\Enterego\PriceList' => '/bitrix/php_interface/enterego_class/PriceList.php',
     '\Enterego\ProductDeactivation' => '/bitrix/php_interface/enterego_class/ProductDeactivation.php',
     'DataBase_like' => '/bitrix/modules/osh.like_favorites/lib/DataBase_like.php',
     '\Bitrix\Like\ORM_like_favoritesTable' => '/bitrix/modules/osh.like_favorites/lib/ORM_like_favoritesTable.php',
@@ -325,7 +325,7 @@ require_once(__DIR__ . '/enterego_class/EnteregoMakeProductsSubscriptionsReport.
  */
 function price_list(): string
 {
-    $new = new PriceList();
+    $new = new Enterego\PriceList();
     return 'price_list();';
 }
 

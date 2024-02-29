@@ -1,5 +1,6 @@
 <?php
-
+namespace Enterego;
+use COption;
 use Shuchkin\SimpleXLSXGen;
 
 /**
@@ -10,7 +11,6 @@ use Shuchkin\SimpleXLSXGen;
  */
 class PriceList
 {
-
     private $arResult = [];
     private $categories_id;
     private $price_list_dir;
@@ -18,7 +18,6 @@ class PriceList
 
     private $category_type = '';
     private $brand = '';
-
 
     public function __construct()
     {
@@ -49,9 +48,10 @@ class PriceList
             'Бренд',
             'Наименование',
             'Заказ штук',
-            'До 10 тыс. руб',
+            'b2b',
             'от 10 до 30 тыс.руб',
-            'от 30 тыс. руб', 'ссылка на продукт'];
+            'от 30 тыс. руб',
+            'ссылка на продукт'];
 
 
         $tree = \CIBlockSection::GetTreeList(array('DEPTH_LEVEL' => 1, 'ACTIVE' => 'Y'), array('ID', 'NAME'));
