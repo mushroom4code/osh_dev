@@ -2,7 +2,7 @@
 /** @var  CAllUser $USER */
 $user_consent = $USER->IsAuthorized() ?
     (new Cuser)->GetById($USER->GetID())->Fetch()[USER_CONSENT_PROPERTY] : false;
-if (!$USER->IsAuthorized() || $user_consent != '1'): ?>
+if (!$USER->IsAuthorized() && $user_consent != '1' || $user_consent != '1'): ?>
     <div id="consent-cookie-popup"
          class="dark:bg-darkBox bg-white shadow-lg z-20 dark:shadow-none fixed lg:xl:md:bottom-10 bottom-16
          lg:xl:md:left-10 hidden lg:xl:px-8 lg:xl:py-6 px-4 py-4 lg:xl:m-0 m-4 rounded-2xl
