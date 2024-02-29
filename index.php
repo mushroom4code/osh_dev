@@ -141,94 +141,7 @@ if (SITE_ID !== SITE_EXHIBITION) { ?>
     </div>
     <div class="section_wrapper min-h-550 flex flex-col items-center">
     <div class="container md:mb-8 mb-0 px-4 md:px-0">
-    <div class="flex md:flex-row flex-col mb-7 justify-between ">
-        <div class="md:w-6/12 w-full mb-2 md:pr-4 pr-0">
-            <?php $APPLICATION->IncludeComponent(
-                "bitrix:advertising.banner",
-                "oshisha_banners",
-                array(
-                    "ANIMATION_DURATION" => "500",
-                    "ARROW_NAV" => "1",
-                    "BS_ARROW_NAV" => "N",
-                    "BS_BULLET_NAV" => "N",
-                    "BS_CYCLING" => "N",
-                    "BS_EFFECT" => "fade",
-                    "BS_HIDE_FOR_PHONES" => "Y",
-                    "BS_HIDE_FOR_TABLETS" => "N",
-                    "BS_KEYBOARD" => "N",
-                    "BS_PAUSE" => "Y",
-                    "BS_WRAP" => "N",
-                    "BULLET_NAV" => "2",
-                    "CACHE_TIME" => "36000000",
-                    "CACHE_TYPE" => "Y",
-                    "COMPONENT_TEMPLATE" => "oshisha_banners",
-                    "CONTROL_NAV" => "Y",
-                    "CYCLING" => "N",
-                    "DEFAULT_TEMPLATE" => "-",
-                    "DIRECTION_NAV" => "Y",
-                    "EFFECT" => "random",
-                    "EFFECTS" => "",
-                    "HEIGHT" => "400",
-                    "JQUERY" => "Y",
-                    "KEYBOARD" => "N",
-                    "NOINDEX" => "Y",
-                    "PARALL_HEIGHT" => "400",
-                    "QUANTITY" => "1",
-                    "SCALE" => "N",
-                    "SPEED" => "500",
-                    "TYPE" => "NEW_MINI_FOOTER",
-                    "WRAP" => "1"
-                ),
-                false,
-                array(
-                    "ACTIVE_COMPONENT" => "Y"
-                )
-            ); ?>
-        </div>
-        <div class="md:w-6/12 w-full mb-7 md:pl-4 pl-0">
-            <?php $APPLICATION->IncludeComponent(
-                "bitrix:advertising.banner",
-                "oshisha_banners",
-                array(
-                    "ANIMATION_DURATION" => "500",
-                    "ARROW_NAV" => "1",
-                    "BS_ARROW_NAV" => "N",
-                    "BS_BULLET_NAV" => "N",
-                    "BS_CYCLING" => "N",
-                    "BS_EFFECT" => "slide",
-                    "BS_HIDE_FOR_PHONES" => "Y",
-                    "BS_HIDE_FOR_TABLETS" => "N",
-                    "BS_KEYBOARD" => "N",
-                    "BS_PAUSE" => "Y",
-                    "BS_WRAP" => "N",
-                    "BULLET_NAV" => "2",
-                    "CACHE_TIME" => "36000000",
-                    "CACHE_TYPE" => "N",
-                    "COMPONENT_TEMPLATE" => "oshisha_banners",
-                    "CONTROL_NAV" => "Y",
-                    "CYCLING" => "N",
-                    "DEFAULT_TEMPLATE" => "bootstrap_v4",
-                    "DIRECTION_NAV" => "Y",
-                    "EFFECT" => "random",
-                    "EFFECTS" => "",
-                    "HEIGHT" => "400",
-                    "JQUERY" => "Y",
-                    "KEYBOARD" => "N",
-                    "NOINDEX" => "Y",
-                    "PARALL_HEIGHT" => "400",
-                    "QUANTITY" => "1",
-                    "SCALE" => "N",
-                    "SPEED" => "500",
-                    "TYPE" => "NEW_MINI_FOOTER_2",
-                    "WRAP" => "1"
-                ),
-                false,
-                array(
-                    "ACTIVE_COMPONENT" => "Y"
-                )
-            ); ?>
-        </div>
-    </div>
+
 
     <?php if (defined('PROPERTY_USE_ON_MAIN_PAGE')) { ?>
         <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight md:text-5xl text-2xl mb-4">Распродажа
@@ -333,6 +246,94 @@ if (SITE_ID !== SITE_EXHIBITION) { ?>
         </div>
     <?php }
 } ?>
+    <div class="flex md:flex-row flex-col mt-7 justify-between ">
+        <div class="md:w-6/12 w-full mb-2 md:pr-4 pr-0">
+            <?php $APPLICATION->IncludeComponent(
+                "bitrix:advertising.banner",
+                "oshisha_banners",
+                array(
+                    "ANIMATION_DURATION" => "500",
+                    "ARROW_NAV" => "1",
+                    "BS_ARROW_NAV" => "N",
+                    "BS_BULLET_NAV" => "N",
+                    "BS_CYCLING" => "N",
+                    "BS_EFFECT" => "fade",
+                    "BS_HIDE_FOR_PHONES" => "Y",
+                    "BS_HIDE_FOR_TABLETS" => "N",
+                    "BS_KEYBOARD" => "N",
+                    "BS_PAUSE" => "Y",
+                    "BS_WRAP" => "N",
+                    "BULLET_NAV" => "2",
+                    "CACHE_TIME" => "36000000",
+                    "CACHE_TYPE" => "Y",
+                    "COMPONENT_TEMPLATE" => "oshisha_banners",
+                    "CONTROL_NAV" => "Y",
+                    "CYCLING" => "N",
+                    "DEFAULT_TEMPLATE" => "-",
+                    "DIRECTION_NAV" => "Y",
+                    "EFFECT" => "random",
+                    "EFFECTS" => "",
+                    "HEIGHT" => "400",
+                    "JQUERY" => "Y",
+                    "KEYBOARD" => "N",
+                    "NOINDEX" => "Y",
+                    "PARALL_HEIGHT" => "400",
+                    "QUANTITY" => "1",
+                    "SCALE" => "N",
+                    "SPEED" => "500",
+                    "TYPE" => "NEW_MINI_FOOTER",
+                    "WRAP" => "1"
+                ),
+                false,
+                array(
+                    "ACTIVE_COMPONENT" => "Y"
+                )
+            ); ?>
+        </div>
+        <div class="md:w-6/12 w-full mb-7 md:pl-4 pl-0">
+            <?php $APPLICATION->IncludeComponent(
+                "bitrix:advertising.banner",
+                "oshisha_banners",
+                array(
+                    "ANIMATION_DURATION" => "500",
+                    "ARROW_NAV" => "1",
+                    "BS_ARROW_NAV" => "N",
+                    "BS_BULLET_NAV" => "N",
+                    "BS_CYCLING" => "N",
+                    "BS_EFFECT" => "slide",
+                    "BS_HIDE_FOR_PHONES" => "Y",
+                    "BS_HIDE_FOR_TABLETS" => "N",
+                    "BS_KEYBOARD" => "N",
+                    "BS_PAUSE" => "Y",
+                    "BS_WRAP" => "N",
+                    "BULLET_NAV" => "2",
+                    "CACHE_TIME" => "36000000",
+                    "CACHE_TYPE" => "N",
+                    "COMPONENT_TEMPLATE" => "oshisha_banners",
+                    "CONTROL_NAV" => "Y",
+                    "CYCLING" => "N",
+                    "DEFAULT_TEMPLATE" => "bootstrap_v4",
+                    "DIRECTION_NAV" => "Y",
+                    "EFFECT" => "random",
+                    "EFFECTS" => "",
+                    "HEIGHT" => "400",
+                    "JQUERY" => "Y",
+                    "KEYBOARD" => "N",
+                    "NOINDEX" => "Y",
+                    "PARALL_HEIGHT" => "400",
+                    "QUANTITY" => "1",
+                    "SCALE" => "N",
+                    "SPEED" => "500",
+                    "TYPE" => "NEW_MINI_FOOTER_2",
+                    "WRAP" => "1"
+                ),
+                false,
+                array(
+                    "ACTIVE_COMPONENT" => "Y"
+                )
+            ); ?>
+        </div>
+    </div>
     </div>
     </div>
 <?php

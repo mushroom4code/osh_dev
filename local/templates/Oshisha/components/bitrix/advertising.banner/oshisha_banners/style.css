@@ -43,6 +43,19 @@ html.dark .swiper-pagination-bullet:not(.swiper-pagination-bullet-active) {
     font-size: 12px;
 }
 
+html.dark .slick-dots li button:before{
+    color:#555555;
+    opacity: 1;
+}
+
+html:not(.dark) .slick-dots li.slick-active button:before {
+    color: #cd1f1e;
+}
+
+html.dark .slick-dots li.slick-active button:before {
+    color: white;
+}
+
 @media (max-width: 768px) {
     .item-mobile-none {
         display: none !important;

@@ -102,7 +102,8 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             ?>
             <div id="<?= $strContID; ?>"
                  class="col2 <?= $templateData['TEMPLATE_CLASS']; ?>">
-                <div class="bx_catalog_tile_section max-w-full md:py-6 md:px-6 p-2" id="hits_slider_<?=$strRand?>">
+                <div class="bx_catalog_tile_section max-w-full md:py-6 md:px-6 p-2 min-h-[550px] flex justify-center items-center"
+                     id="hits_slider_<?=$strRand?>">
                     <?php
                     $boolFirst = true;
                     $arRowIDs = array();
@@ -128,7 +129,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
                             }
                         }
                         ?>
-                        <div class="product-item-small-card lg:w-72 md:w-1/3 w-1/2 h-96 pr-4 mb-7">
+                        <div class="product-item-small-card lg:w-72 md:w-1/3 w-1/2 max-h-96  h-full pr-4 mb-7">
                             <?php $APPLICATION->IncludeComponent(
                                 'bitrix:catalog.item',
                                 'oshisha_catalog.item',
@@ -187,13 +188,14 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             arrows: true,
             infinite: false,
             variableWidth: variableWidth,
-            prevArrow: '<span class="text-6xl cursor-pointer text-gray-slider-arrow flex items-center absolute inset-y-0 left-0"  aria-hidden="true">' +
+            prevArrow: '<span class="text-6xl cursor-pointer stroke-gray-product dark:stroke-gray-slider-arrow  dark:stroke-tagFilterGray flex' +
+                ' items-center absolute inset-y-0 left-0"  aria-hidden="true">' +
                 '<svg width="15" height="25" viewBox="0 0 15 25" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-                '<path d="M12.6665 23.3333L1.99984 12.6667L12.6665 2" stroke="#D9D9D9" stroke-width="3" ' +
+                '<path d="M12.6665 23.3333L1.99984 12.6667L12.6665 2" stroke-width="2.5" ' +
                 'stroke-linecap="round" stroke-linejoin="round"/></svg></span>',
-            nextArrow: '<span class="text-6xl cursor-pointer inset-y-0 right-0 flex items-center absolute dark:text-white" aria-hidden="true">' +
+            nextArrow: '<span class="text-6xl cursor-pointer inset-y-0 right-0 flex stroke-dark items-center absolute dark:stroke-white" aria-hidden="true">' +
                 '<svg width="15" height="25" viewBox="0 0 15 25" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-                '<path d="M2 23.3333L12.6667 12.6667L2 2" stroke="#1C1C1C" stroke-width="3" stroke-linecap="round" ' +
+                '<path d="M2 23.3333L12.6667 12.6667L2 2" stroke-width="2.5" stroke-linecap="round" ' +
                 'stroke-linejoin="round"/></svg></span>',
         })
     }
