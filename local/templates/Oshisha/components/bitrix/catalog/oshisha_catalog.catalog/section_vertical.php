@@ -358,7 +358,7 @@ function setActiveColor(string $itemType = 'card'): string
                                                 </p>
                                             </a>
                                             <div class="sort_orders_element md:-left-1 -left-14 js__sort_orders_element
-                                             hidden absolute bg-filterGray dark:bg-darkBox z-20 p-3 w-max rounded-lg">
+                                             hidden absolute bg-filterGray dark:bg-darkBox z-30 p-3 w-max rounded-lg">
                                                 <ul>
                                                     <li class="catalog_sort_item mb-2 cursor-pointer
                                                     hover:text-light-red dark:hover:text-white js__catalog-sort-item text-xs"

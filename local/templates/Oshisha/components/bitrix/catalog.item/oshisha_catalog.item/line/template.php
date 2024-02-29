@@ -343,7 +343,7 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
                 </div>
                 <div style="clear: both;"></div>
                 <div id="popup_mess"
-                     class="catalog_popup absolute z-20 w-full left-0
+                     class="catalog_popup absolute z-30 w-full left-0
                                <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                          <?= $is_key_found ? 'subscribed' : '' ?>"
                      data-subscription_id="

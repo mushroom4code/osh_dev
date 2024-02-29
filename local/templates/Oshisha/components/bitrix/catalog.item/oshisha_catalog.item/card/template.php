@@ -471,7 +471,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                         </div>
                         <div style="clear: both;"></div>
                         <div id="popup_mess"
-                             class="catalog_popup absolute z-20 w-full left-0 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                             class="catalog_popup absolute z-30 w-full left-0 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                          <?= $is_key_found ? 'subscribed' : '' ?>"
                              data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
                              data-product_id="<?= $item['ID']; ?>">
