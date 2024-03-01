@@ -174,12 +174,12 @@ function setActiveColor(string $itemType = 'card'): string
 
 ?>
 <div class="flex mb-4 flex-col mt-5 w-auto">
-    <div class="flex mb-4 box_with_prod md:flex-row flex-col w-auto">
+    <div class="flex mb-4 box_with_prod lg:flex-row flex-col w-auto">
         <?php if ($isFilter) : ?>
             <div class=" box_filter_catalog lg:w-96 w-80 xl:flex flex-col <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
-            $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
+            $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' md:hidden block' : '') ?>">
                 <div class="catalog-section-list-tile-list w-full bg-filterGray dark:bg-darkBox p-5 rounded-xl
-             md:flex hidden flex-col mb-4">
+             lg:flex hidden flex-col mb-4">
                     <?php foreach ($arResult['SECTION_LIST'] as $arSection): ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap smart-filter-tog flex flex-row cursor-pointer justify-between"
@@ -226,7 +226,7 @@ function setActiveColor(string $itemType = 'card'): string
                     <?php endforeach; ?>
 
                 </div>
-                <div class="catalog-filter-mobile md:flex flex-col hidden md:relative fixed md:w-auto w-screen
+                <div class="catalog-filter-mobile lg:flex flex-col hidden md:relative fixed md:w-auto w-screen
                 left-0 md:py-0 md:h-auto h-screen md:bg-transparent md:dark:bg-transparent bg-filterGray py:16 md:top-auto top-0
                 dark:bg-darkBox md:z-0 z-50">
                     <?php
@@ -288,7 +288,7 @@ function setActiveColor(string $itemType = 'card'): string
             </div>
         <?php endif ?>
         <?php global $GLOBAL_SECTION; ?>
-        <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> max-w-full w-fit xl:ml-11 lg:ml-7 ml-0">
+        <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> xl:max-w-6_5xl lg:max-w-3xl max-w-full w-fit xl:ml-11 lg:ml-7 ml-0">
             <div class="row navigation-wrap mb-5">
                 <div class="col" id="navigation">
                     <?php $APPLICATION->IncludeComponent(
@@ -304,10 +304,12 @@ function setActiveColor(string $itemType = 'card'): string
                     ); ?>
                 </div>
             </div>
-            <h1 class="md:text-3xl text-2xl mb-2 font-semibold dark:font-medium"><?php $APPLICATION->ShowTitle(false); ?></h1>
+            <h1 class="md:text-3xl text-2xl mb-2 font-semibold dark:font-medium
+            <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'hidden' : '' ?>">
+                <?php $APPLICATION->ShowTitle(false); ?></h1>
             <p class="message_for_user_minzdrav md:text-sm text-xs text-textLight dark:text-iconGray dark:font-light mb-5"></p>
             <div id="osh-filter-horizontal2"></div>
-            <div class="osh-block-panel mb-4 <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
+            <div class="osh-block-panel mb-4 <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'hidden' : '' ?>">
                 <div id="osh-filter-horizontal" class="flex flex-col mb-7 mt-5">
                     <div class="flex flex-row justify-between md:items-center items-end mb-5">
                         <div class="col_navigation mr-4">

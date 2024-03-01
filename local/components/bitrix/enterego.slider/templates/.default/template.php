@@ -173,12 +173,12 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
     if ($('#hits_slider_<?=$strRand?>').is('.bx_catalog_tile_section')) {
         let count = 4,
             variableWidth = false;
-            screenWidth = window.screen.width;
+            screenWidth = $(document).width();
         if (screenWidth <= 1380) {
-            count = 4;
+            count = 3;
         }
         if (screenWidth <= 1080) {
-            count = 3;
+            count = 2;
         }
         if (screenWidth <= 746) {
             count = 2;
