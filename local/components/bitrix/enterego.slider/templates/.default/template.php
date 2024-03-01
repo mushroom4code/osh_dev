@@ -129,7 +129,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
                             }
                         }
                         ?>
-                        <div class="product-item-small-card lg:w-72 md:w-1/3 w-1/2 h-96 pr-4 mb-7">
+                        <div class="product-item-small-card md:w-1/4 w-1/2 pr-4 mb-7">
                             <?php $APPLICATION->IncludeComponent(
                                 'bitrix:catalog.item',
                                 'oshisha_catalog.item',

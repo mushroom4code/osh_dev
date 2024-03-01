@@ -143,7 +143,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     <a href="https://oshisha.net"
                        class="dark:text-textDarkLightGray text-white lg:text-13 text-xs mx-2 font-normal dark:hover:text-white
              hover:text-hover-red">
-                        Розничный сайт</a>
+                        Переход на розничный сайт</a>
                 </div>
                 <div class="flex flex-row items-center">
                     <div class="hidden md:flex flex-row mr-3">
