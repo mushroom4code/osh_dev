@@ -56,7 +56,6 @@ $userData = EnteregoUser::getInstance();
                               placeholder="Ваше сообщение *"></textarea>
                 <div class="er_FORM_MESSAGE error_field text-xs text-hover-red mt-1 mb-2"></div>
             </div>
-
             <div class="form-group mb-7">
                 <div class="form-control input_lk input_files drop-zone rounded-lg border border-dashed border-gray-900/25
                  dark:border-tagFilterGray px-6 py-10"

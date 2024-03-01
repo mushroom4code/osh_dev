@@ -31,6 +31,7 @@ class EnteregoBitrix24
         if ($arFields['RESULT'] && CRM_API_ENDPOINT &&
             in_array($arFields['IBLOCK_ID'], [IBLOCK_FEEDBACK_ID, IBLOCK_CALLBACK_ID, IBLOCK_NEW_SITE_COMMENTS])) {
 
+            $userFiles = [];
             // check if the contact exists
             $method = 'crm.contact.list';
             $query = [
@@ -86,8 +87,10 @@ class EnteregoBitrix24
             }
 
             $files = [];
-            foreach ($userFiles as $i => $prop) {
-                $files[] = ["fileData" => [$prop['name'], base64_encode(file_get_contents($prop['tmp_name']))]];
+            if (!empty($userFiles)) {
+                foreach ($userFiles as $i => $prop) {
+                    $files[] = ["fileData" => [$prop['name'], base64_encode(file_get_contents($prop['tmp_name']))]];
+                }
             }
 
             $method = 'crm.deal.add';
