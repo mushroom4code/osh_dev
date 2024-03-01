@@ -102,7 +102,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             ?>
             <div id="<?= $strContID; ?>"
                  class="col2 <?= $templateData['TEMPLATE_CLASS']; ?>">
-                <div class="bx_catalog_tile_section max-w-full md:py-6 md:px-6 p-2"
+                <div class="bx_catalog_tile_section min-h-96 overflow-visible md:py-6 md:px-6 p-2"
                      id="hits_slider_<?=$strRand?>">
                     <?php
                     $boolFirst = true;
@@ -129,7 +129,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
                             }
                         }
                         ?>
-                        <div class="product-item-small-card md:w-1/4 w-1/2 pr-4 mb-7">
+                        <div class="product-item-small-card md:w-1/4 h-full w-1/2 md:px-5 px-1.5 pt-3">
                             <?php $APPLICATION->IncludeComponent(
                                 'bitrix:catalog.item',
                                 'oshisha_catalog.item',
