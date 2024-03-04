@@ -1,5 +1,6 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
+use Bitrix\Conversion\Internals\MobileDetect;
 use Bitrix\Main\Loader;
 use Bitrix\Main\ModuleManager;
 
@@ -16,7 +17,7 @@ if (isset($arParams['USE_COMMON_SETTINGS_BASKET_POPUP']) && $arParams['USE_COMMO
 } else {
     $basketAction = isset($arParams['SECTION_ADD_TO_BASKET_ACTION']) ? $arParams['SECTION_ADD_TO_BASKET_ACTION'] : '';
 }
-
+$mobile = new MobileDetect();
 $sort = [
     'by' => [
         'by' => 'SERVICE_FIELD_POPULARITY', // 'PROPERTY_MINIMUM_PRICE',//'CATALOG_PRICE_'.$GLOBALS['PRICE_TYPE_ID'],
@@ -88,7 +89,6 @@ $sortOrder = array(
     'desc',
     'desc',
 );
-//print_r($sortBy);
 
 $activeSort = 0;
 
@@ -132,50 +132,28 @@ if ($_GET['page'] != '') {
     $catalogElementField = intval($_GET['page']);
 }
 $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
-
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
+// Категории с иерархией
+$arCategory = [];
+require_once($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/include/catalogMenu.php');
 ?>
 <div class="row mb-4 box_with_prod">
     <?php if ($isFilter) : ?>
         <div class=" box_filter_catalog
         <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
-            <div class="row">
-                <div class="catalog-section-list-tile-list">
-                    <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
-                        <div class="catalog-section-list-item-l">
-                            <div class="catalog-section-list-item-wrap smart-filter-tog" data-role="prop_angle"
-                                 data-code-vis="<?= $arSection['ID'] ?>">
-                                <a href="javascript:void(0)"><?= $arSection['NAME'] ?></a>
-                                <? if ($arSection['CHILDS']): ?>
-                                    <span data-role="prop_angle"
-                                          class="smart-filter-tog smart-filter-angle">
-					                    <i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
-                                    </span>
-                                <? endif; ?>
-                            </div>
-                            <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
-                                 data-code="<?= $arSection['ID'] ?>">
-                                <a class="mt-2 color-redLight"
-                                   href="<?= $arSection['SECTION_PAGE_URL'] ?>">Все</a>
-                            </div>
-                            <?php if ($arSection['CHILDS']):
-                                usort($arSection['CHILDS'], 'sort_by_name');
-                                foreach ($arSection['CHILDS'] as $arSectionSub):
-                                    if (CIBlockSection::GetSectionElementsCount($arSectionSub['ID'], ['CNT_ACTIVE' => 'Y']) > 0) {
-                                        ?>
-                                        <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
-                                             data-code="<?= $arSection['ID'] ?>">
-                                            <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
-                                        </div>
-                                    <?php }
-                                endforeach; ?>
-                            <?php endif; ?>
-                        </div>
-                    <?php endforeach; ?>
-
+            <?php if (!$mobile->isMobile()) { ?>
+                <div class="row">
+                    <div class="catalog-section-list-tile-list">
+                        <?php foreach ($arResult['SECTION_LIST'] as $arSection) {
+                            if ($showUserContent || !$showUserContent && $arSection['NAME'] === 'Чай') {
+                                createNewItemsChild($arSection, $smartFil, $arCategory);
+                            }
+                        } ?>
+                    </div>
                 </div>
-            </div>
-            <?php
+            <?php }
 
             //region Filter
             if ($isFilter): ?>

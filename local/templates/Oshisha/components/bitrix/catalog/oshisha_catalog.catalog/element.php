@@ -51,25 +51,8 @@ while ($arItems = $dbBasketItems->Fetch()) {
     $arBasketItems[$arItems["PRODUCT_ID"]] = $arItems["QUANTITY"];
 }
 
-GLOBAL $arrFilterTop;
-$arrFilterTop = array();
-
-$basketUserId = (int)$fUser;
-if ($basketUserId <= 0)
-{
-    $ids = array();
-}
-$ids = array_values(Catalog\CatalogViewedProductTable::getProductSkuMap(
-    IBLOCK_CATALOG,
-    $arResult['VARIABLES']['SECTION_ID'],
-    $basketUserId,
-    $arParams['SECTION_ELEMENT_ID'],
-    $arParams['PAGE_ELEMENT_COUNT'],
-    $arParams['DEPTH']
-));
-
-$arrFilterTop['ID'] = $ids;
 ?>
+
 <div class="row bx-<?= $arParams['TEMPLATE_THEME'] ?>">
     <div>
         <?
@@ -313,193 +296,129 @@ $arrFilterTop['ID'] = $ids;
 
                 $obCache->EndDataCache($recommendedData);
             }
-            if ($USER->IsAuthorized()) {
-                    if (!isset($arParams['DETAIL_SHOW_POPULAR']) || $arParams['DETAIL_SHOW_POPULAR'] != 'N') { ?>
-                        <div class="mb-5 mt-5">
-                            <div data-entity="parent-container">
-                                <div data-entity="header" data-showed="false">
-                                    <h4 class="font-19"><b>С этим товаром покупают</b></h4>
-                                </div>
-                                <div class="by-card">
-                                    <?php $APPLICATION->IncludeComponent(
-                                        "bitrix:catalog.top",
-                                        "oshisha_catalog.top",
-                                        array(
-                                            "ACTION_VARIABLE" => "action",
-                                            "ADD_PICT_PROP" => "-",
-                                            "ADD_PROPERTIES_TO_BASKET" => "Y",
-                                            "ADD_TO_BASKET_ACTION" => "ADD",
-                                            "BASKET_URL" => "/personal/basket.php",
-                                            "CACHE_FILTER" => "N",
-                                            "CACHE_GROUPS" => "Y",
-                                            "CACHE_TIME" => "36000000",
-                                            "CACHE_TYPE" => "A",
-                                            "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
-                                            "COMPATIBLE_MODE" => "Y",
-                                            "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
-                                            "CONVERT_CURRENCY" => "N",
-                                            "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
-                                            "DETAIL_URL" => "",
-                                            "DISPLAY_COMPARE" => "N",
-                                            "ELEMENT_COUNT" => "16",
-                                            "ELEMENT_SORT_FIELD" => "timestamp_x",
-                                            "ELEMENT_SORT_FIELD2" => "id",
-                                            "ELEMENT_SORT_ORDER" => "asc",
-                                            "ELEMENT_SORT_ORDER2" => "desc",
-                                            "ENLARGE_PRODUCT" => "PROP",
-                                            "ENLARGE_PROP" => "-",
-                                            "FILTER_NAME" => "",
-                                            "HIDE_NOT_AVAILABLE" => "Y",
-                                            "HIDE_NOT_AVAILABLE_OFFERS" => "N",
-                                            "IBLOCK_ID" => IBLOCK_CATALOG,
-                                            "IBLOCK_TYPE" => "1c_catalog",
-                                            "LABEL_PROP" => array(),
-                                            "LABEL_PROP_MOBILE" => "",
-                                            "LABEL_PROP_POSITION" => "top-left",
-                                            "LINE_ELEMENT_COUNT" => "4",
-                                            "MESS_BTN_ADD_TO_BASKET" => "Забронировать",
-                                            "MESS_BTN_BUY" => "Купить",
-                                            "MESS_BTN_COMPARE" => "Сравнить",
-                                            "MESS_BTN_DETAIL" => "Подробнее",
-                                            "MESS_NOT_AVAILABLE" => "Нет в наличии",
-                                            "OFFERS_CART_PROPERTIES" => $arParams["OFFERS_CART_PROPERTIES"],
-                                            "OFFERS_FIELD_CODE" => $arParams["OFFERS_FIELD_CODE"],
-                                            "OFFERS_PROPERTY_CODE" => $arParams["OFFERS_PROPERTY_CODE"],
-                                            "OFFERS_LIMIT" => "20",
-                                            "OFFERS_SORT_FIELD" => "sort",
-                                            "OFFERS_SORT_FIELD2" => "id",
-                                            "OFFERS_SORT_ORDER" => "asc",
-                                            "OFFERS_SORT_ORDER2" => "desc",
-                                            "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
-                                            "PARTIAL_PRODUCT_PROPERTIES" => "N",
-                                            "PRICE_CODE" => BXConstants::PriceCode(),
-                                            "FILL_ITEM_ALL_PRICES" => "Y",
-                                            "PRICE_VAT_INCLUDE" => "Y",
-                                            "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
-                                            "PRODUCT_DISPLAY_MODE" => "Y",
-                                            "PRODUCT_ID_VARIABLE" => "id",
-                                            "PRODUCT_PROPS_VARIABLE" => "prop",
-                                            "PRODUCT_QUANTITY_VARIABLE" => "quantity",
-                                            "PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false}]",
-                                            "PRODUCT_SUBSCRIPTION" => "Y",
-                                            "PROPERTY_CODE_MOBILE" => "",
-                                            "ROTATE_TIMER" => "30",
-                                            "SECTION_URL" => "",
-                                            "SEF_MODE" => "N",
-                                            "SHOW_CLOSE_POPUP" => "N",
-                                            "SHOW_DISCOUNT_PERCENT" => "N",
-                                            "SHOW_MAX_QUANTITY" => "N",
-                                            "SHOW_OLD_PRICE" => "N",
-                                            "SHOW_PAGINATION" => "Y",
-                                            "SHOW_PRICE_COUNT" => "1",
-                                            "SHOW_SLIDER" => "Y",
-                                            "SLIDER_INTERVAL" => "3000",
-                                            "SLIDER_PROGRESS" => "N",
-                                            "TEMPLATE_THEME" => "blue",
-                                            "USE_ENHANCED_ECOMMERCE" => "N",
-                                            "USE_PRICE_COUNT" => "N",
-                                            "USE_PRODUCT_QUANTITY" => "N",
-                                            "VIEW_MODE" => "SLIDER",
-                                            "BASKET_ITEMS" => $arBasketItems
-                                        ),
-                                        false
-                                    ); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <?
-                    }
+        }
+
+        $arSliderParams = array(
+            "ACTION_VARIABLE" => $arParams['ACTION_VARIABLE'],
+            "ADD_PICT_PROP" => $arParams['ADD_PICT_PROP'],
+            "ADD_PROPERTIES_TO_BASKET" => $arParams['ADD_PROPERTIES_TO_BASKET'],
+            "ADD_TO_BASKET_ACTION" => "ADD",
+            "BASKET_URL" => $arParams['BASKET_URL'],
+            "CACHE_FILTER" => "N",
+            "CACHE_GROUPS" => "Y",
+            "CACHE_TIME" => "36000000",
+            "CACHE_TYPE" => "A",
+            "COMPARE_NAME" => $arParams['COMPARE_NAME'],
+            "COMPATIBLE_MODE" => $arParams['COMPATIBLE_MODE'],
+            "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
+            "CONVERT_CURRENCY" => $arParams['CONVERT_CURRENCY'],
+            "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
+            "DETAIL_URL" => $arParams['DETAIL_URL'],
+            "DISPLAY_COMPARE" => $arParams['DISPLAY_COMPARE'],
+            "ELEMENT_COUNT" => "16",
+            "ELEMENT_SORT_FIELD" => "timestamp_x",
+            "ELEMENT_SORT_FIELD2" => "id",
+            "ELEMENT_SORT_ORDER" => "asc",
+            "ELEMENT_SORT_ORDER2" => "desc",
+            "ENLARGE_PRODUCT" => "PROP",
+            "ENLARGE_PROP" => "-",
+            "HIDE_NOT_AVAILABLE" => $arParams['HIDE_NOT_AVAILABLE'],
+            "HIDE_NOT_AVAILABLE_OFFERS" => $arParams['HIDE_NOT_AVAILABLE_OFFERS'],
+            "IBLOCK_ID" => $arParams['IBLOCK_ID'],
+            "IBLOCK_TYPE" => $arParams['IBLOCK_TYPE'],
+            "LABEL_PROP" => array(),
+            "LABEL_PROP_MOBILE" => "",
+            "LABEL_PROP_POSITION" => "top-left",
+            "LINE_ELEMENT_COUNT" => "4",
+            "MESS_BTN_ADD_TO_BASKET" => $arParams['MESS_BTN_ADD_TO_BASKET'],
+            "MESS_BTN_BUY" => $arParams['MESS_BTN_BUY'],
+            "MESS_BTN_COMPARE" => $arParams['MESS_BTN_COMPARE'],
+            "MESS_BTN_DETAIL" => $arParams['MESS_BTN_DETAIL'],
+            "MESS_NOT_AVAILABLE" => $arParams['MESS_NOT_AVAILABLE'],
+            "OFFERS_CART_PROPERTIES" => $arParams["OFFERS_CART_PROPERTIES"],
+            "OFFERS_FIELD_CODE" => $arParams["OFFERS_FIELD_CODE"],
+            "OFFERS_PROPERTY_CODE" => $arParams["OFFERS_PROPERTY_CODE"],
+            "OFFERS_LIMIT" => "20",
+            "OFFERS_SORT_FIELD" => $arParams['OFFERS_SORT_FIELD'],
+            "OFFERS_SORT_FIELD2" => $arParams['OFFERS_SORT_FIELD2'],
+            "OFFERS_SORT_ORDER" => $arParams['OFFERS_SORT_ORDER'],
+            "OFFERS_SORT_ORDER2" => $arParams['OFFERS_SORT_ORDER2'],
+            "OFFER_ADD_PICT_PROP" => $arParams['OFFER_ADD_PICT_PROP'],
+            "PARTIAL_PRODUCT_PROPERTIES" => $arParams['PARTIAL_PRODUCT_PROPERTIES'],
+            "PRICE_CODE" => $arParams['PRICE_CODE'],
+            "FILL_ITEM_ALL_PRICES" => $arParams['FILL_ITEM_ALL_PRICES'],
+            "PRICE_VAT_INCLUDE" => $arParams['PRICE_VAT_INCLUDE'],
+            "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
+            "PRODUCT_DISPLAY_MODE" => $arParams['PRODUCT_DISPLAY_MODE'],
+            "PRODUCT_ID_VARIABLE" => $arParams['PRODUCT_ID_VARIABLE'],
+            "PRODUCT_PROPS_VARIABLE" => $arParams['PRODUCT_PROPS_VARIABLE'],
+            "PRODUCT_QUANTITY_VARIABLE" => $arParams['PRODUCT_QUANTITY_VARIABLE'],
+            "PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false}]",
+            "PRODUCT_SUBSCRIPTION" => $arParams['PRODUCT_SUBSCRIPTION'],
+            "PROPERTY_CODE_MOBILE" => "",
+            "ROTATE_TIMER" => "30",
+            "SECTION_URL" => $arParams['SECTION_URL'],
+            "SEF_MODE" => $arParams['SEF_MODE'],
+            "SHOW_CLOSE_POPUP" => $arParams['SHOW_CLOSE_POPUP'],
+            "SHOW_DISCOUNT_PERCENT" => $arParams['SHOW_DISCOUNT_PERCENT'],
+            "SHOW_MAX_QUANTITY" => "N",
+            "SHOW_OLD_PRICE" => "N",
+            "SHOW_PAGINATION" => "Y",
+            "SHOW_PRICE_COUNT" => "1",
+            "SHOW_SLIDER" => "Y",
+            "SLIDER_INTERVAL" => "3000",
+            "SLIDER_PROGRESS" => "N",
+            "TEMPLATE_THEME" => "blue",
+            "USE_ENHANCED_ECOMMERCE" => "N",
+            "USE_PRICE_COUNT" => $arParams['USE_PRICE_COUNT'],
+            "USE_PRODUCT_QUANTITY" => "N",
+            "VIEW_MODE" => "SLIDER",
+            "BASKET_ITEMS" => $arBasketItems
+        );
+
+        #region buy with this product
+        if (defined('BUY_WITH_THIS_PRODUCT_PROPERTY') && $USER->IsAuthorized()) {
+            $arBuyWithThisProductProductsIds = [];
+
+            $buyWithThisProductProductsProperty = CIBlockElement::GetProperty(
+                    IBLOCK_CATALOG,
+                    $elementId,
+                    [],
+                    ['CODE' => BUY_WITH_THIS_PRODUCT_PROPERTY]
+            );
+            while ($buyWithThisProductProductsPropertyValue = $buyWithThisProductProductsProperty->fetch()) {
+                if ($buyWithThisProductProductsPropertyValue['VALUE']) {
+                    $arBuyWithThisProductProductsIds[] = $buyWithThisProductProductsPropertyValue['VALUE'];
+                }
             }
-            if ($USER->IsAuthorized()) {
-                if (!empty($arrFilterTop['ID'])) { ?>
-                    <div class="mb-5 mt-5">
+            if ($arBuyWithThisProductProductsIds) {
+                $arBuyWithThisProductProductsRes = CIBlockElement::GetList(
+                        [],
+                        ['ID' => $arBuyWithThisProductProductsIds, 'ACTIVE'=>'Y'],
+                        false,
+                        false,
+                        ['ID', 'ACTIVE']
+                );
+                $arBuyWithThisProductProductsIds = [];
+                while ($buyWithThisProductProduct = $arBuyWithThisProductProductsRes->fetch()) {
+                        $arBuyWithThisProductProductsIds[] = $buyWithThisProductProduct['ID'];
+                }
+            }
+            $GLOBALS['arrBuyWithThisProductProductsProductsFilter'] = ['ID' => $arBuyWithThisProductProductsIds];
+
+            if ($arBuyWithThisProductProductsIds) {
+                if (!isset($arParams['DETAIL_SHOW_POPULAR']) || $arParams['DETAIL_SHOW_POPULAR'] != 'N') { ?>
+                    <div class="mb-2 mt-2">
                         <div data-entity="parent-container">
                             <div data-entity="header" data-showed="false">
-                                <h4 class="font-19"><b>Вы смотрели</b></h4>
+                                <h4 class="font-19 ml-3"><b>С этим товаром покупают</b></h4>
                             </div>
                             <div class="by-card">
                                 <?php $APPLICATION->IncludeComponent(
                                     "bitrix:catalog.top",
                                     "oshisha_catalog.top",
-                                    array(
-                                        "ACTION_VARIABLE" => "action",
-                                        "PRODUCTS_VIEWED" => "Y",
-                                        "ADD_PICT_PROP" => "-",
-                                        "ADD_PROPERTIES_TO_BASKET" => "Y",
-                                        "ADD_TO_BASKET_ACTION" => "ADD",
-                                        "BASKET_URL" => "/personal/basket.php",
-                                        "CACHE_FILTER" => "N",
-                                        "CACHE_GROUPS" => "Y",
-                                        "CACHE_TIME" => "36000000",
-                                        "CACHE_TYPE" => "A",
-                                        "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
-                                        "COMPATIBLE_MODE" => "Y",
-                                        "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
-                                        "CONVERT_CURRENCY" => "N",
-                                        "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
-                                        "DETAIL_URL" => "",
-                                        "DISPLAY_COMPARE" => "N",
-                                        "ELEMENT_COUNT" => "16",
-                                        "ELEMENT_SORT_FIELD" => "timestamp_x",
-                                        "ELEMENT_SORT_FIELD2" => "id",
-                                        "ELEMENT_SORT_ORDER" => "asc",
-                                        "ELEMENT_SORT_ORDER2" => "desc",
-                                        "ENLARGE_PRODUCT" => "PROP",
-                                        "ENLARGE_PROP" => "-",
-                                        "FILTER_NAME" => "arrFilterTop",
-                                        "HIDE_NOT_AVAILABLE" => "Y",
-                                        "HIDE_NOT_AVAILABLE_OFFERS" => "N",
-                                        "IBLOCK_ID" => IBLOCK_CATALOG,
-                                        "IBLOCK_TYPE" => "1c_catalog",
-                                        "LABEL_PROP" => array(),
-                                        "LABEL_PROP_MOBILE" => "",
-                                        "LABEL_PROP_POSITION" => "top-left",
-                                        "LINE_ELEMENT_COUNT" => "4",
-                                        "MESS_BTN_ADD_TO_BASKET" => "Забронировать",
-                                        "MESS_BTN_BUY" => "Купить",
-                                        "MESS_BTN_COMPARE" => "Сравнить",
-                                        "MESS_BTN_DETAIL" => "Подробнее",
-                                        "MESS_NOT_AVAILABLE" => "Нет в наличии",
-                                        "OFFERS_CART_PROPERTIES" => $arParams["OFFERS_CART_PROPERTIES"],
-                                        "OFFERS_FIELD_CODE" => $arParams["OFFERS_FIELD_CODE"],
-                                        "OFFERS_PROPERTY_CODE" => $arParams["OFFERS_PROPERTY_CODE"],
-                                        "OFFERS_LIMIT" => "20",
-                                        "OFFERS_SORT_FIELD" => "sort",
-                                        "OFFERS_SORT_FIELD2" => "id",
-                                        "OFFERS_SORT_ORDER" => "asc",
-                                        "OFFERS_SORT_ORDER2" => "desc",
-                                        "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
-                                        "PARTIAL_PRODUCT_PROPERTIES" => "N",
-                                        "PRICE_CODE" => BXConstants::PriceCode(),
-                                        "FILL_ITEM_ALL_PRICES" => "Y",
-                                        "PRICE_VAT_INCLUDE" => "Y",
-                                        "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
-                                        "PRODUCT_DISPLAY_MODE" => "Y",
-                                        "PRODUCT_ID_VARIABLE" => "id",
-                                        "PRODUCT_PROPS_VARIABLE" => "prop",
-                                        "PRODUCT_QUANTITY_VARIABLE" => "quantity",
-                                        "PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false}]",
-                                        "PRODUCT_SUBSCRIPTION" => "Y",
-                                        "PROPERTY_CODE_MOBILE" => "",
-                                        "ROTATE_TIMER" => "30",
-                                        "SECTION_URL" => "",
-                                        "SEF_MODE" => "N",
-                                        "SHOW_CLOSE_POPUP" => "N",
-                                        "SHOW_DISCOUNT_PERCENT" => "N",
-                                        "SHOW_MAX_QUANTITY" => "N",
-                                        "SHOW_OLD_PRICE" => "N",
-                                        "SHOW_PAGINATION" => "Y",
-                                        "SHOW_PRICE_COUNT" => "1",
-                                        "SHOW_SLIDER" => "Y",
-                                        "SLIDER_INTERVAL" => "3000",
-                                        "SLIDER_PROGRESS" => "N",
-                                        "TEMPLATE_THEME" => "blue",
-                                        "USE_ENHANCED_ECOMMERCE" => "N",
-                                        "USE_PRICE_COUNT" => "N",
-                                        "USE_PRODUCT_QUANTITY" => "N",
-                                        "VIEW_MODE" => "SLIDER",
-                                        "BASKET_ITEMS" => $arBasketItems
-                                    ),
+                                    array_merge($arSliderParams,
+                                        ["FILTER_NAME" => "arrBuyWithThisProductProductsProductsFilter"]),
                                     false
                                 ); ?>
                             </div>
@@ -509,6 +428,101 @@ $arrFilterTop['ID'] = $ids;
                 }
             }
         }
-        ?>
+
+        #region suitable products
+        if (defined('SUITABLE_PRODUCTS_PROPERTY') && $USER->IsAuthorized()) {
+            $arSuitableProductsIds = [];
+            $product = CIBlockElement::GetByID($elementId)->fetch();
+            if ($product) {
+                $suitableProductsProperty = CIBlockElement::GetProperty(
+                    IBLOCK_CATALOG,
+                    $product['ID'],
+                    [],
+                    ['CODE' => SUITABLE_PRODUCTS_PROPERTY]
+                );
+                while ($suitableProductsPropertyValue = $suitableProductsProperty->fetch()) {
+                    if ($suitableProductsPropertyValue['VALUE']) {
+                        $arSuitableProductsIds[] = $suitableProductsPropertyValue['VALUE'];
+                    }
+                }
+                if ($arSuitableProductsIds) {
+                    $arSuitableProductsRes = CIBlockElement::GetList(
+                        [],
+                        ['ID' => $arSuitableProductsIds],
+                        false,
+                        false,
+                        ['ID', 'ACTIVE']
+                    );
+                    $arSuitableProductsIds = [];
+                    while ($suitableProduct = $arSuitableProductsRes->fetch()) {
+                        if ($suitableProduct['ACTIVE'] === 'Y') {
+                            $isAnyActiveSuitableProducts = true;
+                            $arSuitableProductsIds[] = $suitableProduct['ID'];
+                        }
+                    }
+                }
+                $GLOBALS['arrSuitableProductsFilter'] = ['ID' => $arSuitableProductsIds];
+
+            }
+            if ($arSuitableProductsIds) { ?>
+                <div class="mb-2 mt-2">
+                    <div data-entity="parent-container">
+                        <div data-entity="header" data-showed="false">
+                            <h4 class="font-19 ml-3"><b>Подходящие товары</b></h4>
+                        </div>
+                        <div class="by-card">
+                            <?php $APPLICATION->IncludeComponent(
+                                "bitrix:catalog.top",
+                                "oshisha_catalog.top",
+                                array_merge($arSliderParams , ["FILTER_NAME" => "arrSuitableProductsFilter"]),
+                                false
+                            ); ?>
+                        </div>
+                    </div>
+                </div>
+                <?
+            }
+        }
+
+        #region viewed product
+        if ($USER->IsAuthorized()) {
+            GLOBAL $arrFilterTop;
+            $arrFilterTop = array();
+
+            $basketUserId = (int)$fUser;
+            if ($basketUserId <= 0)
+            {
+                $ids = array();
+            }
+            $ids = array_values(Catalog\CatalogViewedProductTable::getProductSkuMap(
+                IBLOCK_CATALOG,
+                $arResult['VARIABLES']['SECTION_ID'],
+                $basketUserId,
+                $arParams['SECTION_ELEMENT_ID'],
+                $arParams['PAGE_ELEMENT_COUNT'],
+                $arParams['DEPTH']
+            ));
+
+            $arrFilterTop['ID'] = $ids;
+
+            if (!empty($arrFilterTop['ID'])) { ?>
+                <div class="mb-2 mt-2">
+                    <div data-entity="parent-container">
+                        <div data-entity="header" data-showed="false">
+                            <h4 class="font-19 ml-3"><b>Вы смотрели</b></h4>
+                        </div>
+                        <div class="by-card">
+                            <?php $APPLICATION->IncludeComponent(
+                                "bitrix:catalog.top",
+                                "oshisha_catalog.top",
+                                array_merge($arSliderParams, ["FILTER_NAME" => "arrFilterTop"]),
+                                false
+                            ); ?>
+                        </div>
+                    </div>
+                </div>
+                <?
+            }
+        } ?>
     </div>
 </div>

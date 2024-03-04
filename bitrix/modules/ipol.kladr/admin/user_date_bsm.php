@@ -1,1 +1,0 @@
-<?define("ipol_kladr_TEMPORARY_CACHE", "djEFAHhjAAc8Un4wBjcLfVUg");?>

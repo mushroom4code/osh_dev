@@ -34,7 +34,7 @@ if (CModule::IncludeModule('iblock')) {
                         "DETAIL_PAGE_URL" => $arIBlock['DETAIL_PAGE_URL'],
                         "IBLOCK_TYPE" => $arIBlock['IBLOCK_TYPE_ID'],
                         "IBLOCK_ID" => $arIBlock['ID'],
-                        "DEPTH_LEVEL" => "3",
+                        "DEPTH_LEVEL" => "4",
                         "CACHE_TYPE" => "N",
                         "CUSTOM_PARAM_MENU" => "Y"
                     ), false, array('HIDE_ICONS' => 'Y'));

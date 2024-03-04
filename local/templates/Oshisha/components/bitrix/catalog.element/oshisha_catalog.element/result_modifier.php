@@ -41,3 +41,8 @@ EnteregoHelper::setProductsActiveUnit($arResult);
 $arResult['MEASURE_RATIO'] = $arResult['ITEM_MEASURE_RATIOS'][$arResult['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
 $component = $this->getComponent();
 $arParams = $component->applyTemplateModifications();
+
+//TODO local redirect for category 18+
+if ($arResult['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'] == 'Нет' && CATEGORY_DISABLED) {
+    LocalRedirect('/404.php');
+}

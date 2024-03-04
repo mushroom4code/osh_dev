@@ -4,7 +4,8 @@
 
 use Enterego\EnteregoDiscountHitsSelector;
 
-const CATALOG_GIFT_ID = 1873;
+//const CATALOG_GIFT_ID = 1873;
+const CATALOG_GIFT_ID = 478;
 
 if ($arResult['FOLDER'] === '/diskont/') {
     $cat = new EnteregoDiscountHitsSelector();
@@ -16,7 +17,12 @@ if ($arResult['FOLDER'] === '/diskont/') {
     $arResult['SECTION_LIST'] = $cat->getSectionProductsForFilter('hit', $arParams);
 } else {
     $arOrderS = array('DEPTH_LEVEL' => 'ASC', 'SORT' => 'ASC',);
-    $arFilterS = array('ACTIVE' => 'Y', 'IBLOCK_ID' => IBLOCK_CATALOG, 'GLOBAL_ACTIVE' => 'Y',);
+    $arFilterS = array('ACTIVE' => 'Y', 'IBLOCK_ID' => IBLOCK_CATALOG, 'GLOBAL_ACTIVE' => 'Y');
+    //TODO local redirect for category 18+
+    if (CATEGORY_DISABLED) {
+        $arFilterS['PROPERTY'] = array('SEE_PRODUCT_AUTH_VALUE' => 26185);
+    }
+
     $arSelectS = array('*');
 
     $rsSections = CIBlockSection::GetList($arOrderS, $arFilterS, false, $arSelectS);
@@ -25,26 +31,19 @@ if ($arResult['FOLDER'] === '/diskont/') {
     $sectionLinc[0] = &$arResult['ROOT'];
     $arSections = [];
     while ($arSection = $rsSections->GetNext()) {
-        $arSection['TEXT'] = $arSection['NAME'];
-        $arSection['LINK'] = $arSection['CODE'];
-        if ($arSection['DEPTH_LEVEL'] > 1) {
-            $arSection['DEPTH_LEVEL'] = $arSection['DEPTH_LEVEL'] - 1;
-
+        if ($arSection['DEPTH_LEVEL'] <= 2) {
+            if (CIBlockSection::GetSectionElementsCount($arSection['ID'], ['CNT_ACTIVE' => 'Y']) > 0) {
+                $arSection['TEXT'] = $arSection['NAME'];
+                $arSection['LINK'] = $arSection['CODE'];
+                $arSections[$arSection['ID']] = $arSection;
+            }
         }
-
-        $arSections[$arSection['ID']] = $arSection;
     }
 
     foreach ($arSections as $arSection) {
-        if ($arSection['DEPTH_LEVEL'] == 1 && $arSection['IBLOCK_SECTION_ID'] > 0) {
-            $sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']] = $arSection;
-            $sectionLinc[$arSection['ID']] = &$sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']];
-        } else {
-            $sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILD'][$arSection['ID']] = $arSection;
-            $sectionLinc[$arSection['ID']] = &$sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILD'][$arSection['ID']];
-        }
-
+        $sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']] = $arSection;
+        $sectionLinc[$arSection['ID']] = &$sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']];
     }
 
-    $arResult['SECTION_LIST'] = $sectionLinc[0]['CHILD'];
+    $arResult['SECTION_LIST'] = $sectionLinc[0]['CHILDS'];
 }

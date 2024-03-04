@@ -15,6 +15,8 @@ class SDEKDelivery extends CommonPVZ
     public string $delivery_code = 'sdek';
 
     public string $delivery_name = 'SDEK';
+
+    public static string $code = 'sdek';
     private $cdek_cache_id = 'sdek_delivery_prices';
     static $sdek_tarifs = array(136,137,138,139,233,234,1,3,5,10,11,12,15,16,17,18,57,58,59,60,61,62,63,483,482,481,480,83,378,376,368,366,363,361,486,485);
     private $cdek_client;
@@ -204,7 +206,7 @@ class SDEKDelivery extends CommonPVZ
                     'workTime'=> $value->getWorkTime(),
                     'comment' => $value->getAddressComment(),
                     'fullAddress' => $value->getLocation()->getAddressFull(),
-                    'deliveryName' => 'СДЭК',
+                    'deliveryName' => $this::$code,
                     'iconCaption' => 'СДЭК',
                     'hintContent' => $value->getLocation()->getAddress(),
                     "openEmptyBalloon" => true,

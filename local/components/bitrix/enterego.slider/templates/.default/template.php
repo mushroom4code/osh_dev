@@ -163,7 +163,10 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
         </div>
         <?php
     }
-}?>
+}
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
+?>
 <script>
     function initSlider(){
         if ($('#hits_slider_<?=$strRand?>').is('.bx_catalog_tile_section')) {
@@ -176,14 +179,20 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             if (screenWidth <= 1080) {
                 count = 3;
             }
+            <?php if($showUserContent){ ?>
             if (screenWidth <= 746) {
                 count = 2;
+            }
+            <?php } ?>
+            if (screenWidth <= 746) {
+                count = 1;
             }
             $('#hits_slider_<?=$strRand?>').slick({
                 slidesToShow: count,
                 arrows: true,
                 infinite: false,
                 variableWidth: variableWidth,
+                centerMode: false,
                 prevArrow: '<span class="new_custom_button_slick_left_cat"  aria-hidden="true"><i class="fa fa-angle-left"'
                     + ' aria-hidden="true"></i></span>',
                 nextArrow: '<span class="new_custom_button_slick_right_cat" aria-hidden="true"><i class="fa fa-angle-right"'

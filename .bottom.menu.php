@@ -1,6 +1,7 @@
-<?
+<?php
+global $presentationUrl;
 $ar = [];
-$server = file_exists($_SERVER["DOCUMENT_ROOT"].'/local/templates/Oshisha/images/presentation.pdf');
+$server = file_exists($_SERVER["DOCUMENT_ROOT"].$presentationUrl) && !empty($presentationUrl);
 $aMenuLinks = array(
     array(
         "О нас",
@@ -11,7 +12,7 @@ $aMenuLinks = array(
     ),
     array(
         "Презентация",
-        "/local/templates/Oshisha/images/presentation.pdf",
+        "$presentationUrl",
         array(),
         array(),
         "$server"

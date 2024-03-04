@@ -4,7 +4,8 @@
 
 use Enterego\EnteregoDiscount;
 
-const CATALOG_GIFT_ID=1873;
+//const CATALOG_GIFT_ID=1873;
+const CATALOG_GIFT_ID = 478;
 
 if ($arResult['FOLDER'] === '/diskont/') {
     $cat = new EnteregoDiscount();
