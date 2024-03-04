@@ -795,7 +795,7 @@ window.Osh.bxPopup = {
 
         const nodeOshOverlay = BX.create("DIV", {
             props: {
-                className: 'osh_map_overlay',
+                className: 'osh_map_overlay hidden',
                 id: 'osh_map_overlay',
             },
         })

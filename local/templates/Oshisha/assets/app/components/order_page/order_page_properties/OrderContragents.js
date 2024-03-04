@@ -56,8 +56,8 @@ function OrderContragents({property, contrAgents}) {
                 </div>
             </div>
             <BlockInfo selectedContrAgent={selectedContrAgent}/>
-            <input type="hidden" name={'ORDER_PROP_' + property.ID} value={property.VALUE}
-                   data-name={property['CODE']}/>
+            <input type="hidden" name={'ORDER_PROP_' + property.ID} value={selectedContrAgent.ID_CONTRAGENT}
+                   data-name={property.CODE}/>
         </div>
     );
 }
