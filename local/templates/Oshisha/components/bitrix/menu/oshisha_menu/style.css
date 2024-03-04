@@ -44,7 +44,7 @@
 }
 
 .backToTheMenu:hover, .sendToCategory:hover, .sendToCategoryMain:hover {
-    color: red;
+    color: #F55F5C;
 }
 
 .menu_items.hide, .menu_items_child.hide {

@@ -232,7 +232,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         '<a class="link_menu_header link_menu d-flex align-items-center justify-content-between" ' +
         'href="' + that.attr('data-href') + '" data-parent-id="'
         + parentId + '" data-href="' + that.attr('data-href') + '"> ' +
-        '<span class="text_catalog_link">' + 'Посмотреть все' + '</span></a>' +
+        '<span class="text_catalog_link red_text">' + 'Посмотреть все' + '</span></a>' +
         '</div>');
         $.each(menu_items_array.ELEMENT, function (key_item, value_parent) {
             if (parentId === key_item) {
