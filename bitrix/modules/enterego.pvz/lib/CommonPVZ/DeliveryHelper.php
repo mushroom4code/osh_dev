@@ -412,14 +412,16 @@ class DeliveryHelper
             }
         }
 
+        $params['oshDeliveryTimeIntervals'] = unserialize(
+            Option::get(self::$MODULE_ID, 'deliveryTimeIntervals', '', SITE_ID)
+        );
+
         $params['deliveryOptions']['DA_DATA_TOKEN'] = OshishaDelivery::getOshishaDaDataToken();
         $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
         $params['deliveryOptions']['YA_API_KEY'] = OshishaDelivery::getOshishaYMapsKey();
         $params['deliveryOptions']['LIMIT_BASKET'] = OshishaDelivery::getOshishaLimitBasket();
         $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
         $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
-
-        $params['oshishaDeliveryCode'] = OshishaDelivery::$code;
 
         if ($order->getField('PRICE_DELIVERY')) {
             $params['shipmentCost'] = $order->getDeliveryPrice();

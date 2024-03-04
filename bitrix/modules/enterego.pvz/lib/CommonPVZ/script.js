@@ -42,6 +42,7 @@ BX.SaleCommonPVZ = {
         'displayPVZ': typeDisplayPVZ.map,
         'filterDelivery': null,
     },
+    oshDeliveryTimeIntervals: null,
 
     init: function (params) {
         this.curDeliveryId = params.params?.curDeliveryId;
@@ -50,7 +51,7 @@ BX.SaleCommonPVZ = {
         this.shipmentCost = params.params?.shipmentCost;
         this.orderPackages = params.params?.packages;
         this.oshishaDeliveryOptions = params.params?.deliveryOptions;
-        this.oshishaDeliveryCode = params.params?.oshishaDeliveryCode;
+        this.oshDeliveryTimeIntervals = params.params?.oshDeliveryTimeIntervals;
 
         this.refresh()
         this.updateFromDaData()
@@ -254,7 +255,7 @@ BX.SaleCommonPVZ = {
         if (doorDelivery !== undefined) {
 
             const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
-            this.clearDeliveryTime()
+
             deliveryInfo.forEach(delivery => {
                 if (!delivery.error) {
                     const propsRadio = {type: 'radio', name: 'delivery'}
@@ -336,8 +337,17 @@ BX.SaleCommonPVZ = {
                         ]
                     })
 
+                    var boxWithDeliveryTime = [
+                        BX.create({
+                            tag: 'span',
+                            props: {
+                                className: 'ml-lg-2 ml-md-2 ml-0 font-13'
+                            },
+                            text: 'от 2 дней'
+                        }),
+                    ]
+
                     if (delivery.code === 'oshisha') {
-                        this.updateDeliveryTime(delivery.deliveryIntervals ?? ['Не выбрано'])
                         var osh_block = BX.findChildByClassName(boxWithDeliveryInfo, 'box-with-props-delivery')
                         if (delivery.noMarkup != false) {
                             osh_block.appendChild(
@@ -351,8 +361,47 @@ BX.SaleCommonPVZ = {
                                         '</div>'
                                 }),
                             );
+
                         }
                         osh_block.appendChild(this.updateOshishaDelivery());
+
+                        if (__this.oshDeliveryTimeIntervals) {
+                            let TimeDeliveryNodeHtml = '<select style="background-color: unset; padding: 0 23px;"' +
+                                ' class="form-control bx-soa-customer-input bx-ios-fix" id="datetime_interval_popup">' +
+                                '<option value>Не выбрано</option>';
+
+                            for (const [key, intervalArr] of Object.entries(__this.oshDeliveryTimeIntervals)) {
+                                TimeDeliveryNodeHtml += '<option value="' + intervalArr[0] + '-' + intervalArr[1] + '">' +
+                                    intervalArr[0] + '-' + intervalArr[1] + '</option>';
+                            }
+                            TimeDeliveryNodeHtml += '</select>';
+                            const TimeDeliveryNode = BX.create({
+                                tag: 'div',
+                                html: TimeDeliveryNodeHtml,
+                                dataset: {name: 'DELIVERYTIME_INTERVAL'},
+                            })
+
+                            if (!BX('wrap_delivery_time')) {
+                                boxWithDeliveryTime.push(
+                                    BX.create({
+                                        tag: 'div',
+                                        props: {
+                                            id: 'wrap_delivery_time',
+                                            className: "ml-lg-2 ml-md-2 ml-0 font-13",
+                                            style: "max-width: 186px"
+                                        },
+                                        children: [
+                                            BX.create({
+                                                tag: 'label',
+                                                props: {className: 'title'},
+                                                text: 'Удобное время получения:'
+                                            }),
+                                            TimeDeliveryNode
+                                        ]
+                                    })
+                                );
+                            }
+                        }
                     }
                     BX.append(
                         BX.create({
@@ -373,24 +422,8 @@ BX.SaleCommonPVZ = {
                                             props: {
                                                 className: 'col-lg-3 col-md-3 col-12 mb-2'
                                             },
-                                            children: [
-                                                BX.create({
-                                                    tag: 'span',
-                                                    props: {
-                                                        className: 'd-lg-none d-md-none d-block'
-                                                    },
-                                                    html: '<i class="fa fa-truck color-redLight font-18 mr-2" aria-hidden="true"></i> ' +
-                                                        '<span class="font-weight-500">Срок доставки: </span>'
-                                                }),
-                                                BX.create({
-                                                    tag: 'span',
-                                                    props: {
-                                                        className: 'ml-lg-2 ml-md-2 ml-0 font-13'
-                                                    },
-                                                    text: 'от 2 дней'
-                                                }),
-                                            ]
-
+                                            children:
+                                                boxWithDeliveryTime
                                         })
                                     ]
                                 })
@@ -398,9 +431,15 @@ BX.SaleCommonPVZ = {
                         }),
                         BX('deliveries-list')
                     );
-
                 }
             })
+            if(BX('deliveries-list')) {
+                let datetime_interval_popup = $('#datetime_interval_popup');
+                datetime_interval_popup.val($('[name="ORDER_PROP_' + __this.propDeliveryTimeInterval + '"]').val());
+                datetime_interval_popup.on("change", function () {
+                    $('[name="ORDER_PROP_' + __this.propDeliveryTimeInterval + '"]').val(this.value);
+                });
+            }
             if (deliveryInfo.find(delivery => delivery.code === 'oshisha'))
                 this.unlockSubmitButton()
         } else {
@@ -531,7 +570,6 @@ BX.SaleCommonPVZ = {
 
         if (this.curDeliveryId === this.doorDeliveryId) {
             this.buildDeliveryDate()
-            this.buildDeliveryTime()
             this.buildAddressField()
             this.buildDoorDelivery(BX.Sale.OrderAjaxComponent.result)
         } else  {
@@ -665,7 +703,6 @@ BX.SaleCommonPVZ = {
      */
     buildPVZMap: function () {
         this.removeDeliveryDate()
-        this.removeDeliveryTime()
         BX.remove(BX('user-address-wrap'))
         BX.remove(BX('button-success-delivery'))
         BX.show(BX('wrap_data_view'))
@@ -1262,7 +1299,6 @@ BX.SaleCommonPVZ = {
                                                         BX('ID_DELIVERY_ID_' + __this.doorDeliveryId).checked = true
                                                         //TODO default delivery type if not send
                                                         __this.buildDeliveryDate()
-                                                        __this.buildDeliveryTime()
                                                         __this.buildAddressField()
                                                         BX.Sale.OrderAjaxComponent.sendRequest()
 
@@ -1293,12 +1329,6 @@ BX.SaleCommonPVZ = {
       if (BX('wrap_delivery_date')){
           BX.remove(BX('wrap_delivery_date'));
       }
-    },
-
-    removeDeliveryTime: function () {
-        if (BX('wrap_delivery_time')){
-            BX.remove(BX('wrap_delivery_time'));
-        }
     },
 
     buildDeliveryDate: function () {
@@ -1373,92 +1403,6 @@ BX.SaleCommonPVZ = {
         }
 
         return this
-    },
-
-    buildDeliveryTime: function () {
-
-        let __this = this;
-        const TimeDeliveryNode = BX.create({
-            tag: 'div',
-            children: [
-                BX.create({
-                    tag: 'select',
-                    props: {
-                        id: 'datetime_interval_popup',
-                        className: 'form-control bx-soa-customer-input bx-ios-fix',
-                        style: "background-color: unset; height: 40px; padding: 0 23px;"
-                    },
-                })
-            ],
-            dataset: {name: 'DELIVERYTIME_INTERVAL'},
-        })
-
-        if (!BX('wrap_delivery_time')) {
-            BX.append(
-                BX.create({
-                    tag: 'div',
-                    props: {
-                        id: 'wrap_delivery_time',
-                        className: "wrap_filter_block mr-2 order-5"
-                    },
-                    children: [
-                        BX.create('DIV', {
-                            children: [
-                                BX.create({
-                                    tag: 'label',
-                                    props: {className: 'title'},
-                                    text: 'Удобное время получения:'
-                                }),
-                                BX.create({
-                                        tag: 'div',
-                                        children: [
-                                            TimeDeliveryNode
-                                        ]
-                                    }
-                                )
-                            ]
-                        })
-                    ]
-                }),
-                BX('pvz_user_data')
-            );
-
-            let datetime_interval_popup = $('#datetime_interval_popup');
-            datetime_interval_popup.on("change", function () {
-                $('[name="ORDER_PROP_'+__this.propDeliveryTimeInterval+'"]').val(this.value);
-            });
-        }
-    },
-
-    updateDeliveryTime: function (deliveryIntervals) {
-        let datetime_interval_order = $('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]');
-        BX.adjust(
-            BX('datetime_interval_popup'),
-            {
-                props: {
-                    disabled: false
-                },
-                children: deliveryIntervals.map(interval => BX.create({
-                    tag: 'option',
-                    text: interval,
-                }))
-            }
-        )
-
-        $(`#datetime_interval_popup option:contains(${datetime_interval_order.val()})`).prop('selected', true);
-
-    },
-
-    clearDeliveryTime: function () {
-        BX.cleanNode(BX('datetime_interval_popup'))
-        BX.adjust(
-            BX('datetime_interval_popup'),
-            {
-                props: {
-                    disabled: 'disabled'
-                }
-            }
-        )
     },
 
     buildSuccessButtonPVZ: function () {

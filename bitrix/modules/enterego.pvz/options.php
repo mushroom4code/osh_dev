@@ -423,28 +423,22 @@ $aTabs = array(
     )
 );
 
-$oshishaOptions = array(
-    "delivery_time_period" => array(
-        "timeDelivery" => array(
-            "name" => GetMessage('OSH_SETTINGS_TIME_DELIVERY_DAY'),
+$oshishaOptions = [];
+
+if (defined('SUBSIDIARY_SITE_LIST')) {
+    foreach (SUBSIDIARY_SITE_LIST as $subsidiary_id) {
+        $oshishaOptions["deliveryTimeIntervals".$subsidiary_id] = array(
+            "name" => GetMessage('OSH_SETTINGS_TIME_DELIVERY').' ('.$subsidiary_id.')',
             "type" => "news",
-            "id" => 'dayDelivery',
+            "id" => 'deliveryTimeIntervals'.$subsidiary_id,
+            "site_id" => $subsidiary_id,
             "elems" => array(
-                array("type" => "text", 'size' => '5', 'name' => 'timeDeliveryStartDay[]'),
-                array("type" => "text", 'size' => '5', 'name' => 'timeDeliveryEndDay[]')
+                array("type" => "text", 'size' => '5', 'name' => 'deliveryTimeIntervals'.$subsidiary_id.'Start[]'),
+                array("type" => "text", 'size' => '5', 'name' => 'deliveryTimeIntervals'.$subsidiary_id.'End[]')
             )
-        ),
-        "timeDeliveryNight" => array(
-            "name" => GetMessage('OSH_SETTINGS_TIME_DELIVERY_NIGHT'),
-            "type" => "news",
-            "id" => 'nightDelivery',
-            "elems" => array(
-                array("type" => "text", 'size' => '5', 'name' => 'timeDeliveryStartNight[]'),
-                array("type" => "text", 'size' => '5', 'name' => 'timeDeliveryEndNight[]')
-            )
-        ),
-    ),
-);
+        );
+    }
+}
 
 
 $tabControl = new CAdminTabControl(
@@ -555,23 +549,19 @@ $tabControl->begin();
                     </td>
                 </tr><?php
             } else if ($aTab['DIV'] === 'oshisha') {
-                    \CommonPVZ\OshishaDelivery::generate($oshishaOptions["delivery_time_period"],
+                    \CommonPVZ\OshishaDelivery::generate($oshishaOptions,
                         \CommonPVZ\OshishaDelivery::getOshishaOptionsData()); ?>
 
-                    <tr>
-                        <td>Время доставки:</td>
-                        <td>Время доставки настраивается в свойстве заказа "DELIVERYTIME_INTERVAL"</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div style="display: none" id="oshisha_update_region_restrictions_label"
-                                 class="adm-info-message-wrap">
-                            </div>
-                        </td>
-                        <td>
-                            <input type="button" id="oshisha_update_region_restrictions"
-                                   value="<?= Loc::getMessage('OSH_REGION_RESTRICTIONS') ?>"/>
-                        </td>
+                <tr>
+                    <td>
+                        <div style="display: none" id="oshisha_update_region_restrictions_label"
+                             class="adm-info-message-wrap">
+                        </div>
+                    </td>
+                    <td>
+                        <input type="button" id="oshisha_update_region_restrictions"
+                               value="<?= Loc::getMessage('OSH_REGION_RESTRICTIONS') ?>"/>
+                    </td>
                 </tr>
                 <?php
             }
@@ -590,6 +580,24 @@ $tabControl->end();
 if ($request->isPost() && check_bitrix_sessid()) {
     $_REQUEST['SDEK_tarifs'] = ($_REQUEST['SDEK_tarifs']) ? serialize($_REQUEST['SDEK_tarifs']) : 'a:0:{}';
     Option::set($module_id, 'SDEK_tarifs', $_REQUEST['SDEK_tarifs']);
+
+    if (defined('SUBSIDIARY_SITE_LIST')) {
+        foreach (SUBSIDIARY_SITE_LIST as $subsidiary_id) {
+            $tempLocationsArr = [];
+            $deliveryTimeIntervalsStart = $_REQUEST['deliveryTimeIntervals'.$subsidiary_id.'Start'] ?? [];
+            $deliveryTimeIntervalsEnd = $_REQUEST['deliveryTimeIntervals'.$subsidiary_id.'End'] ?? [];
+            if (!empty($deliveryTimeIntervalsStart) && !empty($deliveryTimeIntervalsEnd)) {
+                foreach ($deliveryTimeIntervalsStart as $key => $startTime) {
+                    if (!empty($deliveryTimeIntervalsEnd[$key])) {
+                        $tempLocationsArr[$key][] = $startTime;
+                        $tempLocationsArr[$key][] = $deliveryTimeIntervalsEnd[$key];
+                    }
+                }
+            }
+            $deliveryTimeIntervalsSerialized = serialize($tempLocationsArr);
+            Option::set($module_id, 'deliveryTimeIntervals', $deliveryTimeIntervalsSerialized, $subsidiary_id);
+        }
+    }
     foreach ($aTabs as $aTab) {
         foreach ($aTab['OPTIONS'] as $arOption) {
             if (!is_array($arOption)) {
@@ -766,16 +774,12 @@ if ($request->isPost() && check_bitrix_sessid()) {
 </script>
 <script type="text/javascript">
     function settingsAddRights(a) {
+        console.log(a);
         let attr_id = a.attributes.dataid.value;
-        let array_name_start, array_name_end, child_start_period, child_end_period, remove_button;
+        let array_name_start, hyphen_label, array_name_end, child_start_period, child_end_period, remove_button;
         let box_for_strings = document.querySelector('div[data-type=' + attr_id + ']');
-        if (attr_id === 'dayDelivery') {
-            array_name_start = 'timeDeliveryStartDay[]';
-            array_name_end = 'timeDeliveryEndDay[]';
-        } else {
-            array_name_start = 'timeDeliveryStartNight[]';
-            array_name_end = 'timeDeliveryEndNight[]';
-        }
+            array_name_start = attr_id+'Start[]';
+            array_name_end = attr_id+'End[]';
 
         child_start_period = BX.create('INPUT', {
             props: {
@@ -785,6 +789,13 @@ if ($request->isPost() && check_bitrix_sessid()) {
                 size: '5'
             }
         });
+
+        hyphen_label = BX.create('label', {
+            props: {
+                style: 'margin-left: 5px; margin-right: 5px;'
+            },
+            text: ' - '
+        })
 
         child_end_period = BX.create('INPUT', {
             props: {
@@ -800,9 +811,9 @@ if ($request->isPost() && check_bitrix_sessid()) {
                 href: 'javascript:void(0)',
                 type: 'text',
                 className: 'flex-align-items',
-                events: {
-                    click: settingsDeleteRow()
-                }
+            },
+            attrs: {
+                onClick: 'settingsDeleteRow(this)'
             },
             children: [
                 BX.create('IMG', {
@@ -812,19 +823,22 @@ if ($request->isPost() && check_bitrix_sessid()) {
                         width: '20',
                         height: '20'
                     }
-                })]
+                })
+            ]
         });
 
         let tbl = BX.create('DIV', {
             props: {
-                className: 'flex-row d-flex padding-10',
+                className: 'padding-10',
+                style: 'display: flex; align-items: center; margin-bottom: 5px;'
             },
-            children: [child_start_period, child_end_period, remove_button]
+            children: [child_start_period, hyphen_label, child_end_period, remove_button]
         });
         BX.append(tbl, box_for_strings);
     }
 
     function settingsDeleteRow(el) {
+        console.log(el);
         BX.remove(BX.findParent(el, {className: 'padding-10'}));
         return false;
     }
