@@ -41,7 +41,7 @@ class EnteregoExchange
                 'order' => array(
                     'ID_CONTRAGENT' => 'ASC'
                 ),
-                'limit' => 10,
+                'limit' => 50,
             );
 
             if (!empty($dateStartImport1C) || !empty($stepDate)) {
@@ -83,7 +83,7 @@ class EnteregoExchange
                     'CONTRAGENT',
                     'INN' => 'CONTRAGENT.INN'
                 ),
-                'limit' => 10,
+                'limit' => 50,
                 'runtime' => array(
                     new Main\Entity\ReferenceField(
                         'RELATION',
