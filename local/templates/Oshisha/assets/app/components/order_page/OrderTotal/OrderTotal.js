@@ -27,7 +27,7 @@ function OrderTotal() {
                  rounded-full text-center dark:bg-dark-red">18+</span>
                 </span>
             </div>
-            <div id="bx-soa-total" className="mb-3 bx-soa-sidebar">
+            <div id="bx-soa-total" className="mb-3 bx-soa-sidebar sticky top-[200px]">
                 <div className="bx-soa-cart-total-ghost"></div>
                 <div className="bx-soa-cart-total p-6 rounded-xl bg-textDark dark:bg-darkBox mb-7">
                     <TotalInfo result={result} params={params} options={options} getSelectedDelivery={getSelectedDelivery}/>

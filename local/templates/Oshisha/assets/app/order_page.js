@@ -183,22 +183,22 @@ BX.OrderPageComponents = {
                 case 'MAIN':
                     var mainErrorsNode = document.getElementById(this.OrderMainErrorsBlockId);
                     this.showError(mainErrorsNode, blockErrors);
-                    this.animateScrollTo(mainErrorsNode, 800, 20);
+                    this.animateScrollTo(mainErrorsNode, 800, 300);
                     break;
                 case 'DELIVERY':
                     var deliveryBlockNode = document.getElementById(this.OrderDeliveryBlockId);
                     this.showError(deliveryBlockNode, blockErrors, true);
-                    this.animateScrollTo(deliveryBlockNode, 800, 20);
+                    this.animateScrollTo(deliveryBlockNode, 800, 300);
                     break;
                 case 'PAY_SYSTEM':
                     var paySystemBlockNode = document.getElementById(this.OrderPaysystemsBlockId);
                     this.showError(paySystemBlockNode, blockErrors, true);
-                    this.animateScrollTo(paySystemBlockNode, 800, 20);
+                    this.animateScrollTo(paySystemBlockNode, 800, 300);
                     break;
                 case 'PROPERTY':
                     var propsBlockNode = document.getElementById(this.OrderPropertiesBlockId);
                     this.showError(propsBlockNode, blockErrors, true);
-                    this.animateScrollTo(propsBlockNode, 800, 20);
+                    this.animateScrollTo(propsBlockNode, 800, 300);
                     break;
             }
         }
@@ -206,9 +206,9 @@ BX.OrderPageComponents = {
 
     showError: function (node, msg, border) {
         if (BX.type.isArray(msg))
-            msg = msg.join('<br>');
+            msg = msg.join('<div><br></div>');
 
-        var errorContainer = node.querySelector('.alert.alert-danger'), animate;
+        var errorContainer = node.querySelector('.alert.alert-danger');
         if (errorContainer && msg.length) {
             BX.cleanNode(errorContainer);
             errorContainer.appendChild(BX.create('DIV', {html: msg}));

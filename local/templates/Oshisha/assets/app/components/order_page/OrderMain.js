@@ -105,7 +105,7 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
 
                             </div>
                             <div id="user-properties-block" className="bx-soa-section-content">
-                                <div className="alert alert-danger text-light-red dark:text-white p-4"
+                                <div className="alert alert-danger text-hover-red mb-2 text-sm font-medium"
                                      style={{display: "none"}}></div>
                                 <OrderUserProps contrAgents={contrAgents}/>
                             </div>
@@ -151,7 +151,7 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                             </div>
                             <div className="box_with_delivery_type">
                                 <div className="bx-soa-section-content" id="delivery-block">
-                                    <div className="alert alert-danger text-light-red dark:text-white p-4"
+                                    <div className="alert alert-danger text-hover-red mb-2 text-sm font-medium"
                                          style={{display: "none"}}></div>
                                     <OrderDelivery/>
                                 </div>
@@ -183,7 +183,7 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                                 </div>
                             </div>
                             <div className="bx-soa-section-content py-2.5" id="paysystems_block">
-                                <div className="alert alert-danger text-light-red dark:text-white p-4"
+                                <div className="alert alert-danger text-hover-red mb-2 text-sm font-medium"
                                      style={{display: "none"}}></div>
                                 <OrderPaySystems/>
                             </div>
