@@ -195,8 +195,8 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                 <div className="fixed top-0 left-0 w-full h-full bg-lightOpacityWindow dark:bg-darkOpacityWindow z-50
                 md:flex block justify-center items-center">
                     <div
-                        className="flex flex-col md:max-w-5xl md:top-auto top-0 relative md:h-4/5 max-w-auto
-                         overflow-hidden w-full bg-white dark:bg-darkBox py-7 md:px-7 px-4 md:rounded-xl rounded-0 h-full">
+                        className="flex flex-col md:max-w-5xl md:top-auto top-0 relative overflow-auto lg:h-4/5 h-full
+                         max-w-auto w-full bg-white dark:bg-darkBox py-7 md:px-7 px-4 md:rounded-xl rounded-0">
                         <div className='flex md:flex-row flex-col mb-3'>
                             <div className='flex-col flex-wrap flex-1 mb-6'>
                                 <p className="mb-2 text-textLight dark:text-textDarkLightGray
