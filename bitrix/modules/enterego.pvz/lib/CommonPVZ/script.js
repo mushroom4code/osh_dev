@@ -821,11 +821,13 @@ BX.SaleCommonPVZ = {
             },
             onsuccess: function (res) {
                 __this.pvzObj = JSON.parse(res) || [];
+                let uniquePvzDeliveriesTemp = {'Все': 'Все'}
                 __this.pvzObj.features.forEach((item) => {
                     if (!Object.keys(__this.uniquePvzDeliveries).find((deliveryName) => deliveryName === item.properties.deliveryName)) {
-                        __this.uniquePvzDeliveries[item.properties.deliveryName] = item.properties.iconCaption;
+                        uniquePvzDeliveriesTemp[item.properties.deliveryName] = item.properties.iconCaption;
                     }
                 });
+                __this.uniquePvzDeliveries = uniquePvzDeliveriesTemp;
                 __this.buildSortService();
                 BX.show(BX('wrap_sort_service'));
                 __this.showPVZ();
