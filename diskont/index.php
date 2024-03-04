@@ -29,6 +29,10 @@ if (SITE_ID !== SITE_EXHIBITION) {
         ));
     }
 
+    if (CATEGORY_DISABLED) {
+        LocalRedirect('/404.php');
+    }
+
     $GLOBALS['ArPreFilter'] = array(
         'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
     );

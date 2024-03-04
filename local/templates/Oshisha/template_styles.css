@@ -574,30 +574,6 @@ h3.ctweb-title {
     height: 28px;
 }
 
-.parent_menu {
-    /*overflow: hidden;
-    overflow-y: scroll;
-    scrollbar-color: #d5d5d5 transparent;
-    scrollbar-width: thin;*/
-
-    width: 310px;
-    min-width: 310px;
-    border-radius: 20px; /*20px 0 0 20px;*/
-}
-
-.menu_items {
-    position: relative;
-    left: -15px;
-}
-
-.li_menu_header:first-child.active_item_menu {
-    border-radius: 20px 20px 0px 0px;
-}
-
-.li_menu_header:last-child.active_item_menu {
-    border-radius: 0px 0px 20px 20px;
-}
-
 .padding_product_box {
     padding-left: 31px;
     flex-grow: 1;
@@ -649,7 +625,7 @@ h3.ctweb-title {
 
 .blur_photo .image_cart, .blur_photo .product-item-detail-slider-images-container, .blur_photo .product-item-detail-slider-container {
     width: 100%;
-    z-index: 1000;
+    z-index: 100;
     backdrop-filter: blur(8px);
     left: 0;
     filter: blur(10px);

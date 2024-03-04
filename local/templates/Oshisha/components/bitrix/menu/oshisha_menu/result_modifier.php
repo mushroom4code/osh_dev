@@ -169,8 +169,15 @@ foreach ($arResult as $key => $arItem) {
 
 	} elseif ($arItem["DEPTH_LEVEL"] == "3") {
 		$arMenuItemsIDs[$curItemLevel_1][$curItemLevel_2][] = $arItem["PARAMS"]["item_id"];
-		$arAllItems[$arItem["PARAMS"]["item_id"]] = $arItem;
-	}
+        if ($arItem["IS_PARENT"]) {
+            $curItemLevel_3 = $arItem["PARAMS"]["item_id"];
+        }
+        $arAllItems[$arItem["PARAMS"]["item_id"]] = $arItem;
+
+	} elseif ($arItem["DEPTH_LEVEL"] == "4") {
+        $arMenuItemsIDs[$curItemLevel_2][$curItemLevel_3][] = $arItem["PARAMS"]["item_id"];
+        $arAllItems[$arItem["PARAMS"]["item_id"]] = $arItem;
+    }
 }
 
 FillAllPicturesAndDescriptions($arAllItems, $arMenuItemsIDs, $arImgDesc);
@@ -182,7 +189,7 @@ foreach ($arMenuItemsIDs as $itemIdLevel_1 => $arLevels2) {
 	$countLevels2 = count($arLevels2);
 
 	if ($countLevels2 > 0) {
-		for ($i = 1; $i <= 3; $i++) {
+		for ($i = 1; $i <= 4; $i++) {
 			$sumElementsInRow = 0;
 			foreach ($arLevels2 as $itemIdLevel_2 => $arLevels3) {
 				$sumElementsInRow += count($arLevels3) + 1;
@@ -197,7 +204,7 @@ foreach ($arMenuItemsIDs as $itemIdLevel_1 => $arLevels2) {
 					$tmpCount += 1 + count($arTmpLevels3);
 				}
 
-				if ($tmpCount <= $countItemsInRow * (3 - $i) && $countItemsInRow <= $sumElementsInRow) {
+				if ($tmpCount <= $countItemsInRow * (4 - $i) && $countItemsInRow <= $sumElementsInRow) {
 					break;
 				}
 			}

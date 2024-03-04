@@ -4,6 +4,7 @@ BX.ready(
         if (boxSelect.length > 0) {
             $(boxSelect).select2({
                 minimumResultsForSearch: -1,
+                sorter: data => data.sort((a, b) => a.text.localeCompare(b.text))
             })
 
             $(boxSelect).on('select2:open', function () {

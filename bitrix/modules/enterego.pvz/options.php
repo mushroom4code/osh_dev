@@ -372,6 +372,12 @@ $aTabs = array(
                 array("text")
             ),
             array(
+                'Oshisha_ymaps_suggest_apikey',
+                GetMessage('OSH_SETTINGS_YMAPS_SUGGEST_KEY_NAME'),
+                Option::get($module_id, 'Oshisha_ymaps_suggest_apikey'),
+                array("text")
+            ),
+            array(
                 'Oshisha_dadatatoken',
                 GetMessage('OSH_SETTINGS_DA_DATA_NAME'),
                 Option::get($module_id, 'Oshisha_dadatatoken'),

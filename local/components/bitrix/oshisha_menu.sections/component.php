@@ -38,6 +38,10 @@ if($this->StartResultCache())
 			"IBLOCK_ACTIVE"=>"Y",
 			"<="."DEPTH_LEVEL" => $arParams["DEPTH_LEVEL"],
 		);
+		//TODO local redirect for category 18+
+		if (CATEGORY_DISABLED) {
+			$arFilter['PROPERTY'] = array('SEE_PRODUCT_AUTH_VALUE' => 26185);
+		}
 		$arOrder = array(
 			"left_margin"=>"asc",
 		);

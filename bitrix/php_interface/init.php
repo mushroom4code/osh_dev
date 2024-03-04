@@ -111,22 +111,13 @@ function onSalePaySystemRestrictionsClassNamesBuildListHandler()
         )
     );
 }
+// скрытие категорий и товаров 18+
+EnteregoSettings::getDisabledFlagCategory();
 
 function PriceTypeANDStatusUser()
 {
-//    global $USER;
-//    $user_object = new EnteregoUserExchange();
-//    $user_object->USER_ID = $USER->GetID() ?? 0;
-//    $user_object->GetActiveContrAgentForUserPrice();
-
-//    if (!empty($user_object->contragents_user)) {
-//        $GLOBALS['UserTypeOpt'] = false; //здесь поставить true для оптовиков
-//        $GLOBALS['PRICE_TYPE_ID'] = BASIC_PRICE; //Здесь переключение типов цен - сейчас включили розничную = 2
-//    } else {
         $GLOBALS['UserTypeOpt'] = false;
         $GLOBALS['PRICE_TYPE_ID'] = BASIC_PRICE;
-//    }
-
 }
 
 function getUserType()

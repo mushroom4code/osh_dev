@@ -120,9 +120,28 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     $browserInfo = EnteregoSettings::getInfoBrowser();
     $APPLICATION->ShowHead();
     // Переменная для убора функционала под мобильное приложение
-    $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent(); ?>
+    $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
+
+    //    get presentation
+    global  $presentationUrl;
+    $SectionRes = CIBlockElement::GetList(
+        array(),
+        array('ACTIVE' => 'Y', 'CODE' => 'presentationHeader'),
+        false, false,
+        array("CODE", 'NAME', 'ID', 'PROPERTY_PRESENTATION_FILE')
+    );
+    $presentation = $SectionRes->Fetch();
+    $presentationUrl = '';
+
+    if ($presentation) {
+        if (!empty($presentation['PROPERTY_PRESENTATION_FILE_VALUE'])) {
+            $presentationUrl = CFile::GetPath($presentation['PROPERTY_PRESENTATION_FILE_VALUE']);
+        }
+    }
+    //    get presentation
+    ?>
     <?php if ($showUserContent) { ?>
-    <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
+        <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
     <?php } ?>
 </head>
 <body class="bx-background-image">
@@ -286,8 +305,8 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                 <?php if ($USER->IsAuthorized()) { ?>
                                     <a href="/about/delivery/" class="py-2 px-3 font-13">Доставка и оплата</a>
                                 <?php }
-                                if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                                    <a href="/local/templates/Oshisha/images/presentation.pdf"
+                                if (file_exists($_SERVER["DOCUMENT_ROOT"] . $presentationUrl) && !empty($presentationUrl)) { ?>
+                                    <a href="<?= $presentationUrl ?>"
                                        download class="py-2 px-3 font-13">Презентация</a>
                                 <?php }
                             } ?>
@@ -327,8 +346,8 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                     <a href="/about/o-nas/" class="link_menu_top">
                                         <span class="text_catalog_link not_weight">О нас</span>
                                     </a>
-                                    <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                                        <a href="/local/templates/Oshisha/images/presentation.pdf" download
+                                    <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . $presentationUrl) && !empty($presentationUrl)) { ?>
+                                        <a href="<?= $presentationUrl ?>" download
                                            class="text_header link_menu_top"> <span
                                                     class="text_catalog_link not_weight"> Презентация</span></a>
                                     <?php } ?>
@@ -400,9 +419,6 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                         <?php } ?>
                                     </select>
                                 </div>
-                                <script>$('#subsidiary_link').select2({
-                                        minimumResultsForSearch: -1,
-                                    })</script>
                             <?php } else { ?>
                                 <a href="/about/feedback_new_site/"
                                    class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать

@@ -46,12 +46,7 @@ $(document).ready(function () {
         line = $('#basket-line'),
         bool_basket = $(div).is('#basket-items-list-container');
     //CATALOG
-    let checkInput = $(inputItem).is(checkProductOrdersReady),
-        box_for_tasted = $(body).find('.box_for_tasted'),
-        icon = $('#icon'),
-        main_menu = $('.main_menu');
-    // HIDE
-    $(main_menu).hide();
+    let checkInput = $(inputItem).is(checkProductOrdersReady);
     $(boxAddress).hide();
     $('.content_for_box_delivery').hide();
     // SELECT
@@ -2450,8 +2445,8 @@ $(document).ready(function () {
     });
 
     $('.smart-filter-tog').on('click', function () {
-        var code_vis = $(this).data('code-vis');
-        $('.catalog-section-list-item-sub[data-code="' + code_vis + '"]').toggleClass('active');
+        $('.catalog-section-list-item-sub[data-code="' + $(this).data('code-vis') + '"]').toggleClass('active');
+        $('.catalog-section-list-item-l[data-code="' + $(this).data('code-vis') + '"]').toggleClass('d-none');
         $(this).toggleClass('smart-filter-angle-up');
     });
 

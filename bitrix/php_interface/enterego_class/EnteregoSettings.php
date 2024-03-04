@@ -82,4 +82,18 @@ class EnteregoSettings
         $browserInfo['version'] = $bInfo[2];
         return $browserInfo;
     }
+
+    /** Get disabled flag
+     * @return bool
+     */
+    public static function getDisabledFlagCategory(): bool
+    {
+        $domain = $_SERVER['HTTP_HOST'];
+        $categoryDisabled = false;
+        if($domain === 'oshisha.cc') {
+            $categoryDisabled = true;
+        }
+
+        return define("CATEGORY_DISABLED", $categoryDisabled);
+    }
 }

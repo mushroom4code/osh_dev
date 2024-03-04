@@ -28,24 +28,37 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         $HAS_CHILD = 1;
 
     if ($showUserContent || !$showUserContent && $arResult["ALL_ITEMS"][$itemID]['TEXT'] === 'Чай') {
-        if ($arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/diskont/'
+        if ($arResult["ALL_ITEMS"][$itemID]["TEXT"] !== 'Дисконт'
             && $arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/hit/' && !empty($arResult["ALL_ITEMS"][$itemID]['TEXT'])) {
-            $menu_for_JS['MAIN'][] = [
-                'LINK' => $arResult["ALL_ITEMS"][$itemID]["LINK"],
-                'TEXT' => $arResult["ALL_ITEMS"][$itemID]["TEXT"],
-                'ID' => $itemID,
-                'HAS_CHILD' => $HAS_CHILD,
-            ];
+            if ($arResult["ALL_ITEMS"][$itemID]['DEPTH_LEVEL'] == '1') {
+                $menu_for_JS['MAIN'][] = [
+                    'LINK' => $arResult["ALL_ITEMS"][$itemID]["LINK"],
+                    'TEXT' => $arResult["ALL_ITEMS"][$itemID]["TEXT"],
+                    'ID' => $itemID,
+                    'HAS_CHILD' => $HAS_CHILD,
+                ];
+            }
             if (is_array($arColumns) && count($arColumns) > 0) {
                 foreach ($arColumns as $key => $arRow) {
                     foreach ($arRow as $itemIdLevel_2 => $arLevel_3) {
-                        $menu_for_JS['ELEMENT'][$itemID][] = [
+                        $childsItems = [];
+                        if ($arResult["ALL_ITEMS"][$itemIdLevel_2]['IS_PARENT']) {
+                            foreach ($arLevel_3 as $child_id => $child) {
+                                $childsItems[$child] = [
+                                    'LINK' => $arResult["ALL_ITEMS"][$child]["LINK"],
+                                    'TEXT' => $arResult["ALL_ITEMS"][$child]["TEXT"]
+                                ];
+                            }
+                        }
+                        $menu_for_JS['ELEMENT'][$itemID][$itemIdLevel_2] = [
                             'LINK' => $arResult["ALL_ITEMS"][$itemIdLevel_2]["LINK"],
                             'TEXT' => $arResult["ALL_ITEMS"][$itemIdLevel_2]["TEXT"],
+                            'ELEMENT' => $childsItems
                         ];
+
                     }
                 }
-                usort($menu_for_JS['ELEMENT'][$itemID], 'sort_by_name_menu');
+                uasort($menu_for_JS['ELEMENT'][$itemID], 'sort_by_name_menu');
             }
         }
     }
@@ -75,12 +88,14 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         }
 
         $result = json_encode($menu_for_JS);
-        if ($showUserContent) { ?>
-            <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
-                <a class="link_menu_header" href="/diskont/">
-                    <span class="text_catalog_link">Дисконт</span>
-                </a>
-            </li>
+        if ($showUserContent) {
+            if (!CATEGORY_DISABLED) { ?>
+                <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+                    <a class="link_menu_header" href="/diskont/">
+                        <span class="text_catalog_link">Дисконт</span>
+                    </a>
+                </li>
+                <?php } ?>
             <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
                 <a class="link_menu_header" href="/catalog_new/">
                     <span class="text_catalog_link">Новинки</span>
@@ -102,118 +117,204 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         <!--                <span class="text_catalog_link">Акции</span>-->
         <!--            </a>-->
         <!--        </li>		-->
-        <div class="open_menu" style="display: none" id="main_menu">
+        <div class="open_menu main_menu" style="display: none" id="main_menu">
             <div class="parent_menu"></div>
-            <div class="menu_items hide"></div>
+            <div class="menu_items hide flex-column align-content-start d-flex">
+                <div class="title mb-3 p-2 text-center width-100 position-relative align-items-center d-flex
+                 justify-content-center"></div>
+                <div class="box flex-row align-content-start d-flex justify-content-between flex-wrap"></div>
+            </div>
+            <div class="menu_items_child hide flex-column align-content-start d-flex">
+                <div class="title mb-3 p-2 text-center width-100 position-relative align-items-center
+                 justify-content-between d-flex"></div>
+                <div class="box flex-row align-content-start d-flex justify-content-between flex-wrap"></div>
+            </div>
         </div>
     </ul>
 </nav>
 <script type="text/javascript">
-    let menu_items_array = <?= json_encode($menu_for_JS);?>;
-    let icon_bar = $('#main_menus');
-    let main_menu = $('#main_menu');
-    let parent_menu = $('.parent_menu');
-    let menu_items = $('.menu_items');
+    const menu_items_array = <?= json_encode($menu_for_JS);?>;
     let class_active = '';
-    let hrefs = window.location.pathname;
 
-    $('.overlay_top').on('click', function () {
-        $(icon_bar).removeAttr('style');
-        $(icon_bar).find('.span_bar').removeClass('open_menu');
-        $(main_menu).hide(300);
-        $(parent_menu).empty();
-        $(menu_items).empty();
-        $('.overlay_top').hide();
-
-    });
-    $(icon_bar).on('click', function () {
-        let that = $(this).find('.span_bar').attr('class');
-        //$('body').addClass('overlay_top');
+    $('#main_menus').on('click', function () {
         $('.overlay_top').show();
-        if (that === "span_bar") {
+
+        const openButton = $(this).find('.span_bar');
+        if (!openButton.hasClass('open_menu')) {
             $(this).attr('style', 'flex-direction:row;transition:0.3s;');
-            $(this).find('.span_bar').addClass('open_menu');
-            $('#main_menu').addClass('main_menu');
-            if (menu_items_array !== '') {
+            openButton.addClass('open_menu')
+
+            if (Object.keys(menu_items_array?.MAIN)?.length > 0) {
+                let href = '';
+                let name = '';
                 $(menu_items_array.MAIN).each(function (key, value) {
+                    let print_strelka = '';
+                    let class_active = '';
+
                     if (value.TEXT === 'Кальяны') {
                         class_active = 'active_item_menu';
-                    } else {
-                        class_active = '';
+                        href = value.TEXT;
+                        name = 'Кальяны'
                     }
-                    if (value.HAS_CHILD == 1)
-                        var print_strelka = '<i class="fa_icon fa fa-angle-right" aria-hidden="true"></i>';
-                    else
-                        var print_strelka = '';
 
-                    if (value.LINK !== '' && value.LINK !== null && value.TEXT !== ''
-                        && value.TEXT !== null && value.TEXT !== ' ') {
-                        $(parent_menu).append('<li onclick="location.href=\'' + value.LINK + '\'" class="li_menu_header none_mobile link_js ' + class_active + '" data-role="bx-menu-item">' +
-                            '<span class="parent_category_menu"></span>' +
+                    if (value.HAS_CHILD == 1)
+                        print_strelka = '<i class="fa_icon fa fa-angle-right" aria-hidden="true"></i>';
+
+                    if (value.LINK !== '' && value.LINK !== null && value.TEXT !== '' && value.TEXT !== null
+                        && value.TEXT !== ' ') {
+                        $('.parent_menu').append('<li class="li_menu_header none_mobile link_js ' + class_active + '" ' +
+                            'data-role="bx-menu-item" data-href="' + value.LINK + '"> <span class="parent_category_menu"></span>' +
                             '<a class="link_menu_header parent_category" id="' + value.ID + '" href="javascript:void(0)">' +
-                            '<span class="text_catalog_link">' + value.TEXT + '</span></a>' + print_strelka + '</li>');
+                            '<span class="text_catalog_link">' +
+                            '' + value.TEXT + '</span></a>' + print_strelka + '</li>');
                     }
                 });
+                $('.menu_items .title').empty().html(
+                    name + ' <div class="sendToCategoryMain cursor-pointer" ' +
+                    'onclick="location.href=\'' + href + '\'"> ' +
+                    'Все <i class="fa_icon fa fa-angle-right ml-2" aria-hidden="true"></i></div>');
 
                 $.each(menu_items_array.ELEMENT, function (key_item, value_item) {
-                    $(parent_menu).find('li.active_item_menu').each(
+                    $('.parent_menu').find('li.active_item_menu').each(
                         function () {
-                            let id = $(this).find('a').attr('id');
-
-                            if (id === key_item) {
-                                $(value_item).each(function (i, val) {
-                                    $(menu_items).append('<div class="menu-item-line p-0">' +
-                                        '<a class="link_menu_header link_menu" href="' + val.LINK + '">' +
-                                        '<span class="text_catalog_link">' + val.TEXT + '</span></a></div')
-                                })
+                            if ($(this).find('a').attr('id') === key_item) {
+                                createItemMenu(value_item, $('.menu_items .box'), key_item)
                             }
                         }
                     );
                 });
             }
-            $(main_menu).show(300);
+            $('#main_menu').show(300);
         } else {
-            $(this).removeAttr('style');
-            $(this).find('.span_bar').removeClass('open_menu');
-            $(main_menu).hide(300);
-            $(parent_menu).empty();
-            $(menu_items).empty();
-            //$('body').removeClass('overlay_top');
-            $('.overlay_top').hide();
+            closeMenu($(this))
         }
-        /* $('li.link_js').on('click', function () {
-             let id = $(this).find('a').attr('id');
-             $(document).find('.active_item_menu').removeClass('active_item_menu');
 
-             $(this).addClass('active_item_menu');
-             $(menu_items).hide().empty();
+        $(document).on('click', 'li.link_js', function () {
 
-             $.each(menu_items_array.ELEMENT, function (key_item, value_item) {
-                 if (id === key_item) {
-                     $(value_item).each(function (i, val) {
-                         $(menu_items).append('<a class="link_menu_header col-3 link_menu" href="' + val.LINK + '">' +
-                             '<span class="text_catalog_link">' + val.TEXT + '</span></a>').show(200);
-                     })
-                 }
-             });
-         });*/
-        $(document).on('mouseover', 'li.link_js .text_catalog_link', function () {
-            let id = $(this).closest('li').find('a').attr('id');
+            const li = $(this).closest('li')
+            const id = li.find('a').attr('id');
             $(document).find('.active_item_menu').removeClass('active_item_menu');
+            li.addClass('active_item_menu');
 
-            $(this).closest('li').addClass('active_item_menu');
-            $(menu_items).addClass('hide').empty();
+            $('.menu_items').addClass('hide');
+            $('.menu_items .title').empty().html(
+                $(li).find('.text_catalog_link').text() + ' <div class="sendToCategoryMain cursor-pointer" ' +
+                'onclick="location.href=\'' + li.attr('data-href') + '\'"> ' +
+                'Все <i class="fa_icon fa fa-angle-right ml-2" aria-hidden="true"></i></div>');
+
+            $('.menu_items .box').empty();
+            $('.menu_items_child').addClass('hide');
 
             $.each(menu_items_array.ELEMENT, function (key_item, value_item) {
                 if (id === key_item) {
-                    $(value_item).each(function (i, val) {
-                        $(menu_items).append('<div class="menu-item-line">' +
-                            '<a class="link_menu_header link_menu" href="' + val.LINK + '">' +
-                            '<span class="text_catalog_link">' + val.TEXT + '</span></a></div>').removeClass('hide');
-                    })
+                    createItemMenu(value_item, $('.menu_items .box'), id, $('.menu_items'))
                 }
             });
 
         });
     });
+
+    //
+    $(document).on('click', '.child_js', function () {
+        const that = $(this);
+        const id = $(that).attr('id');
+        const parentId = $(that).attr('data-parent-id');
+        $('.menu_items_child').addClass('hide');
+        $('.menu_items_child .title').empty().html(
+            '<div class="backToTheMenu cursor-pointer" ' +
+            'onclick="backToMenu()"><i class="fa_icon fa fa-angle-left mr-2" aria-hidden="true"></i>Назад</div>'
+            + $(that).find('.text_catalog_link').text() + ' <div class="sendToCategory cursor-pointer" ' +
+            'onclick="location.href=\'' + that.attr('data-href') + '\'"> ' +
+            'Все <i class="fa_icon fa fa-angle-right ml-2" aria-hidden="true"></i></div>'
+        );
+        $('.menu_items_child .box').empty();
+        $('.menu_items').addClass('hide');
+
+        $.each(menu_items_array.ELEMENT, function (key_item, value_parent) {
+            if (parentId === key_item) {
+                $.each(value_parent, function (key_child, value_item) {
+                    if (id === key_child) {
+                        createItemMenu(value_item.ELEMENT, $('.menu_items_child .box'), parentId, $('.menu_items_child'))
+                    }
+                });
+            }
+        });
+
+    });
+
+    $('.overlay_top').on('click', function () {
+        closeMenu($('#main_menus'))
+    });
+
+    function backToMenu() {
+        $('.menu_items_child').addClass('hide');
+        $('.menu_items_child .box').empty();
+        $('.menu_items_child .title').empty();
+        $('.menu_items').removeClass('hide');
+    }
+
+    function closeMenu(icon_bar) {
+        $(icon_bar).removeAttr('style');
+        $(icon_bar).find('.span_bar').removeClass('open_menu');
+        $('#main_menu').hide(300);
+        $('.parent_menu').empty();
+        $('.menu_items .box').empty();
+        $('.menu_items .title').empty();
+        $('.menu_items_child .box').empty();
+        $('.menu_items_child .title').empty();
+        $('.overlay_top').hide();
+    }
+
+    function createItemMenu(value_item, menu_items, parentId = 0, parent) {
+
+        let res = Object.entries(value_item).sort((a, b) => {
+            if (a[1].TEXT < b[1].TEXT) return -1;
+            if (a[1].TEXT > b[1].TEXT) return 1;
+            return 0;
+        });
+
+        let listLength = res.length;
+        let classItem = 'col-7';
+        const maxLength = 14;
+
+        if (res.length > maxLength) {
+            listLength = Math.ceil(res.length / 2);
+            classItem = 'col-6';
+        }
+
+        for (let i = 0; i < listLength; i++) {
+
+            let itemList = res[i]
+            createItem(itemList, menu_items, parentId, classItem)
+
+            if (res.length > maxLength) {
+                let newIndex = (Math.floor(res.length / 2) + i) + 1;
+                if ((res.length - 1) >= newIndex) {
+                    itemList = res[newIndex];
+                    createItem(itemList, menu_items, parentId, classItem)
+                }
+            }
+        }
+
+        $(parent).removeClass('hide');
+    }
+
+    function createItem(itemList, menu_items, parentId, classItem) {
+        let down = '';
+        let classChild = '';
+        let val = itemList[1];
+        let href = val?.LINK;
+        if (typeof val.ELEMENT === "object" && Object.keys(val.ELEMENT)?.length > 0) {
+            down = '<i class="fa_icon fa fa-angle-right child_js" aria-hidden="true"></i>';
+            classChild = 'child_js';
+            href = 'javascript:void(0)'
+        }
+        let item = '<div class="menu-item-line h-auto ' + classItem + '">' +
+            '<a class="link_menu_header link_menu d-flex align-items-center justify-content-between ' + classChild + '" ' +
+            'href="' + href + '" data-parent-id="' + parentId + '" id="' + itemList[0] + '" data-href="' + val?.LINK + '"> ' +
+            '<span class="text_catalog_link">' + val.TEXT + '</span> ' + down + ' </a>' +
+            '</div>';
+
+        $(menu_items).append(item)
+    }
 </script>
