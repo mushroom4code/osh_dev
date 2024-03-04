@@ -140,19 +140,6 @@ function getCurrentPriceId()
 
 function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 {
-
-    $aModuleMenu[] = array(
-        "parent_menu" => "global_menu_content",
-        'menu_id' => 'global_menu_osh',
-        'text' => 'Настройки сайта',
-        'title' => 'Настройки сайта',
-        'sort' => 9,
-        'items_id' => 'global_menu_osh',
-        'icon' => 'imi_corp',
-        'url' => '/bitrix/php_interface/enterego_class/site_options.php?lang=' . LANG,
-
-    );
-
     $arRes = array(
         "global_menu_enterego" => array(
             "menu_id" => "enterego",
@@ -165,6 +152,17 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
             "items_id" => "global_menu_enterego",
             "help_section" => "enterego",
             "items" => array(
+                array(
+                    "parent_menu" => "global_menu_content",
+                    'menu_id' => 'global_menu_osh',
+                    'text' => 'Настройки сайта',
+                    'title' => 'Настройки сайта',
+                    'sort' => 9,
+                    'items_id' => 'global_menu_osh',
+                    'icon' => 'imi_corp',
+                    'url' => '/bitrix/admin/enterego_admin.php?category=site_options&lang=' . LANG,
+
+                ),
                 array(
                     "parent_menu" => "global_menu_enterego",
                     "icon" => "default_menu_icon",
