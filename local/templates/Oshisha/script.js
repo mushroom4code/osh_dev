@@ -3124,3 +3124,10 @@ $(document).on('click', function (e) {
     }
     e.stopPropagation();
 });
+
+$(document).ready(function () {
+    $("body").on("contextmenu", "img", function(e) {
+        console.log(e);
+        return false;
+    });
+});
