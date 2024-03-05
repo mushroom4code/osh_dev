@@ -65,7 +65,7 @@ if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
             $basket->save();
         }
         try {
-            $answer['QUANTITY'] = round(array_sum($basket->getQuantityList()));
+            $answer['QUANTITY'] = round(array_sum($basket->getQuantityList() ?? 0));
         } catch (\Bitrix\Main\ArgumentNullException $e) {
             $answer['QUANTITY'] = 0;
         }

@@ -1,4 +1,6 @@
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
+<?php use Bitrix\Sale\Fuser;
+
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 \Bitrix\Main\Loader::includeModule("osh.like_favorites");
 CModule::AddAutoloadClasses(
@@ -9,9 +11,9 @@ CModule::AddAutoloadClasses(
 $arResult = '';
 
 if (!empty($_POST['product_array'])) {
-
+    CModule::IncludeModule("sale");
     $product_array = json_decode($_POST['product_array']);
-
+    $product_array->fuser_id = Fuser::getId();
     if (!empty($product_array->product_id) && ( !empty($product_array->fuser_id) )
         && !empty($product_array->method)) {
         $result = DataBase_like::SetRemoveLikeFavorite($product_array->fuser_id, $product_array->product_id,

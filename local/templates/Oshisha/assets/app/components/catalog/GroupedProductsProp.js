@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 /**
  * GroupedProductsPropValue
@@ -18,7 +18,7 @@ function GroupedProductsPropValue({
 
     const keys = Object.keys(group);
 
-    if (propData.TYPE === 'color') {
+    if (propData?.TYPE === 'color') {
         const srcPicture = group[keys[0]].PREVIEW_PICTURE
         return (
             <a className={"offer-link " + (select ? 'selected' : '')}>
@@ -102,15 +102,14 @@ function GroupedProductsPropValue({
  * @param productId
  * @param listProducts
  * @param updateProduct
- * @param setSelectPropValue
- * @param selectPropValue
  * @returns {JSX.Element}
  * @constructor
  */
 function GroupedProductsProp({
-                                 propSettings, props, productId, listProducts, updateProduct, setSelectPropValue,
-                                 selectPropValue
+                                 propSettings, props, productId, listProducts, updateProduct
                              }) {
+
+    const [selectPropValue, setSelectPropValue] = useState([])
 
     if (propSettings[props[0]]) {
 
@@ -138,23 +137,23 @@ function GroupedProductsProp({
         }
 
         if (selectPropValue.findIndex(item => item.prop === props[0]) === -1) {
-
             setActiveGroup(listProducts[productId].PROPERTIES[propData.CODE].JS_PROP);
         }
 
         useEffect(() => {
-            // console.log(selectPropValue)
-                const productsSuccess = sortOnPriorityArDataProducts(listProducts, propData.CODE);
-                const productResult = listProducts[productsSuccess[0].id];
-                updateProduct(productResult);
-
+            const productsSuccess = sortOnPriorityArDataProducts(listProducts, propData.CODE);
+            const productResult = listProducts[productsSuccess[0].id];
+            productResult.DETAIL_PAGE_URL = '/catalog/product/' + productResult.CODE + '/'
+            updateProduct(productResult);
         }, [selectPropValue]);
 
         return (
             selectPropValue.length > 0 ?
                 <div className="flex flex-row mb-4 overflow-auto">
                     {dataProps.map((group, g_key) => {
-                        const select = selectPropValue.find(item => arrayDiff(item.group, group) && item.prop === props[0]) !== undefined
+                        const select = selectPropValue.find(
+                            item => arrayDiff(item.group, group) && item.prop === props[0]
+                        ) !== undefined
                         return <GroupedProductsPropValue
                             key={g_key} select={select} propData={propData}
                             listProducts={listProducts} selectPropValue={selectPropValue}
