@@ -68,7 +68,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
     $contrAgentId = 0;
     foreach ($arResult['ORDER_PROPS'] as $prop) {
         if ($prop['CODE'] === 'CONTRAGENT_ID') {
-            $contrAgentId = $prop['VALUE'];
+            $contrAgentId = (int)$prop['VALUE'];
         }
     }
 
