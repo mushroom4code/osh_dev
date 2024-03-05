@@ -359,7 +359,7 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
         <div class="md:w-1/12 w-1/4 md:order-2 order-3 md:text-center text-start md:py-0 py-3 md:px-0 px-1"><?= $item['PRODUCT']['QUANTITY'] ?></div>
         <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
             <div class="bx_catalog_item_price md:w-1/12 order-6 w-1/4 md:py-0 py-3 md:px-0 px-2">
-                <div class="box_with_titles flex flex-row text-xs text-textLight items-center md:justify-between justify-end
+                <div class="box_with_titles flex flex-row text-xs text-textLight items-start md:justify-between justify-end
                  dark:text-textDarkLightGray">
                     <div class="md:mr-0 mr-3">
                     <?php
