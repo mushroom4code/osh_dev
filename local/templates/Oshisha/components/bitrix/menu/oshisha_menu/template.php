@@ -223,13 +223,17 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         $('.menu_items_child .title').empty().html(
             '<div class="backToTheMenu cursor-pointer" ' +
             'onclick="backToMenu()"><i class="fa_icon fa fa-angle-left mr-2" aria-hidden="true"></i>Назад</div>'
-            + $(that).find('.text_catalog_link').text() + ' <div class="sendToCategory cursor-pointer" ' +
-            'onclick="location.href=\'' + that.attr('data-href') + '\'"> ' +
-            'Все <i class="fa_icon fa fa-angle-right ml-2" aria-hidden="true"></i></div>'
+            + $(that).find('.text_catalog_link').text() + '<div style="width:38px;"></div>'
         );
         $('.menu_items_child .box').empty();
         $('.menu_items').addClass('hide');
 
+        $('.menu_items_child .box').append('<div class="menu-item-line h-auto col-7">' +
+        '<a class="link_menu_header link_menu d-flex align-items-center justify-content-between" ' +
+        'href="' + that.attr('data-href') + '" data-parent-id="'
+        + parentId + '" data-href="' + that.attr('data-href') + '"> ' +
+        '<span class="text_catalog_link red_text">' + 'Посмотреть все' + '</span></a>' +
+        '</div>');
         $.each(menu_items_array.ELEMENT, function (key_item, value_parent) {
             if (parentId === key_item) {
                 $.each(value_parent, function (key_child, value_item) {

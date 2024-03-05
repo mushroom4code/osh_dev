@@ -37,6 +37,7 @@ BX.SaleCommonPVZ = {
     oshishaDeliveryOptions: null,
     oshishaDeliveryCode: null,
     propTypePvzId: null,
+    uniquePvzDeliveries: {},
     componentParams: {
         'displayPVZ': typeDisplayPVZ.map,
         'filterDelivery': null,
@@ -653,7 +654,6 @@ BX.SaleCommonPVZ = {
 
         this.buildDeliveryType()
             .buildDataView()
-            .buildSortService()
             .buildDeliverySelect()
             // .buildMobileControls()
 
@@ -669,7 +669,6 @@ BX.SaleCommonPVZ = {
         BX.remove(BX('user-address-wrap'))
         BX.remove(BX('button-success-delivery'))
         BX.show(BX('wrap_data_view'))
-        BX.show(BX('wrap_sort_service'))
         // BX.show(BX('wrap_delivery_date'))
         this.buildSuccessButtonPVZ()
         this.getPVZList();
@@ -822,6 +821,14 @@ BX.SaleCommonPVZ = {
             },
             onsuccess: function (res) {
                 __this.pvzObj = JSON.parse(res) || [];
+                __this.uniquePvzDeliveries = {'Все': 'Все'}
+                __this.pvzObj.features.forEach((item) => {
+                    if (!Object.keys(__this.uniquePvzDeliveries).find((deliveryName) => deliveryName === item.properties.deliveryName)) {
+                        __this.uniquePvzDeliveries[item.properties.deliveryName] = item.properties.iconCaption;
+                    }
+                });
+                __this.buildSortService();
+                BX.show(BX('wrap_sort_service'));
                 __this.showPVZ();
                 BX.Sale.OrderAjaxComponent.endLoader();
             },
@@ -839,9 +846,16 @@ BX.SaleCommonPVZ = {
      * Отображает ПВЗ с учетом фильтра
      */
     showPVZ: function () {
+        let uniqueDeliveryNames = [];
+
         const pvzList = this.componentParams.filterDelivery === null
             ? this.pvzObj.features
             : this.pvzObj.features.filter( item => this.componentParams.filterDelivery === item.properties.deliveryName )
+        this.pvzObj.features.forEach((item) => {
+            if (!uniqueDeliveryNames.find((deliveryName) => deliveryName === item.properties.deliveryName)) {
+                uniqueDeliveryNames.push(item.properties.deliveryName);
+            }
+        });
 
         this.clearDeliveryBlock()
         if (this.componentParams.displayPVZ === typeDisplayPVZ.list) {
@@ -1111,7 +1125,9 @@ BX.SaleCommonPVZ = {
         BX.remove(BX('button-success-delivery'))
         BX.remove(BX('button-success-pvz'))
         BX.hide(BX('wrap_data_view'))
-        BX.hide(BX('wrap_sort_service'))
+        if(BX('wrap_sort_service')) {
+            BX.hide(BX('wrap_sort_service'));
+        }
 
         BX.append(
             BX.create({
@@ -1681,76 +1697,78 @@ BX.SaleCommonPVZ = {
     },
 
     buildSortService: function () {
-        if (!BX('wrap_sort_service')) {
-            BX.append(
-                BX.create({
-                    tag: 'div',
-                    props: {
-                        id: 'wrap_sort_service',
-                        className: "wrap_filter_block wrap_sort_service"
-                    },
-                    children: [
-                        BX.create({
-                            tag: 'div',
-                            props: {
-                                id: 'sort_service_select',
-                                className: 'sort_service_select',
-                            },
-                            children: [
-                                BX.create({
-                                    tag: 'div',
-                                    props: {
-                                        id: 'sort-title',
-                                        className: 'title'
-                                    },
-                                    text: 'Фильтрация'
-                                }),
-                                BX.create({
-                                    tag: 'div',
-                                    props: {
-                                        id: 'active_sort_service',
-                                        className: 'active_sort_service',
-                                    },
-                                    text: 'Все',
-                                    events: {
-                                        click: BX.proxy(function () {
-                                            BX.toggleClass(BX('sort_service_select'), 'active')
-                                        }, this)
-                                    }
-                                }),
-                                BX.create({
-                                    tag: 'ul',
-                                    props: {
-                                        id: 'sort_services_list',
-                                        className: 'sort_services_list',
-                                    },
-                                    children: ['Все', '5Post', 'OSHISHA', 'СДЭК', 'Почта России','Деловые линии'].map(item => {
-                                            return BX.create({
-                                                tag: 'li',
-                                                props: {className: 'sort_service'},
-                                                text: item,
-                                                events: {
-                                                    click: BX.proxy(function (e) {
-                                                        BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                        BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                        this.filterPvzList(e.target.getAttribute('data-target'))
-                                                    }, this)
-                                                },
-                                                dataset: {
-                                                    target: item
-                                                }
-                                            })
-                                        }),
-                                })
-                            ]
-
-                        })
-                    ]
-                }),
-                BX('pvz_user_data')
-            )
+        if (BX('wrap_sort_service')) {
+            BX.cleanNode(BX('wrap_sort_service'));
         }
+        BX.append(
+            BX.create({
+                tag: 'div',
+                props: {
+                    id: 'wrap_sort_service',
+                    className: "wrap_filter_block wrap_sort_service"
+                },
+                children: [
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            id: 'sort_service_select',
+                            className: 'sort_service_select',
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'div',
+                                props: {
+                                    id: 'sort-title',
+                                    className: 'title'
+                                },
+                                text: 'Фильтрация'
+                            }),
+                            BX.create({
+                                tag: 'div',
+                                props: {
+                                    id: 'active_sort_service',
+                                    className: 'active_sort_service',
+                                },
+                                text: 'Все',
+                                events: {
+                                    click: BX.proxy(function () {
+                                        BX.toggleClass(BX('sort_service_select'), 'active')
+                                    }, this)
+                                }
+                            }),
+                            BX.create({
+                                tag: 'ul',
+                                props: {
+                                    id: 'sort_services_list',
+                                    className: 'sort_services_list',
+                                },
+                                children: Object.keys(this.uniquePvzDeliveries).map((deliveryName) => {
+                                    return BX.create({
+                                        tag: 'li',
+                                        props: {className: 'sort_service'},
+                                        text: this.uniquePvzDeliveries[deliveryName],
+                                        events: {
+                                            click: BX.proxy(function (e) {
+                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                this.filterPvzList(e.target.getAttribute('data-target'))
+                                            }, this)
+                                        },
+                                        dataset: {
+                                            target: deliveryName
+                                        }
+                                    });
+                                })
+                            })
+                        ]
+
+                    })
+                ]
+            }),
+            BX('pvz_user_data')
+        )
+
         return this
     },
 
