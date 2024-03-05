@@ -66,7 +66,7 @@ Thumbs.db
 /bitrix/tmp/
 /bitrix/.settings.php
 /bitrix/php_interface/dbconn.php
-/bitrix/php_interface/Subsidiary/dbconn.php
+/bitrix/php_interface/enterego_class/Subsidiary/conf.php
 /KladrErrorLog.txt
 /log*txt
 /sup.php
