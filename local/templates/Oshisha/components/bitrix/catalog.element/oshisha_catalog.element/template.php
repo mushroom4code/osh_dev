@@ -117,7 +117,8 @@ $skuProps = [];
 $isGift = EnteregoHelper::productIsGift($arResult['ID']);
 $rowResHidePrice = $arResult['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $price = $actualItem['PRICES_CUSTOM'];
-
+$newProduct = $arResult['PROPERTIES'][PROP_NEW];
+$hitProduct = $arResult['PROPERTIES'][PROP_HIT];
 $priceCalculate = $price['PRICE_DATA']['PRICE'];
 $price_new = $price['PRICE_DATA']['PRINT_PRICE'];
 

@@ -23,6 +23,14 @@
                     }
                 } ?>
             </div>
+            <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
+                <span class="taste bg-greenLight dark:bg-greenButton text-white absolute left-5 top-20 md:py-5 py-1.5 px-1
+                md:px-3 rounded-full text-sm z-10 font-medium">NEW</span>
+            <?php }
+            if ($hitProduct['VALUE'] === 'Да') { ?>
+                <span class="taste bg-yellowSt text-black absolute font-semibold left-5 top-20 md:py-5 py-1.5 px-1
+                md:px-4 rounded-full text-sm z-10">ХИТ</span>
+            <?php } ?>
             <div class="xl:max-h-[650px] md:max-h-[460px] md:min-h-[460px] xl:min-h-[650px] min-h-[300px]
             max-h-[320px] h-full bg-white rounded-xl flex justify-center items-center border-borderColor border dark:border-0">
                 <span class="product-item-detail-slider-left carousel_elem_custom absolute top-1/2 md:-left-5 -left-3
