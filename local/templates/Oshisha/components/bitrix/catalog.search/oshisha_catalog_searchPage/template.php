@@ -91,9 +91,7 @@ if ($arParams['USE_SEARCH_RESULT_ORDER'] === 'N') {
 }
 
 if (Loader::includeModule('search')) {
-    if ($mobile->isMobile()) {
-
-        ?>
+    if ($mobile->isMobile()) { ?>
         <div class="w-full mt-5 md:hidden block">
             <?php $APPLICATION->IncludeComponent(
                 "bitrix:search.title",
@@ -126,9 +124,7 @@ if (Loader::includeModule('search')) {
                 true
             ); ?>
         </div>
-
-        </div><?php
-    }
+    <?php }
     $arElements = $APPLICATION->IncludeComponent(
         "bitrix:search.page",
         "oshisha_searсh.page",
