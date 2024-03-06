@@ -54,6 +54,10 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
 
             $sectionNumber = 0;
             foreach ($arResult['SECTIONS'] as &$section) {
+
+                if($section['NAME'] === 'Дисконт')
+                    continue;
+
                 $this->addEditAction($section['ID'], $section['EDIT_LINK'], $sectionEdit);
                 $this->addDeleteAction($section['ID'], $section['DELETE_LINK'], $sectionDelete, $sectionDeleteParams);
 
