@@ -75,7 +75,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
 
     useEffect(() => {
         getProductData({prodId: productId, action: 'fastProduct', groupedProduct: groupedProduct})
-    }, []);
+    }, [productId]);
 
     useEffect(() => {
         setPopupShowHide(seePopup)
@@ -232,8 +232,8 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                             </svg>
                                         </a>
                                     </div>
-                                    <div className="alert_quantity absolute md:p-4 p-2 text-xs left-0 top-12 bg-filterGray
-                                dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20 hidden"
+                                    <div className="alert_quantity absolute md:p-4 text-textLight dark:text-textDarkLightGray
+                                     p-2 text-xs left-0 top-12 bg-filterGray dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20 hidden"
                                          data-id={state.product_id}></div>
                                 </div>
                             </div>
