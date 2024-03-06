@@ -60,7 +60,6 @@ $favorite = '';
 $styleForTaste = '';
 $taste = $item['PROPERTIES'][PROPERTY_KEY_VKUS];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
-$useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES'][PROP_NEW];
 $hitProduct = $item['PROPERTIES'][PROP_HIT];
 

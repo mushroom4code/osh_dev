@@ -103,7 +103,7 @@ if ($action === 'fastProduct') {
         'QUANTITY' => $item['QUANTITY'],
         'PRICE' => $item['CATALOG_PRICE_' . B2B_PRICE],
         'SALE_PRICE' => round($item['CATALOG_PRICE_' . SALE_PRICE_TYPE_ID]),
-        'SALE_BOOL' => $item['PROPERTY_USE_DISCOUNT_VALUE_VALUE'] === 'Да',
+        'SALE_BOOL' => false,
     ];
 
     if (!empty($price['USER_PRICE'])) {
@@ -138,7 +138,6 @@ if ($action === 'fastProduct') {
         'PRODUCT' => $item['PRODUCT'],
         'PREVIEW_PICTURE' => CFile::GetPath(($item['PREVIEW_PICTURE'] ?? $item['DETAIL_PICTURE']))
             ?? '/local/templates/Oshisha/images/no-photo.gif',
-//        'USE_DISCOUNT' => $useDiscount['VALUE'],
 //        'ACTUAL_BASKET' => $priceBasket,
         'SALE_PRICE' => round($specialPrice),
         'NAME' => $item['NAME'],

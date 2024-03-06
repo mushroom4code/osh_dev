@@ -88,14 +88,13 @@ if (isset($arResult['ITEM'])) {
         $measureRatio = $price['MIN_QUANTITY'];
         $morePhoto = $actualItem['MORE_PHOTO'];
     }
-    $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 
     foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
 
         foreach ($PRICE['PRICES'] as $price_key => $price_val) {
 
 
-            if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
+            if (USE_CUSTOM_SALE_PRICE) {
                 if ($price_key == SALE_PRICE_TYPE_ID) {
                     $price['SALE_PRICE'] = $price_val;
                 }

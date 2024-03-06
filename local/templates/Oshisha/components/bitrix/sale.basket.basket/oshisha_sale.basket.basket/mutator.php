@@ -57,8 +57,6 @@ foreach ($item as $row) {
     $product_prices = '';
     $price = [];
     $show_product_prices = false;
-    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
-    $newProp = $propsUseSale->Fetch();
     $res = CIBlockElement::GetList(
         array(),
         array("ID" => $row['PRODUCT_ID']),
@@ -73,7 +71,7 @@ foreach ($item as $row) {
         if (!empty($ar_res)) {
             $str_product_prices = '';
             $product_prices_sql = $ar_res["CATALOG_PRICE_" . B2B_PRICE];
-            if (($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) && (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
+            if (USE_CUSTOM_SALE_PRICE && (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
                     && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) && !$showDiscountPrice) {
                 $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID]);
                 $price['SALE_PRICE'] = $str_product_prices[0] . '₽';

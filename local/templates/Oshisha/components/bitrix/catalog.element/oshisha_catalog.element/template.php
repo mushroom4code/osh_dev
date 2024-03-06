@@ -115,7 +115,6 @@ if ($haveOffers) {
 $measureRatio = $actualItem['ITEM_MEASURE_RATIOS'][$actualItem['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
 $skuProps = [];
 $isGift = EnteregoHelper::productIsGift($arResult['ID']);
-$useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
 $rowResHidePrice = $arResult['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $price = $actualItem['PRICES_CUSTOM'];
 
@@ -126,7 +125,7 @@ if (!empty($price['USER_PRICE']['PRICE'])) {
     $specialPrice = $price['USER_PRICE'];
 }
 
-if ((USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] === 'true') && !empty($price['SALE_PRICE']['PRINT_PRICE'])
+if ((USE_CUSTOM_SALE_PRICE) && !empty($price['SALE_PRICE']['PRINT_PRICE'])
     && (!isset($specialPrice) || $price['SALE_PRICE']['PRICE'] < $specialPrice['PRICE'])) {
 
     $specialPrice = $price['SALE_PRICE'];

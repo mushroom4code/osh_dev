@@ -58,7 +58,6 @@ $favorite = '';
 $styleForTaste = '';
 $taste = $item['PROPERTIES'][PROPERTY_KEY_VKUS];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
-$useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES'][PROP_NEW];
 $hitProduct = $item['PROPERTIES'][PROP_HIT];
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
@@ -72,14 +71,6 @@ $jsonForModal = [];
 $specialPrice = 0;
 if (!empty($price['USER_PRICE'])) {
     $specialPrice = $price['USER_PRICE']['PRICE'];
-}
-
-if (!empty($price['SALE_PRICE']['PRICE']) &&
-    ($useDiscount['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE)) {
-
-    $specialPrice = ($specialPrice === 0 || $price['SALE_PRICE']['PRICE'] < $specialPrice)
-        ? $price['SALE_PRICE']['PRICE']
-        : $specialPrice;
 }
 
 if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
@@ -190,7 +181,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                       stroke-linejoin="round"/>
                             </svg>
                         </div>
-                        <?php } ?>
+                    <?php } ?>
                 </div>
                 <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                     <div class="bx_catalog_item_price md:mt-2 mb-2 mt-1 d-flex justify-content-end">
@@ -450,12 +441,39 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                     <div style="clear: both;"></div>
                 <?php } else { ?>
                     <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>" class="not_avail">
+                        <div class="flex flex-row justify-between items-center">
+                        <?php if (!empty($price['PRICE_DATA']['PRICE'])) { ?>
+                            <div class="box_with_price card-price font_weight_600  min-height-auto">
+                                <div class="flex md:flex-col flex-row md:items-start items-center relative">
+                                    <div class="bx_price md:text-xl text-lg font-semibold dark:font-medium md:mb-0 mb-1
+                                        <?= $styleForNo ?> position-relative md:mr-0 mr-2">
+                                        <?php
+                                        if (!empty($specialPrice)) {
+                                            echo(round($specialPrice));
+                                        } else {
+                                            echo(round($price['PRICE_DATA']['PRICE']));
+                                        } ?>₽
+                                    </div>
+                                    <?php if (!empty($specialPrice)) { ?>
+                                        <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center relative">
+                                            <span class="line-through font-light decoration-red text-textLight
+                                             dark:text-grayIconLights mr-2 md:text-lg text-xs">
+                                                <?= $price['PRICE_DATA']['PRICE'] ?>₽</span>
+                                            <span class="sale-percent text-light-red font-medium md:text-lg text-10
+                                             md:inherit absolute md:top-auto md:left-auto -top-2 w-full left-[51%]">
+                                                - <?= (round($price['PRICE_DATA']['PRICE']) - round($specialPrice)) ?>₽
+                                            </span>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        <?php } ?>
                         <div class="box_with_fav_bask">
                             <div class="not_product detail_popup text-xs dark:text-textDark text-white font-medium
-                             flex justify-center flex-row items-center dark:bg-dark-red bg-light-red py-2 px-4
+                             flex justify-center flex-row items-center dark:bg-dark-red bg-light-red py-2 md:px-4 px-2.5
                              rounded-full text-center w-auto <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                              <?= $is_key_found ? 'subscribed' : '' ?>">
-                                <svg width="18" height="17" class="mr-1 stroke-white
+                                <svg width="18" height="17" class="md:mr-1 stroke-white
                                 <?= $is_key_found ? 'subscribed' : ' ' ?>"
                                      viewBox="0 0 34 33" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -464,12 +482,13 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                     <path d="M19.5794 28.875C19.3325 29.2917 18.9781 29.6376 18.5517 29.8781C18.1253 30.1186 17.6419 30.2451 17.1498 30.2451C16.6577 30.2451 16.1743 30.1186 15.7479 29.8781C15.3215 29.6376 14.9671 29.2917 14.7202 28.875"
                                           stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                                Нет в наличии
+                                <span class="xl:block hidden">Нет в наличии</span>
                             </div>
                             <div class="detail_popup absolute z-20 w-full left-0 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                 <?= $is_key_found ? 'subscribed' : '' ?> min_card">
                                 <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
                             </div>
+                        </div>
                         </div>
                         <div style="clear: both;"></div>
                         <div id="popup_mess"

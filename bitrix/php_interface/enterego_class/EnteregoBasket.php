@@ -94,14 +94,7 @@ class EnteregoBasket
                     }
                 }
 
-                $propsUseSale = CIBlockElement::GetProperty(
-                    IBLOCK_CATALOG,
-	                $product_id,
-                    array(),
-                    array('CODE' => 'USE_DISCOUNT'));
-                $newProp = $propsUseSale->Fetch();
-
-                if ((USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') && SITE_ID !== 'V3' ) {
+                if ((USE_CUSTOM_SALE_PRICE) && SITE_ID !== 'V3' ) {
                     $typePriceIds[] = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
                 }
 

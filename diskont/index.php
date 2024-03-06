@@ -1,16 +1,17 @@
 <?php
+
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 global $APPLICATION;
 $APPLICATION->SetPageProperty("title", "Дисконт");
 $APPLICATION->SetTitle("Дисконт");
 $APPLICATION->AddChainItem('Дисконт','/diskont/');
+localRedirect('/');
 
 ?>
     <div id="o_nas" class="mb-5">
 
 
 <?php
-
 define("HIDE_SIDEBAR", true);
 
 /**

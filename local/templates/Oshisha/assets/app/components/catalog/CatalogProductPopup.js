@@ -68,7 +68,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
             quantityProduct: productData.PRODUCT?.ACTUAL_BASKET ?? 0,
             maxQuantity: productData.PRODUCT?.QUANTITY ?? productData.CATALOG_QUANTITY,
             price: productData.PRODUCT?.PRICE?.split('.')[0] ?? productData?.PRICE?.split('.')[0],
-            saleBool: productData.PRODUCT?.SALE_BOOL ?? false,
+            saleBool: false,
             salePrice: productData.PRODUCT?.SALE_PRICE ?? 0,
         });
     }
@@ -174,8 +174,8 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                             className="prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2 flex flex-row items-center relative">
                             {state.saleBool ? <div className="base-price group-prices product-item-detail-price-current text-3xl
                                  font-medium dark:font-normal text-lightGrayBg dark:text-textDarkLightGray mr-5">
-                                {state.salePrice}₽ <span
-                                className="mx-3 line-through decoration-hover-red text-2xl text-tagFilterGray"> {state.price}₽</span>
+                                {state.salePrice}₽
+                                <span className="mx-3 line-through decoration-hover-red text-2xl text-tagFilterGray"> {state.price}₽</span>
                             </div> : <div className="base-price group-prices product-item-detail-price-current text-3xl
                                  font-medium dark:font-normal text-lightGrayBg dark:text-textDarkLightGray mr-5">
                                 {state.price}₽

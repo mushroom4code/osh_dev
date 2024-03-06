@@ -132,13 +132,6 @@ foreach($arResult["SEARCH"] as $i=>$arItem)
             {
                 $arElement = &$arResult["ELEMENTS"][$arItem["ITEM_ID"]];
 
-                $db_props = CIBlockElement::GetProperty($arElement['IBLOCK_ID'], $arElement['ID'],
-                    array("sort" => "asc"), Array("CODE"=>"USE_DISCOUNT"));
-
-                if($ar_props = $db_props->Fetch()) {
-                    $arElement['USE_DISCOUNT'] = $ar_props['VALUE_XML_ID'] === 'true';
-                }
-
                 $customPrice['PRICES'] = [];
                 foreach ($priceTypes as $priceID => $priceType) {
                     if (isset($arElement['PRICES'][$priceType])) {
@@ -148,7 +141,7 @@ foreach($arResult["SEARCH"] as $i=>$arItem)
                     }
                 }
                 $arElement['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($customPrice,
-                    $arElement['USE_DISCOUNT'], $arElement['ID']);
+                    false, $arElement['ID']);
 
                 if ($arParams["SHOW_PREVIEW"] == "Y")
                 {

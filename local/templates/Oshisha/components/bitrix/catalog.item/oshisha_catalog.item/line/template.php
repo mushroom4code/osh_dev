@@ -60,7 +60,7 @@ $favorite = '';
 $styleForTaste = '';
 $taste = $item['PROPERTIES'][PROPERTY_KEY_VKUS];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
-$useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
+
 $newProduct = $item['PROPERTIES'][PROP_NEW];
 $hitProduct = $item['PROPERTIES'][PROP_HIT];
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
@@ -73,14 +73,6 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle);
 $specialPrice = 0;
 if (!empty($price['USER_PRICE'])) {
     $specialPrice = $price['USER_PRICE']['PRICE'];
-}
-
-if (!empty($price['SALE_PRICE']['PRICE']) &&
-    ($useDiscount['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE)) {
-
-    $specialPrice = ($specialPrice === 0 || $price['SALE_PRICE']['PRICE'] < $specialPrice)
-        ? $price['SALE_PRICE']['PRICE']
-        : $specialPrice;
 }
 
 if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
@@ -320,12 +312,12 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
             <?php } else { ?>
             <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>"
                  class="not_avail bx_catalog_item_controls w-5/12 md:order-4 order-2 relative md:py-0 py-3 md:px-0 px-1">
-                <div class="box_with_fav_bask flex justify-center items-center">
+                <div class="box_with_fav_bask flex justify-center flex-row items-center">
                     <div class="not_product detail_popup text-xs dark:text-textDark text-white font-medium
-                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-full text-center w-fit cursor-pointer
+                                dark:bg-dark-red bg-light-red py-2 px-2.5 rounded-full text-center cursor-pointer
                                 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                 <?= $is_key_found ? 'subscribed' : '' ?>">
-                        <svg width="18" height="17" class="mr-3 stroke-white
+                        <svg width="18" height="17" class="stroke-white
                                 <?= $is_key_found ? 'subscribed' : ' ' ?>"
                              viewBox="0 0 34 33" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
@@ -334,7 +326,6 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
                             <path d="M19.5794 28.875C19.3325 29.2917 18.9781 29.6376 18.5517 29.8781C18.1253 30.1186 17.6419 30.2451 17.1498 30.2451C16.6577 30.2451 16.1743 30.1186 15.7479 29.8781C15.3215 29.6376 14.9671 29.2917 14.7202 28.875"
                                   stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        Нет в наличии
                     </div>
                     <div class="detail_popup absolute z-20 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                 <?= $is_key_found ? 'subscribed' : '' ?> min_card">
@@ -413,7 +404,7 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
                         <path d="M19.5794 28.875C19.3325 29.2917 18.9781 29.6376 18.5517 29.8781C18.1253 30.1186 17.6419 30.2451 17.1498 30.2451C16.6577 30.2451 16.1743 30.1186 15.7479 29.8781C15.3215 29.6376 14.9671 29.2917 14.7202 28.875"
                               stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    Нет в наличии
+                    <span class="xl:block hidden">Нет в наличии</span>
                 </div>
                 <?php
                 $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',

@@ -35,9 +35,8 @@ $arResult = EnteregoGroupedProducts::getListGroupedProduct($arResult['ID'], $lis
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP end */
 
 $arResult['ADD_TO_BASKET'] = EnteregoContragents::getActiveContragentForUser($USER->GetID());
-$useDiscount = ($arResult['PROPERTIES']['USE_DISCOUNT']['VALUE'] ?? 'Нет') === 'Да' ;
 $arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($arResult['ITEM_ALL_PRICES'][0],
-    $useDiscount, $arResult['ID']);
+    false, $arResult['ID']);
 
 $component = $this->getComponent();
 $arParams = $component->applyTemplateModifications();

@@ -180,51 +180,52 @@ function setActiveColor(string $itemType = 'card'): string
             $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' md:hidden block' : '') ?>">
                 <div class="catalog-section-list-tile-list w-full bg-filterGray dark:bg-darkBox p-5 rounded-xl
              lg:flex hidden flex-col mb-4">
-                    <?php foreach ($arResult['SECTION_LIST'] as $arSection): ?>
-                        <div class="catalog-section-list-item-l">
-                            <div class="catalog-section-list-item-wrap smart-filter-tog flex flex-row cursor-pointer justify-between"
-                                 data-role="prop_angle"
-                                 data-code-vis="<?= $arSection['ID'] ?>">
-                                <a href="javascript:void(0)"
-                                   class="text-sm font-semibold dark:font-medium text-dark dark:text-textDarkLightGray"><?= $arSection['NAME'] ?>
-                                </a>
-                                <?php if ($arSection['CHILDS']): ?>
-                                    <span data-role="prop_angle"
-                                          class="smart-filter-tog smart-filter-angle">
+                    <?php foreach ($arResult['SECTION_LIST'] as $arSection):
+                        if ($arSection['NAME'] !== 'Дисконт') { ?>
+                            <div class="catalog-section-list-item-l">
+                                <div class="catalog-section-list-item-wrap smart-filter-tog flex flex-row cursor-pointer justify-between"
+                                     data-role="prop_angle"
+                                     data-code-vis="<?= $arSection['ID'] ?>">
+                                    <a href="javascript:void(0)"
+                                       class="text-sm font-semibold dark:font-medium text-dark dark:text-textDarkLightGray"><?= $arSection['NAME'] ?>
+                                    </a>
+                                    <?php if ($arSection['CHILDS']): ?>
+                                        <span data-role="prop_angle"
+                                              class="smart-filter-tog smart-filter-angle">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                          xmlns="http://www.w3.org/2000/svg" class="smart-filter-angles">
                                         <path d="M1.89089 4.49273C1.50382 4.88766 1.50382 5.52803 1.89089 5.92295L6.73974 10.8657C7.51402 11.6549 8.76861 11.6546 9.54249 10.8651L14.3895 5.91931C14.7766 5.52439 14.7766 4.88402 14.3895 4.48908C14.0024 4.09413 13.3748 4.09413 12.9878 4.48908L8.83927 8.72208C8.45223 9.1171 7.82464 9.117 7.4376 8.72208L3.29257 4.49273C2.90551 4.09778 2.27795 4.09778 1.89089 4.49273Z"
                                               fill="#838383"></path>
                                     </svg>
                                 </span>
-                                <?php endif; ?>
-                            </div>
-                            <div class="catalog-section-list-item-sub
+                                    <?php endif; ?>
+                                </div>
+                                <div class="catalog-section-list-item-sub
                         <?php if ($smartFil != '') { ?>active mb-2 mt-2  <?php } else { ?>hidden<?php } ?>"
-                                 data-code="<?= $arSection['ID'] ?>">
-                                <a class="font-semibold text-light-red dark:text-white text-sm"
-                                   href="<?= $arSection['SECTION_PAGE_URL'] ?>">Все</a>
-                            </div>
-                            <div class="overflow-auto max-h-96 p-2">
-                                <?php if ($arSection['CHILDS']):
-                                    usort($arSection['CHILDS'], 'sort_by_name');
-                                    foreach ($arSection['CHILDS'] as $arSectionSub):
-                                        if (CIBlockSection::GetSectionElementsCount($arSectionSub['ID'], ['CNT_ACTIVE' => 'Y']) > 0) {
-                                            ?>
-                                            <div class="catalog-section-list-item-sub mb-2 <?php if ($smartFil != '') { ?>active<?php } else { ?>hidden<?php } ?>"
-                                                 data-code="<?= $arSection['ID'] ?>">
-                                                <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"
-                                                   class="font-light text-dark dark:text-textDarkLightGray hover:text-light-red
+                                     data-code="<?= $arSection['ID'] ?>">
+                                    <a class="font-semibold text-light-red dark:text-white text-sm"
+                                       href="<?= $arSection['SECTION_PAGE_URL'] ?>">Все</a>
+                                </div>
+                                <div class="overflow-auto max-h-96 p-2">
+                                    <?php if ($arSection['CHILDS']):
+                                        usort($arSection['CHILDS'], 'sort_by_name');
+                                        foreach ($arSection['CHILDS'] as $arSectionSub):
+                                            if (CIBlockSection::GetSectionElementsCount($arSectionSub['ID'], ['CNT_ACTIVE' => 'Y']) > 0) {
+                                                ?>
+                                                <div class="catalog-section-list-item-sub mb-2 <?php if ($smartFil != '') { ?>active<?php } else { ?>hidden<?php } ?>"
+                                                     data-code="<?= $arSection['ID'] ?>">
+                                                    <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"
+                                                       class="font-light text-dark dark:text-textDarkLightGray hover:text-light-red
                                             dark:hover:text-white text-sm">
-                                                    <?= $arSectionSub['NAME'] ?></a>
-                                            </div>
-                                        <?php }
-                                    endforeach; ?>
-                                <?php endif; ?>
+                                                        <?= $arSectionSub['NAME'] ?></a>
+                                                </div>
+                                            <?php }
+                                        endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                        </div>
+                            <?php } ?>
                     <?php endforeach; ?>
-
                 </div>
                 <div class="catalog-filter-mobile lg:flex flex-col hidden md:relative fixed md:w-auto w-screen
                 left-0 md:py-0 md:h-auto h-screen md:bg-transparent md:dark:bg-transparent bg-filterGray py:16 md:top-auto top-0
@@ -235,13 +236,14 @@ function setActiveColor(string $itemType = 'card'): string
                         <div class="bx-sidebar-block bg-filterGray dark:bg-darkBox md:p-5 p-5 rounded-xl md:max-h-none max-h-[90%]
                       overflow-x-hidden overflow-y-auto <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
                             <div class="w-full flex justify-end md:hidden">
-                            <svg width="25" height="25" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                 class="js__filter-close">
-                                <path d="M3.02588 33.9165L32.9795 3.39307" class="stroke-iconLune dark:stroke-white"
-                                      stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M3.02588 3.0835L32.9795 33.6069" class="stroke-iconLune dark:stroke-white"
-                                      stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                                <svg width="25" height="25" viewBox="0 0 37 37" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     class="js__filter-close">
+                                    <path d="M3.02588 33.9165L32.9795 3.39307" class="stroke-iconLune dark:stroke-white"
+                                          stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3.02588 3.0835L32.9795 33.6069" class="stroke-iconLune dark:stroke-white"
+                                          stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                             </div>
                             <?php
 

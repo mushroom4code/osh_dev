@@ -78,12 +78,6 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         $result = json_encode($menu_for_JS) ?>
         <li class="mr-7" data-role="bx-menu-item">
             <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight dark:hover:text-white
-             hover:text-hover-red"
-               href="/diskont/">
-                Дисконт</a>
-        </li>
-        <li class="mr-7" data-role="bx-menu-item">
-            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight dark:hover:text-white
              hover:text-hover-red" href="/catalog_new/">Новинки</a>
         </li>
         <li class="mr-7" data-role="bx-menu-item">
