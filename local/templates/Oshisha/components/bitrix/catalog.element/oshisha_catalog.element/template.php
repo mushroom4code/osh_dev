@@ -254,8 +254,9 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 </div>
                 <?php if ($isGift) { ?>
                     <div>
-                        <h4 class="bx-title dark:text-textDark text-textLight">Данная продукция не продается
-                            отдельно</h4>
+                        <h4 class="xl:text-3xl text-xl mb-4 text-light-red font-semibold dark:font-light
+                           dark:text-hover-red  flex flex-row justify-between items-start">
+                            Данная продукция не продается отдельно</h4>
                     </div>
                     <?php
                 } else { ?>
