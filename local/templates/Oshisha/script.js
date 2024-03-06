@@ -3127,7 +3127,6 @@ $(document).on('click', function (e) {
 
 $(document).ready(function () {
     $("body").on("contextmenu", "img", function(e) {
-        console.log(e);
         return false;
     });
 });
