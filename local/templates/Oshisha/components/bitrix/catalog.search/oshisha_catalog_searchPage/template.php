@@ -128,18 +128,23 @@ if (Loader::includeModule('search')) {
             );
 			
 		}
-		 echo '<div class="mb-5" style="color: #999999;font-weight: 600;font-size: 24px;">Вы искали "'.htmlspecialcharsbx($_GET['q']).'". Найдено '.count($arElements).' совпадений</div>';	
+		 echo '<div class="my-10 xl:text-3xl text-xl text-tagFilterGray font-semibold dark:font-light
+                dark:text-iconGray flex flex-row justify-between items-start">
+                Вы искали "'.htmlspecialcharsbx($_GET['q']).'". Найдено '.count($arElements).' совпадений</div>';
         
     } else {
         if (is_array($arElements)) {
-            echo '<div class="mb-5" style="color: #999999;font-weight: 600;font-size: 37px;">К сожалению, такого товара нет на сайте.</div>';
+            echo '<div class="my-10 xl:text-3xl text-xl text-tagFilterGray font-semibold dark:font-light
+                dark:text-iconGray flex flex-row justify-between items-start" >
+                К сожалению, такого товара нет на сайте.</div>';
 
             if ($USER->IsAuthorized() && SITE_ID !== SITE_EXHIBITION) {
                 if (!isset($arParams['USE_BIG_DATA']) || $arParams['USE_BIG_DATA'] != 'N') {
                     ?>
-                    <div class="row mb-3 mt-5 by-card">
+                    <div class="row mb-3 mt-16 by-card ">
                         <div class="col" data-entity="parent-container">
-                            <h4><b>Рекомендации для вас</b></h4>
+                            <h4 class="xl:text-3xl mb-5 text-xl text-lightGrayBg font-medium dark:font-light
+                dark:text-textDarkLightGray flex flex-row justify-between items-start">Рекомендации для вас</h4>
                             <?php $APPLICATION->IncludeComponent(
                                 "bitrix:catalog.top",
                                 "oshisha_catalog.top",
