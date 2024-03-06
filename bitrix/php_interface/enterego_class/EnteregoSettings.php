@@ -88,12 +88,13 @@ class EnteregoSettings
      */
     public static function getDisabledFlagCategory(): bool
     {
-        $domain = $_SERVER['HTTP_HOST'];
-        $categoryDisabled = false;
-        if($domain === 'oshisha.cc') {
-            $categoryDisabled = true;
-        }
+        // todo - роспотребнадзор - убор блокировки категорий на сайте
+//        $domain = $_SERVER['HTTP_HOST'];
+//        $categoryDisabled = false;
+//        if($domain === 'oshisha.cc') {
+//            $categoryDisabled = true;
+//        }
 
-        return define("CATEGORY_DISABLED", $categoryDisabled);
+        return define("CATEGORY_DISABLED", false);
     }
 }
