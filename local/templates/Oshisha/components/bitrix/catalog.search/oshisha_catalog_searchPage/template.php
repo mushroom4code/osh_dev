@@ -14,12 +14,13 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var CBitrixComponent $component */
 
 use Bitrix\Main\Loader;
-use Bitrix\Main\Page\Asset;
+use Bitrix\Conversion\Internals\MobileDetect;
 
 $this->setFrameMode(true);
 
-global $searchFilter;
+global $searchFilter;;
 
+$mobile = new MobileDetect();
 if (Loader::includeModule("sale")) {
     $recommendedData = array();
     $recommendedCacheId = array('IBLOCK_ID' => $arParams['IBLOCK_ID']);
@@ -79,7 +80,6 @@ if (Loader::includeModule("sale")) {
 }
 
 
-
 $elementOrder = array();
 if ($arParams['USE_SEARCH_RESULT_ORDER'] === 'N') {
     $elementOrder = array(
@@ -91,6 +91,44 @@ if ($arParams['USE_SEARCH_RESULT_ORDER'] === 'N') {
 }
 
 if (Loader::includeModule('search')) {
+    if ($mobile->isMobile()) {
+
+        ?>
+        <div class="w-full mt-5 md:hidden block">
+            <?php $APPLICATION->IncludeComponent(
+                "bitrix:search.title",
+                "oshisha_search.title",
+                array(
+                    "CATEGORY_0" => array("iblock_1c_catalog"),
+                    "CATEGORY_0_TITLE" => "",
+                    "CATEGORY_0_iblock_1c_catalog" => array("all"),
+                    "CATEGORY_1" => array(),
+                    "CATEGORY_1_TITLE" => "",
+                    "CHECK_DATES" => "N",
+                    "CONTAINER_ID" => "title-search_desktop",
+                    "CONVERT_CURRENCY" => "N",
+                    "INPUT_ID" => "input_search_desktop",
+                    "NUM_CATEGORIES" => "2",
+                    "ORDER" => "date",
+                    "PAGE" => "#SITE_DIR#catalog/",
+                    "PREVIEW_HEIGHT" => "150",
+                    "PREVIEW_TRUNCATE_LEN" => "",
+                    "PREVIEW_WIDTH" => "150",
+                    "PRICE_CODE" => BXConstants::PriceCode(),
+                    "PRICE_VAT_INCLUDE" => "Y",
+                    "SHOW_INPUT" => "Y",
+                    "SHOW_OTHERS" => "N",
+                    "SHOW_PREVIEW" => "Y",
+                    "TEMPLATE_THEME" => "blue",
+                    "TOP_COUNT" => "5",
+                    "USE_LANGUAGE_GUESS" => "N"
+                ),
+                true
+            ); ?>
+        </div>
+
+        </div><?php
+    }
     $arElements = $APPLICATION->IncludeComponent(
         "bitrix:search.page",
         "oshisha_searсh.page",
@@ -116,7 +154,7 @@ if (Loader::includeModule('search')) {
         ),
         $component,
         array('HIDE_ICONS' => 'Y')
-    );	//var_dump($arElements);
+    );    //var_dump($arElements);
     if (!empty($arElements) && is_array($arElements)) {
         $searchFilter = array(
             "ID" => $arElements,
@@ -126,12 +164,12 @@ if (Loader::includeModule('search')) {
                 "ELEMENT_SORT_FIELD" => "ID",
                 "ELEMENT_SORT_ORDER" => $arElements
             );
-			
-		}
-		 echo '<div class="my-10 xl:text-3xl text-xl text-tagFilterGray font-semibold dark:font-light
+
+        }
+        echo '<div class="my-10 xl:text-3xl text-xl text-tagFilterGray font-semibold dark:font-light
                 dark:text-iconGray flex flex-row justify-between items-start">
-                Вы искали "'.htmlspecialcharsbx($_GET['q']).'". Найдено '.count($arElements).' совпадений</div>';
-        
+                Вы искали "' . htmlspecialcharsbx($_GET['q']) . '". Найдено ' . count($arElements) . ' совпадений</div>';
+
     } else {
         if (is_array($arElements)) {
             echo '<div class="my-10 xl:text-3xl text-xl text-tagFilterGray font-semibold dark:font-light
@@ -276,7 +314,7 @@ if (!empty($searchFilter) && is_array($searchFilter)) {
             "CACHE_TIME" => $arParams["CACHE_TIME"],
             "DISPLAY_COMPARE" => $arParams["DISPLAY_COMPARE"],
             "PRICE_CODE" => $arParams["~PRICE_CODE"],
-            "FILL_ITEM_ALL_PRICES"=>"Y",
+            "FILL_ITEM_ALL_PRICES" => "Y",
             "USE_PRICE_COUNT" => $arParams["USE_PRICE_COUNT"],
             "SHOW_PRICE_COUNT" => $arParams["SHOW_PRICE_COUNT"],
             "PRICE_VAT_INCLUDE" => $arParams["PRICE_VAT_INCLUDE"],
@@ -355,16 +393,16 @@ if (!empty($searchFilter) && is_array($searchFilter)) {
             'COMPARE_NAME' => (isset($arParams['COMPARE_NAME']) ? $arParams['COMPARE_NAME'] : ''),
             'USE_COMPARE_LIST' => (isset($arParams['USE_COMPARE_LIST']) ? $arParams['USE_COMPARE_LIST'] : '')
         ) + $elementOrder;
-?>
-<div class="search_result">
-<?
-    $APPLICATION->IncludeComponent(
-        "bitrix:catalog.section",
-        "oshisha_catalog.section",
-        $componentParams,
-        $arResult["THEME_COMPONENT"],
-        array('HIDE_ICONS' => 'Y')
-    );?>
-	</div>
-	<?
+    ?>
+    <div class="search_result">
+        <?
+        $APPLICATION->IncludeComponent(
+            "bitrix:catalog.section",
+            "oshisha_catalog.section",
+            $componentParams,
+            $arResult["THEME_COMPONENT"],
+            array('HIDE_ICONS' => 'Y')
+        ); ?>
+    </div>
+    <?
 }
