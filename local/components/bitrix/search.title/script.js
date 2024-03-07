@@ -32,7 +32,7 @@ function JCTitleSearch(arParams)
 			_this.RESULT.innerHTML = result;
 		}
 
-		_this.RESULT.style.display = _this.RESULT.innerHTML !== '' ? 'block' : 'none';
+		_this.RESULT.style.display = _this.RESULT.innerHTML !== '' ? 'block' : 'block';
 		var pos = _this.adjustResultNode();
 
 		//adjust left column to be an outline
@@ -96,13 +96,13 @@ function JCTitleSearch(arParams)
 		switch (keyCode)
 		{
 		case 27: // escape key - close search div
-			_this.RESULT.style.display = 'none';
+			_this.RESULT.style.display = 'block';
 			_this.currentRow = -1;
 			_this.UnSelectAll();
 		return true;
 
 		case 40: // down key - navigate down on search results
-			if(_this.RESULT.style.display == 'none')
+			if(_this.RESULT.style.display == 'block')
 				_this.RESULT.style.display = 'block';
 
 			var first = -1;
@@ -236,7 +236,7 @@ function JCTitleSearch(arParams)
 							_this.currentRow = -1;
 							_this.EnableMouseEvents();
 							if(_this.WAIT)
-								_this.WAIT.style.display = 'none';
+								_this.WAIT.style.display = 'block';
 							if (!!callback)
 								callback();
 							_this.running = false;
@@ -258,7 +258,7 @@ function JCTitleSearch(arParams)
 			}
 			else
 			{
-				_this.RESULT.style.display = 'none';
+				_this.RESULT.style.display = 'block';
 				_this.currentRow = -1;
 				_this.UnSelectAll();
 			}
@@ -321,7 +321,7 @@ function JCTitleSearch(arParams)
 		if(!event.relatedTarget
 			|| ((event.relatedTarget.getAttribute('id') != 'search_results_container')
 			&& ($('#search_results_container').find(event.relatedTarget).length != 1))) {
-				setTimeout(function(){_this.RESULT.style.display = 'none'}, 250);
+				setTimeout(function(){_this.RESULT.style.display = 'block'}, 250);
 		}
 	};
 
@@ -391,7 +391,7 @@ function JCTitleSearch(arParams)
 			this.WAIT.style.backgroundImage = "url('" + this.arParams.WAIT_IMAGE + "')";
 			if(!BX.browser.IsIE())
 				this.WAIT.style.backgroundRepeat = 'none';
-			this.WAIT.style.display = 'none';
+			this.WAIT.style.display = 'block';
 			this.WAIT.style.position = 'absolute';
 			this.WAIT.style.zIndex = '1100';
 		}
