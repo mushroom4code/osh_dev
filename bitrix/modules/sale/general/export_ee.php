@@ -322,7 +322,7 @@ class CSaleExportEe extends CSaleExport
                     <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENTS") ?>>
                     <?php foreach ($arData['USERS'][$user["ID"]]['CONTRAGENTS'] as $contrUser) { ?>
                         <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENT") ?>>
-                            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($contrUser["ID_CONTRAGENT"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
+                            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($contrUser["XML_ID"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
                             <<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>><?= htmlspecialcharsbx($contrUser["INN"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>>
                             <<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_ACTIVE") ?>><?= $contrUser["STATUS"] == '1' ? 'true' : 'false' ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_ACTIVE") ?>>
                         </<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENT") ?>>
