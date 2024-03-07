@@ -311,12 +311,12 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
         }
     } elseif ($_GET["mode"] == "contragents_success") {
         /** Enterego contragents success export */
-        $time = !empty($_SESSION['START_DATETIME_EXPORT']) ? $_SESSION['START_DATETIME_EXPORT'] : ConvertTimeStamp(false, "FULL");
+        $time = !empty($_SESSION['START_DATETIME_EXPORT']) ? $_SESSION['START_DATETIME_EXPORT'] : new \Bitrix\Main\Type\DateTime();
         COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS', $time);
-        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE', null);
-        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_ID', null);
-        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE', null);
-        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_ID', null);
+//        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE', null);
+//        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_ID', null);
+//        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE', null);
+//        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_ID', null);
 
         $_SESSION['START_STEP_CONTRAGENT'] = '';
         $_SESSION['START_DATETIME_EXPORT'] = '';
@@ -326,14 +326,17 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
         /** Enterego contragents && users export */
         if (empty($_SESSION['START_STEP_CONTRAGENT']) || !isset($_SESSION['START_STEP_CONTRAGENT'])) {
             $_SESSION['START_STEP_CONTRAGENT'] = '1';
-            $_SESSION['START_DATETIME_EXPORT'] = ConvertTimeStamp(false, "FULL");
+            $_SESSION['START_DATETIME_EXPORT'] = new \Bitrix\Main\Type\DateTime();
         }
+        $oldStartExchange = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS');
+        $dateStartImport1C = !empty($oldStartExchange) ? DateTime::createFromUserTime($oldStartExchange) : '';
 
         // GET CONTRAGENT && USERS
         if ($_SESSION['START_STEP_CONTRAGENT'] === '1') {
-            $stepContrDate = DateTime::createFromUserTime(COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE'));
+            $optionContr = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE');
+            $stepContrDate = !empty($optionContr) ? DateTime::createFromUserTime($optionContr) : '';
             $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_ID');
-            $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $stepContrID);
+            $arData = EnteregoExchange::GetInfoForXML($stepContrDate,$dateStartImport1C, $stepContrID);
             if (!empty($arData['CONTRAGENTS'])) {
                 $stepContrDate = COption::SetOptionString(
                     'DATE_IMPORT_CONTRAGENTS',
@@ -351,9 +354,10 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
         }
 
         if ($_SESSION['START_STEP_CONTRAGENT'] === '2') {
-            $stepContrDate = DateTime::createFromUserTime(COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE'));
+            $optionContr = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE');
+            $stepContrDate = !empty($optionContr) ? DateTime::createFromUserTime($optionContr) : '';
             $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_ID');
-            $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $stepContrID, 'users');
+            $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $dateStartImport1C, $stepContrID, 'users');
             if (!empty($arData['USERS'])) {
                 $stepContrDate = COption::SetOptionString(
                     'DATE_IMPORT_CONTRAGENTS',

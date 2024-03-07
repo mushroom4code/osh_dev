@@ -7,7 +7,6 @@ use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\DateTime;
 use Bitrix\Main\UserTable;
-use COption;
 use Bitrix\Main;
 use Enterego\ORM\EnteregoORMContragentsTable;
 
@@ -15,7 +14,8 @@ class EnteregoExchange
 {
     /**
      * Import contragent-company-user
-     * @param DateTime $stepDate
+     * @param DateTime|string $stepDate
+     * @param DateTime|string $dateStartImport1C
      * @param bool|int $id
      * @param string $type
      * @return array
@@ -24,15 +24,14 @@ class EnteregoExchange
      * @throws SystemException
      */
     public static function GetInfoForXML(
-        datetime $stepDate,
+        datetime|string $stepDate,
+        datetime|string $dateStartImport1C,
         bool|int $id = 0,
         string   $type = ''): array
     {
         $arData = ['CONTRAGENTS' => [], 'USERS' => []];
         $dateExportStart = $_SESSION['START_DATETIME_EXPORT'];
-        $dateStartImport1C = DateTime::createFromUserTime(
-            COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS')
-        );
+
         $step = !empty($stepDate) ? $stepDate : $dateStartImport1C;
         if (empty($type)) {
             /** select contragents for XML on date interval with id interval*/
@@ -44,7 +43,7 @@ class EnteregoExchange
                 'limit' => 50,
             );
 
-            if ($step) {
+            if (!empty($step)) {
                 $filterContr['filter'] = array(
                     ">DATE_UPDATE" => $step,
                 );
@@ -52,7 +51,7 @@ class EnteregoExchange
 
             $filterContr['filter']['<DATE_UPDATE'] = $dateExportStart;
 
-            if ($id > 0) {
+            if (!empty($id)) {
                 $filterContr['filter'][">ID_CONTRAGENT"] = $id;
             }
 
@@ -81,7 +80,8 @@ class EnteregoExchange
                     'RELATION_ID_CONTRAGENT' => 'RELATION.ID_CONTRAGENT',
                     'RELATION_STATUS' => 'RELATION.STATUS',
                     'CONTRAGENT',
-                    'INN' => 'CONTRAGENT.INN'
+                    'INN' => 'CONTRAGENT.INN',
+                    'XML_ID_CONTR' => 'CONTRAGENT.XML_ID'
                 ),
                 'limit' => 50,
                 'runtime' => array(
@@ -117,7 +117,7 @@ class EnteregoExchange
                 $filterUser['filter']['>TIMESTAMP_X'] = $step;
             }
 
-            if ($id > 0) {
+            if (!empty($id)) {
                 $filterUser['filter']['>ID'] = $id;
             }
 
@@ -137,7 +137,7 @@ class EnteregoExchange
                         $arData['USERS'][$userID]['EMAIL'] = $arResultUser['EMAIL'];
                         $arData['USERS'][$userID]['CONTRAGENTS'][$arResultUser['RELATION_ID_CONTRAGENT']] = [
                             'ID_CONTRAGENT' => $arResultUser['RELATION_ID_CONTRAGENT'],
-                            'XML_ID' => $arResultUser['MAIN_USER_CONTRAGENT_XML_ID'],
+                            'XML_ID' => $arResultUser['XML_ID_CONTR'],
                             'INN' => $arResultUser['INN'],
                             'STATUS' => $arResultUser['RELATION_STATUS'],
                         ];
