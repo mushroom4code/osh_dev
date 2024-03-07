@@ -137,7 +137,7 @@ class EnteregoExchange
                         $arData['USERS'][$userID]['EMAIL'] = $arResultUser['EMAIL'];
                         $arData['USERS'][$userID]['CONTRAGENTS'][$arResultUser['RELATION_ID_CONTRAGENT']] = [
                             'ID_CONTRAGENT' => $arResultUser['RELATION_ID_CONTRAGENT'],
-                            'XML_ID' => $arResultUser['XML_ID'],
+                            'XML_ID' => $arResultUser['MAIN_USER_CONTRAGENT_XML_ID'],
                             'INN' => $arResultUser['INN'],
                             'STATUS' => $arResultUser['RELATION_STATUS'],
                         ];
