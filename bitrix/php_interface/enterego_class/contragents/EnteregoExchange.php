@@ -33,7 +33,7 @@ class EnteregoExchange
         $dateStartImport1C = DateTime::createFromUserTime(
             COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS')
         );
-
+        $step = !empty($stepDate) ? $stepDate : $dateStartImport1C;
         if (empty($type)) {
             /** select contragents for XML on date interval with id interval*/
             $filterContr = array(
@@ -44,9 +44,9 @@ class EnteregoExchange
                 'limit' => 50,
             );
 
-            if (!empty($dateStartImport1C) || !empty($stepDate)) {
+            if ($step) {
                 $filterContr['filter'] = array(
-                    ">DATE_UPDATE" => $dateStartImport1C || $stepDate,
+                    ">DATE_UPDATE" => $step,
                 );
             }
 
@@ -113,8 +113,8 @@ class EnteregoExchange
                 "<TIMESTAMP_X" => $dateExportStart,
             );
 
-            if (!empty($dateStartImport1C) || !empty($stepDate)) {
-                $filterUser['filter']['>TIMESTAMP_X'] = $dateStartImport1C || $stepDate;
+            if ($step) {
+                $filterUser['filter']['>TIMESTAMP_X'] = $step;
             }
 
             if ($id > 0) {
