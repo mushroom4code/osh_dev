@@ -113,7 +113,7 @@ class EnteregoExchange
                 "<TIMESTAMP_X" => $dateExportStart,
             );
 
-            if ($step) {
+            if (!empty($step)) {
                 $filterUser['filter']['>TIMESTAMP_X'] = $step;
             }
 
