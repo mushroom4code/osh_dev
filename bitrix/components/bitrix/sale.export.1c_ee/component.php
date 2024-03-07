@@ -336,18 +336,20 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
             $optionContr = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE');
             $stepContrDate = !empty($optionContr) ? DateTime::createFromUserTime($optionContr) : '';
             $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_ID');
-            $arData = EnteregoExchange::GetInfoForXML($stepContrDate,$dateStartImport1C, $stepContrID);
+            $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $dateStartImport1C, $stepContrID);
             if (!empty($arData['CONTRAGENTS'])) {
-                $stepContrDate = COption::SetOptionString(
+                COption::SetOptionString(
                     'DATE_IMPORT_CONTRAGENTS',
                     'IMPORT_CONTRAGENTS_STEP_DATE',
                     end($arData['CONTRAGENTS'])['DATE_UPDATE']
                 );
-                $stepContrID = COption::SetOptionString(
+                COption::SetOptionString(
                     'DATE_IMPORT_CONTRAGENTS',
                     'IMPORT_CONTRAGENTS_STEP_ID',
                     end($arData['CONTRAGENTS'])['ID_CONTRAGENT']
                 );
+                $stepContrDate = end($arData['CONTRAGENTS'])['DATE_UPDATE'];
+                $stepContrID = end($arData['CONTRAGENTS'])['ID_CONTRAGENT'];
             } else {
                 $_SESSION['START_STEP_CONTRAGENT'] = '2';
             }
@@ -355,20 +357,22 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
 
         if ($_SESSION['START_STEP_CONTRAGENT'] === '2') {
             $optionContr = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE');
-            $stepContrDate = !empty($optionContr) ? DateTime::createFromUserTime($optionContr) : '';
-            $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_ID');
-            $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $dateStartImport1C, $stepContrID, 'users');
+            $stepUserDate = !empty($optionContr) ? DateTime::createFromUserTime($optionContr) : '';
+            $stepUserID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_ID');
+            $arData = EnteregoExchange::GetInfoForXML($stepUserDate, $dateStartImport1C, $stepUserID, 'users');
             if (!empty($arData['USERS'])) {
-                $stepContrDate = COption::SetOptionString(
+                COption::SetOptionString(
                     'DATE_IMPORT_CONTRAGENTS',
                     'IMPORT_USER_STEP_DATE',
                     end($arData['USERS'])['TIMESTAMP_X']
                 );
-                $stepContrID = COption::SetOptionString(
+                COption::SetOptionString(
                     'DATE_IMPORT_CONTRAGENTS',
                     'IMPORT_USER_STEP_ID',
                     end($arData['USERS'])['ID']
                 );
+                $stepUserDate = end($arData['USERS'])['TIMESTAMP_X'];
+                $stepUserID = end($arData['USERS'])['ID'];
             }
         }
 
