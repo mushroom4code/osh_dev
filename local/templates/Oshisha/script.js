@@ -1726,14 +1726,15 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
     });
 
     $.each(arrProductGrouped, function (prod_id, item) {
-
+        console.log(item)
         $.each(item.PROPERTIES, function (k, props) {
             if (k !== 'USE_DISCOUNT' && props?.JS_PROP !== undefined && selectedPropData[k] !== undefined &&
                 Object.keys(props?.JS_PROP)?.length === Object.keys(selectedPropData[k])?.length) {
                 $.each(props.JS_PROP, function (key, jsProp) {
                     let propList = selectedPropData[k][key];
                     let priority = -1;
-
+                    console.log(prod_id)
+                    console.log(selectedPropData[k])
                     if (propList !== undefined && jsProp?.VALUE_ENUM === propList?.VALUE_ENUM) {
                         if (propCodePriority === k) {
                             priority = 1;

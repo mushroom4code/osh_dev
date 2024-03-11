@@ -2988,9 +2988,14 @@ $(document).on('click', '.offer-link .offer-box', function () {
     const propCodePriority = $(this).attr('data-prop_code');
     let box_parent = $(this).closest('.catalog-item-product');
     showHideBlock($(this), $(box_parent).find('.prices-all'));
-    const productsSuccess = sortOnPriorityArDataProducts(arrProductGrouped, propCodePriority)
-    window.location.href = window.location.protocol + '//' + window.location.hostname + productsSuccess[0].code;
 
+    const productsSuccess = sortOnPriorityArDataProducts(arrProductGrouped, propCodePriority)
+    console.log(propCodePriority)
+    // console.log(arrProductGrouped)
+    console.log(productsSuccess)
+    // window.location.href = window.location.protocol + '//' + window.location.hostname + '/catalog/product/'
+    //     + productsSuccess[0].code + '/';
+    // console.log(productsSuccess)
 });
 
 function openTabContent(item) {
@@ -2998,19 +3003,19 @@ function openTabContent(item) {
     const oldItemTab = tabBox.querySelector('a.tab-product.active')
     if (oldItemTab.id !== item.id) {
 
-        tabBox.querySelector('.tab-pane[id="'+oldItemTab.id+'"]').classList.add('hidden')
-        tabBox.querySelector('.tab-pane[id="'+oldItemTab.id+'"]').classList.remove('block')
+        tabBox.querySelector('.tab-pane[id="' + oldItemTab.id + '"]').classList.add('hidden')
+        tabBox.querySelector('.tab-pane[id="' + oldItemTab.id + '"]').classList.remove('block')
         oldItemTab.classList.remove('active')
 
         const liOld = oldItemTab.closest('li')
         liOld.classList.remove('border-light-red', 'dark:border-white')
         liOld.classList.add('border-grey-line-order', 'dark:border-grayButton')
 
-        const liNew =  item.closest('li');
+        const liNew = item.closest('li');
         item.classList.add('active')
         liNew.classList.add('border-light-red', 'dark:border-white')
         liNew.classList.remove('border-grey-line-order', 'dark:border-grayButton')
-        tabBox.querySelector('.tab-pane[id="'+item.id+'"]').classList.add('block')
-        tabBox.querySelector('.tab-pane[id="'+item.id+'"]').classList.remove('hidden')
+        tabBox.querySelector('.tab-pane[id="' + item.id + '"]').classList.add('block')
+        tabBox.querySelector('.tab-pane[id="' + item.id + '"]').classList.remove('hidden')
     }
 }
