@@ -313,9 +313,9 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
         /** Enterego contragents success export */
         $time = !empty($_SESSION['START_DATETIME_EXPORT']) ? $_SESSION['START_DATETIME_EXPORT'] : new \Bitrix\Main\Type\DateTime();
         COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS', $time);
-//        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE', null);
+        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE', null);
         COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_ID', null);
-//        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE', null);
+        COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE', null);
         COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_ID', null);
 
         $_SESSION['START_STEP_CONTRAGENT'] = '';
