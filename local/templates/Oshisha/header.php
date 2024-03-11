@@ -178,7 +178,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                            class="lg:text-13 text-xs dark:text-textDarkLightGray text-white dark:font-light font-normal
                            callback js__callback dark:hover:text-white hover:text-hover-red">Обратный звонок</a>
                     </div>
-                    <div class="w-14 h-7 bg-gray-slider-arrow flex flex-row justify-between items-center px-1
+                    <div class="w-14 h-7 bg-gray-slider-arrow pulse flex flex-row justify-between items-center px-1
                      rounded-full dark:bg-gray-box-dark header-switch"
                          onclick="toggleTheme(this)">
                         <svg width="20" height="20" viewBox="0 0 17 17" fill="none" data-theme="dark"
