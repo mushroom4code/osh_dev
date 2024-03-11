@@ -299,23 +299,22 @@ $option = $option_site; ?>
         <script>
             $(document).ready(function () {
                 let ageAccess = sessionStorage.getItem("age_access");
-                console.log(ageAccess)
-                console.log(localStorage?.age_access)
-                if (localStorage?.age_access !== '1' || ageAccess !== '1' ) {
-                        $("#trueModal").arcticmodal(
-                            {
-                                closeOnOverlayClick: false,
-                                afterClose: function (data, el) {
-                                    localStorage.setItem('age_access','1');
-                                    sessionStorage.setItem("age_access", "1");
-                                    $("#2Modal").arcticmodal({closeOnOverlayClick: false,});
-                                }
+                if (localStorage?.age_access !== '1' || ageAccess !== '1') {
+                    $("#trueModal").arcticmodal(
+                        {
+                            closeOnOverlayClick: false,
+                            afterClose: function (data, el) {
+                                localStorage.setItem('age_access', '1');
+                                sessionStorage.setItem("age_access", "1");
+                                $("#2Modal").arcticmodal({closeOnOverlayClick: false,});
                             }
-                        );
+                        }
+                    );
 
                 } else {
                     sessionStorage.setItem("age_access", "1");
                 }
+
             });
             // age access
         </script>

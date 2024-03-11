@@ -1815,6 +1815,19 @@ ToggleThemeLocalStorages()
 document.addEventListener('DOMContentLoaded', function () {
     const item = document.querySelector('.header-switch');
     switchHeader(item)
+    let buttonTheme = sessionStorage.getItem("themeQuestion");
+    if (localStorage?.themeQuestion == '1' || buttonTheme == '1') {
+        sessionStorage.setItem("themeQuestion", "1");
+
+    }
+    $('.pulse').on('click', function () {
+            console.log('TEST1')
+            localStorage.setItem('themeQuestion', '1');
+            sessionStorage.setItem("themeQuestion", "1");
+            $(".header-switch").removeClass('pulse');
+            console.log(sessionStorage.themeQuestion)
+        }
+    );
 })
 
 // LOADER
