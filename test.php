@@ -2,8 +2,8 @@
 //require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 //global $APPLICATION;
 ////$_GET["mode"] = 'query_contragents';
-////$_GET["mode"] = 'contragents_success';
-//$_GET["filename"] = 'contragents___8ccb7ce5-fae0-41dc-a74d-61c38c0dfbb7.xml';
+//$_GET["mode"] = 'import';
+//$_GET["filename"] = 'contragents___b3bb2689-28f6-4619-aed5-152cc6a24653.xml';
 //COption::SetOptionString("sale", "secure_1c_exchange", "N");
 //global $USER;
 //$USER->Authorize('16407');

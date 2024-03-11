@@ -210,6 +210,7 @@ class EnteregoContragents
         } else {
             $newArData = $arData;
             unset($newArData['XML_ID']);
+            unset($newArData['DATE_INSERT']);
             $updateResult = EnteregoORMContragentsTable::update(array('ID_CONTRAGENT' => $resultSelect['ID_CONTRAGENT']), $newArData);
             if ($updateResult->isSuccess()) {
                 $result = true;
