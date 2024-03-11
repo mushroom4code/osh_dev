@@ -2963,39 +2963,25 @@
     }
 })(window);
 
-function showHideBlock(that, id = 0, pricesBox = false) {
-    $(that).closest('div.d-flex').find('.offer-box').each(function (i, elem) {
-        $(elem).attr('data-active', 'false');
+function showHideBlock(that) {
+    $(that).closest('div.flex.overflow-auto').find('.offer-link').each(function (i, elem) {
         $(elem).removeClass('selected');
-        $(elem).closest('.offer-link').removeClass('selected');
+        $(elem).find('.offer-box').attr('data-active', 'false').removeClass('selected border-light-red dark:border-white')
+            .addClass('border-textDarkLightGray');
     });
-    $(that).attr('data-active', 'true');
-    $(that).closest('.offer-link').addClass('selected');
-    if (pricesBox) {
-        $(pricesBox).find('.prices-box').each(function (key, price) {
-            if (!$(price).hasClass('hidden')) {
-                $(price).addClass('hidden');
-                $(price).removeClass('active')
-            }
-        });
-        $(pricesBox).find('.prices-box[data-product_id="' + id + '"]').removeClass('hidden').addClass('active');
-    }
+    $(that).find('.offer-box').attr('data-active', 'true').removeClass('border-textDarkLightGray').addClass('border-light-red dark:border-white');
+    $(that).addClass('selected');
 }
 
-$(document).on('click', '.offer-link .offer-box', function () {
+$(document).on('click', '.offer-link', function () {
 
     const arrProductGrouped = JSON.parse($(document).find('#product_prop_data').val() ?? [{}]);
-    const propCodePriority = $(this).attr('data-prop_code');
+    const propCodePriority = $(this).find('.offer-box').attr('data-prop_code');
     let box_parent = $(this).closest('.catalog-item-product');
     showHideBlock($(this), $(box_parent).find('.prices-all'));
-
     const productsSuccess = sortOnPriorityArDataProducts(arrProductGrouped, propCodePriority)
-    console.log(propCodePriority)
-    // console.log(arrProductGrouped)
-    console.log(productsSuccess)
-    // window.location.href = window.location.protocol + '//' + window.location.hostname + '/catalog/product/'
-    //     + productsSuccess[0].code + '/';
-    // console.log(productsSuccess)
+    window.location.href = window.location.protocol + '//' + window.location.hostname + '/catalog/product/'
+        + productsSuccess[0].code + '/';
 });
 
 function openTabContent(item) {
