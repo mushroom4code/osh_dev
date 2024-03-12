@@ -23,7 +23,7 @@ function get_orders(array $filter = []): array
 
     $listOrders = [];
 
-    $products = CSaleOrder::GetList(array('ID' => 'DESC'), $filter);
+    $products = CSaleOrder::GetList(array('DATE_INSERT' => 'DESC'), $filter);
 
     while ($res = $products->Fetch()) {
         $listOrders[] = $res;

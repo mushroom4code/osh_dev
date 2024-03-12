@@ -50,7 +50,7 @@ if (!$name)
     <div class="personal_hide flex flex-col">
         <a href="#personal_orders_bar"
            class="dark:text-textDarkLightGray text-base dark:hover:text-white hover:text-light-red font-medium text-textLight mb-3"
-           data-toggle="collapse" aria-controls="personal_orders_bar"
+           data-toggle="collapse"
            aria-expanded="false" id="not_link">Заказы</a>
         <div id="personal_orders_bar" class="flex flex-col mb-3">
             <a href="/personal/orders/"
@@ -61,7 +61,7 @@ if (!$name)
                id="personal_orders_filter_history_Y">Все заказы</a>
             <a href="/personal/orders/?show_canceled=Y"
                class="dark:text-textDarkLightGray text-sm font-light mb-3 text-textLight dark:hover:text-white hover:text-light-red"
-               id="#">Завершено</a>
+               id="#">Выполнены</a>
             <a href="/personal/orders/?show_delivery=Y"
                class="dark:text-textDarkLightGray text-sm font-light mb-3 text-textLight dark:hover:text-white hover:text-light-red"
                id="#">В доставке</a>

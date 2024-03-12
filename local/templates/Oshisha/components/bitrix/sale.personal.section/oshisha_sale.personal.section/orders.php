@@ -26,8 +26,8 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
     <h5 class="mb-3 text-2xl font-medium text-textLight dark:text-textDarkLightGray">Заказы</h5>
     <div class="flex flex-row justify-between mb-4 items-center">
         <div class="flex justify-between items-center">
-            <input type="text" data-range="true" data-multiple-dates-separator=" - "
-                   class="datepicker-here dark:bg-grayButton bg-white dark:border-none border-borderColor text-sm
+            <input type="text" data-range="true" data-multiple-dates-separator=" - " id="date_interval_orders"
+                   class="datepicker-here dark:bg-grayButton bg-white dark:border-none date_input border-borderColor text-sm
                          focus:border-borderColor shadow-none py-2 px-4 outline-none rounded-md w-auto date_input mr-3"/>
             <a class="sort_orders dark:bg-grayButton bg-textDark text-sm py-2 md:px-4 px-2 rounded-md w-full relative"
                href="javascript:void(0)">
@@ -51,7 +51,7 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
                     </span>
                 </div>
                 <div class="sort_orders_elements hidden absolute top-9 w-full rounded-b-lg z-30 p-3 pt-0 dark:bg-grayButton
-                 bg-textDark right-0"
+                 bg-textDark right-0"  data-sort-order="new"
                      data-sort-status="<?= $orders_status ?>">
                     <ul>
                         <li class="order_sort_item text-xs mb-2" data-sort-order="new">Новые</li>
