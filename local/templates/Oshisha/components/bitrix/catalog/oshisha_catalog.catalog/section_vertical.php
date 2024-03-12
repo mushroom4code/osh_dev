@@ -290,7 +290,7 @@ function setActiveColor(string $itemType = 'card'): string
             </div>
         <?php endif ?>
         <?php global $GLOBAL_SECTION; ?>
-        <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> xl:max-w-6_5xl lg:max-w-3xl max-w-full w-fit xl:ml-11 lg:ml-7 ml-0">
+        <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> 2xl:max-w-6_5xl xl:max-w-[63rem] lg:max-w-3xl max-w-full w-fit xl:ml-11 lg:ml-7 ml-0">
             <div class="row navigation-wrap mb-5">
                 <div class="col" id="navigation">
                     <?php $APPLICATION->IncludeComponent(

@@ -175,8 +175,8 @@ class PriceList
 
                 $prod[] = array_merge(array(
                     'NAME' => $arRes['NAME'],
-                    'PATH' => 'https://' . OSHISHA_DOMAIN . '/catalog/product/' . $arRes['CODE'] . '/'
-                        ?? 'https://' . OSHISHA_DOMAIN,
+                    'PATH' => 'https://oshisha.cc/catalog/product/' . $arRes['CODE'] . '/'
+                        ?? 'https://oshisha.cc/',
                     'BASE' => $base_price,
                     'b2b' => $arRes['PRICE_' . B2B_PRICE],
                     'USE_MARKING' => $arRes['PROPERTY_MARKIROVANNYY_VALUE'],
