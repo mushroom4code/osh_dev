@@ -94,6 +94,7 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
         "ID",
         "IBLOCK_ID",
         "PREVIEW_TEXT",
+        "NAME",
         "PREVIEW_PICTURE",
         "DETAIL_PICTURE",
     );
