@@ -21,9 +21,40 @@ function tasteInit() {
     });
 }
 
+//MAIN
+function getCookie(name) {
+    let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+function setCookie(name, value, options = {}) {
+
+    options = {
+        path: '/',
+        // при необходимости добавьте другие значения по умолчанию
+        ...options
+    };
+
+    if (options.expires instanceof Date) {
+        options.expires = options.expires.toUTCString();
+    }
+
+    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+    for (let optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        let optionValue = options[optionKey];
+        if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+        }
+    }
+
+    document.cookie = updatedCookie;
+}
 $(document).ready(function () {
     let div = $('div'),
-        body = $('body'),
         inputItem = $('input'),
         href = window.location.pathname,
         screenWidth = window.screen.width,
@@ -93,15 +124,6 @@ $(document).ready(function () {
             }, 2000);
         }
     }
-
-    //MAIN
-    function getCookie(name) {
-        let matches = document.cookie.match(new RegExp(
-            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-        ));
-        return matches ? decodeURIComponent(matches[1]) : undefined;
-    }
-
 
     //ORDERS
     let parent_container_delivery = $('.bx-soa-pp-company-graf-container');
@@ -1815,17 +1837,16 @@ ToggleThemeLocalStorages()
 document.addEventListener('DOMContentLoaded', function () {
     const item = document.querySelector('.header-switch');
     switchHeader(item)
-    let buttonTheme = sessionStorage.getItem("themeQuestion");
-    if (localStorage?.themeQuestion == '1' || buttonTheme == '1') {
-        sessionStorage.setItem("themeQuestion", "1");
+    let buttonTheme = getCookie("themeQuestion");
 
+    if (localStorage?.themeQuestion == '1' || buttonTheme == '1') {
+        setCookie("themeQuestion",1)
     }
+
     $('.pulse').on('click', function () {
-            console.log('TEST1')
             localStorage.setItem('themeQuestion', '1');
-            sessionStorage.setItem("themeQuestion", "1");
+            setCookie("themeQuestion",1)
             $(".header-switch").removeClass('pulse');
-            console.log(sessionStorage.themeQuestion)
         }
     );
 })
