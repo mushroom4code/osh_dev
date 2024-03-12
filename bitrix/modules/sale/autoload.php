@@ -430,7 +430,7 @@ CModule::AddAutoloadClasses(
 		'\Bitrix\Sale\Discount\Preset\SelectProductPreset' => 'lib/discount/preset/selectproductpreset.php',
 		'\Bitrix\Sale\Discount\Preset\State' => 'lib/discount/preset/state.php',
 		'\Bitrix\Sale\Discount\Result\CompatibleFormat' => 'lib/discount/result/compatibleformat.php',
-		'\Bitrix\Sale\Discount\RuntimeCache\DiscountCache' => 'lib/discount/runtimecache/discountcache.php',
+		'\Bitrix\Sale\Discount\RuntimeCache\DiscountCache' => '../../php_interface/enterego_class/discountcache.php',
 		'\Bitrix\Sale\Discount\RuntimeCache\FuserCache' => 'lib/discount/runtimecache/fusercache.php',
 		'\Bitrix\Sale\Discount\Actions' => 'lib/discount/actions.php',
 		'\Bitrix\Sale\Discount\Analyzer' => 'lib/discount/analyzer.php',
