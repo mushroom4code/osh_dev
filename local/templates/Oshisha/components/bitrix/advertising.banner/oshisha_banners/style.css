@@ -77,3 +77,8 @@ html.dark .slick-dots li.slick-active button:before {
         margin: 0;
     }
 }
+
+.carousel-inner-main img{
+    border-radius: 2rem;
+    max-height: 500px;
+}
