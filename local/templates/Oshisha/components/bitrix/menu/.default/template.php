@@ -48,10 +48,9 @@ if (!$name)
         <?php endif; ?>
     </div>
     <div class="personal_hide flex flex-col">
-        <a href="#personal_orders_bar"
-           class="dark:text-textDarkLightGray text-base dark:hover:text-white hover:text-light-red font-medium text-textLight mb-3"
-           data-toggle="collapse"
-           aria-expanded="false" id="not_link">Заказы</a>
+        <a href="javascript:void(0)" onclick="$('#personal_orders_bar').toggleClass('hidden')"
+           class="dark:text-textDarkLightGray personal-orders-bar text-base dark:hover:text-white hover:text-light-red
+           font-medium text-textLight mb-3" id="not_link">Заказы</a>
         <div id="personal_orders_bar" class="flex flex-col mb-3">
             <a href="/personal/orders/"
                class="dark:text-textDarkLightGray text-sm font-light text-textLight mb-3 dark:hover:text-white hover:text-light-red"

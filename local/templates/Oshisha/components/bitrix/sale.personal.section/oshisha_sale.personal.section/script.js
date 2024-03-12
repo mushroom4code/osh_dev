@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
 
     if (window.daDataParam !== undefined && window.daDataParam.token !== undefined) {
@@ -85,38 +84,43 @@ $(document).ready(function () {
         let popup_mess = $(this).parent().find('#popup_mess_order_copy');
         let content;
         if ($(this).hasClass('js--basket-empty') || $('div#personal_orders').hasClass('js--basket-empty')) {
-            content = '<p style="font-size: 1rem; font-weight: 500">' +
+            content = '<p class="mb-3 text-lg font-semibold dark:font-normal text-textLight dark:text-textDarkLightGray">' +
                 'Вы точно хотите повторить заказ?</p>' +
-                ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
+                ($(this).hasClass('js--not-active') ?
+                    '<p class="mb-5 font-normal dark:font-light text-textLight dark:text-textDarkLightGray" >' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
-                '<div class="confirmation_container">' +
-                '<a href="' + $(this).attr('href') + '" id="yes_mess" class="d-flex  link_message_box_product ' +
-                'justify-content-center align-items-center">' +
+                '<div class="confirmation_container flex flex-row">' +
+                '<a href="' + $(this).attr('href') + '" id="yes_mess" class="flex  link_message_box_product ' +
+                'justify-center items-center px-7 py-2.5 dark:bg-dark-red rounded-md bg-light-red text-white text-sm ' +
+                'dark:shadow-md shadow-shadowDark w-1/2 mr-3 ark:hover:bg-hoverRedDark cursor-pointer">' +
                 'Да</a>' +
-                '<a href="#" id="no_mess" class="d-flex basket-empty link_message_box_product ' +
-                'justify-content-center align-items-center">' +
+                '<a href="#" id="no_mess" class="flex basket-empty link_message_box_product text-white text-sm' +
+                ' justify-center items-center px-3 py-2 dark:shadow-md w-1/2 shadow-shadowDark ' +
+                ' dark:hover:bg-black cursor-pointer dark:bg-grayButton rounded-md bg-lightGrayBg">' +
                 'Нет</a></div>';
         } else {
-            content = '<p style="font-size: 1rem; font-weight: 500">' +
+            content = '<p class="md:mb-7 mb-4 md:text-xl text-lg font-semibold dark:font-normal text-textLight dark:text-textDarkLightGray">' +
                 'Очистить корзину перед добавлением товаров?</p>' +
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
-                '<div class="confirmation_container">' +
-                '<a href="' + $(this).attr('href') + '&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
-                'justify-content-center align-items-center">' +
+                '<div class="confirmation_container flex flex-row">' +
+                '<a href="' + $(this).attr('href') + '&EMPTY_BASKET=Y" id="yes_mess" class="flex link_message_box_product ' +
+                ' justify-center items-center px-7 py-2.5 dark:bg-dark-red rounded-md bg-light-red text-white text-sm ' +
+                ' dark:shadow-md shadow-shadowDark w-1/2 mr-3 ark:hover:bg-hoverRedDark cursor-pointer">' +
                 'Да</a>' +
-                '<a href="' + $(this).attr('href') + '" id="no_mess" class="d-flex  link_message_box_product ' +
-                'justify-content-center align-items-center">' +
+                '<a href="' + $(this).attr('href') + '" id="no_mess" class="flex link_message_box_product text-white text-sm' +
+                ' justify-center items-center px-3 py-2 w-1/2 dark:shadow-md shadow-shadowDark ' +
+                ' dark:hover:bg-black cursor-pointer dark:bg-grayButton rounded-md bg-lightGrayBg">' +
                 'Нет</a></div>';
         }
         var Confirmer = new BX.PopupWindow("popup_mess_order_copy", null, {
             content: content,
             max_width: "300px",
-            closeIcon: {width: "31px", height: "30px", top: '3%', left: '88%', color: 'black'},
+            closeIcon: {width: "31px", height: "30px", top: '3%', right: '1%', color: 'black'},
             zIndex: 300,
             offsetLeft: 0,
             offsetTop: 0,
-            className: 'flex-column align-items-center box_with_message_copy_order',
+            className: 'flex-col flex items-center md:m-0 m-3 box_with_message_copy_order md:p-10 p-5 bg-white rounded-lg dark:bg-darkBox',
             draggable: {restrict: false},
             overlay: {backgroundColor: 'black', opacity: '80'},  /* затемнение фона */
         });
@@ -136,15 +140,13 @@ $(document).ready(function () {
     var loadingScreen;
     var BXFormPosting = false;
 
-    function startLoader()
-    {
+    function startLoader() {
         if (BXFormPosting === true)
             return false;
 
         BXFormPosting = true;
 
-        if (!loadingScreen)
-        {
+        if (!loadingScreen) {
             loadingScreen = new BX.PopupWindow('loading_screen', null, {
                 overlay: {backgroundColor: 'black', opacity: 1},
                 events: {
@@ -171,15 +173,14 @@ $(document).ready(function () {
     }
 
 
-    function endLoader()
-    {
+    function endLoader() {
         BXFormPosting = false;
 
-        if (loadingScreen && loadingScreen.isShown())
-        {
+        if (loadingScreen && loadingScreen.isShown()) {
             loadingScreen.close();
         }
     }
+
     $('#date_interval_orders').datepicker({
         onSelect: function (date, datepicker) {
             if (/^\d\d.\d\d.\d\d\d\d\s-\s\d\d.\d\d.\d\d\d\d$/.test(date)) {
@@ -190,7 +191,6 @@ $(document).ready(function () {
                     type: 'POST',
                     data: {dateInterval: date, typeSort: typeSort, sortStatus: sortStatus},
                     success: function (response) {
-                        console.log(response)
                         if (response != 'error') {
                             $('.sale-order-list-inner-container').remove();
                             $('div#personal_orders').append(response);
@@ -211,7 +211,6 @@ $(document).ready(function () {
                 type: 'POST',
                 data: {sortStatus: sortStatus, typeSort: typeSort},
                 success: function (response) {
-                    console.log(response)
                     if (response != 'error') {
                         $('.sale-order-list-inner-container').remove();
                         $('div#personal_orders').append(response);
