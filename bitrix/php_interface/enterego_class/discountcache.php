@@ -157,7 +157,7 @@ final class DiscountCache
 				'NAME', 'CONDITIONS_LIST', 'ACTIONS_LIST', 'ACTIVE_FROM', 'ACTIVE_TO', 'PREDICTIONS_LIST', 'PREDICTIONS_APP',
 				'PREDICTION_TEXT', 'PRESET_ID', 'CURRENCY', 'LID', 'SHORT_DESCRIPTION', 'SHORT_DESCRIPTION_STRUCTURE',
 			);
-
+            //enterego changed procedure of getting and filtering discounts /begin
 			$couponsDiscount = array();
 			if (!empty($couponList))
 			{
@@ -266,6 +266,7 @@ final class DiscountCache
                 }
                 unset($discount, $discountIterator);
             }
+            //enterego changed procedure of getting and filtering discounts /end
 
 			\CTimeZone::Enable();
 
