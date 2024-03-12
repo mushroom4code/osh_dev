@@ -72,6 +72,7 @@ if($_POST['sortStatus'] === 'show_canceled') {
 $dateIntervalArray = [];
 if (isset($_POST['dateInterval'])) {
     $dateIntervalArray = explode(' - ', $_POST['dateInterval']);
+    $listOrders = sortByField("DATE_INSERT", 'DESC', $element, $index, $dateIntervalArray);
 }
 
 switch ($_POST['typeSort']) {
