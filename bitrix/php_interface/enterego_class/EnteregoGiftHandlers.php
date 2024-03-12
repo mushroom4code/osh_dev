@@ -6,15 +6,18 @@ use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ArgumentNullException;
 use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\ArgumentTypeException;
+use Bitrix\Main\LoaderException;
 use Bitrix\Main\NotImplementedException;
 use Bitrix\Main\NotSupportedException;
 use Bitrix\Main\ObjectException;
 use Bitrix\Main\ObjectNotFoundException;
+use Bitrix\Main\SystemException;
 use Bitrix\Sale;
 use Bitrix\Main\Context;
 use Bitrix\Sale\Basket;
+use Bitrix\Sale\BasketBase;
 use Bitrix\Sale\Fuser;
-
+use Bitrix\Sale\Order;
 
 class EnteregoGiftHandlers
 {
@@ -22,18 +25,19 @@ class EnteregoGiftHandlers
     /**
      * Add gift in basket if discount sale can be applied
      *
-     * @throws ObjectNotFoundException
-     * @throws ObjectException
-     * @throws NotSupportedException
-     * @throws NotImplementedException
-     * @throws ArgumentNullException
-     * @throws ArgumentTypeException
-     * @throws ArgumentOutOfRangeException
      * @throws ArgumentException
+     * @throws ArgumentNullException
+     * @throws ArgumentOutOfRangeException
+     * @throws ArgumentTypeException
+     * @throws NotImplementedException
+     * @throws NotSupportedException
+     * @throws ObjectException
+     * @throws ObjectNotFoundException
+     * @throws LoaderException
      */
     public static function OnLoadSaleBasketAddGiftInBasket()
     {
-        $userId = Fuser::getId() ;
+        $userId = Fuser::getId();
 
         /** @var Basket $basket */
         $basket = Basket::loadItemsForFUser(
@@ -102,8 +106,8 @@ class EnteregoGiftHandlers
     }
 
     /** Initialize order for calculate discount
-     * @param Sale\BasketBase $basket
-     * @return Sale\Order|null
+     * @param BasketBase $basket
+     * @return Order|null
      * @throws ArgumentException
      * @throws ArgumentNullException
      * @throws ArgumentOutOfRangeException
@@ -111,6 +115,7 @@ class EnteregoGiftHandlers
      * @throws NotSupportedException
      * @throws ObjectException
      * @throws ObjectNotFoundException
+     * @throws SystemException
      */
     private static function InitializeOrder(Sale\BasketBase $basket): ?Sale\Order
     {

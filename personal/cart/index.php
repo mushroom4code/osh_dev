@@ -4,7 +4,7 @@
 
 $APPLICATION->SetTitle("Корзина");
 $APPLICATION->SetPageProperty("title", "Корзина");
-
+CModule::IncludeModule("sale");
 //Add automatically gift in the basket
 \Enterego\EnteregoGiftHandlers::OnLoadSaleBasketAddGiftInBasket();
 

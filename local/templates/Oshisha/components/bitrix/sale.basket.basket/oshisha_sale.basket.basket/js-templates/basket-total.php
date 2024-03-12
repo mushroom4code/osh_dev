@@ -10,7 +10,7 @@ use Enterego\contragents\EnteregoContragents;
  */
 ?>
 <script id="basket-total-template" type="text/html">
-    <div class="basket-checkout-container p-8 rounded-xl bg-textDark dark:bg-darkBox mb-7"
+    <div class="basket-checkout-container md:p-8 p-5 rounded-xl bg-textDark dark:bg-darkBox mb-7"
          data-entity="basket-checkout-aligner">
         <div class="basket-checkout-section">
             <div class="basket-checkout-section-inner">
@@ -88,7 +88,7 @@ use Enterego\contragents\EnteregoContragents;
             </div>
         </div>
     </div>
-    <div class="basket-checkout-container p-8 rounded-xl bg-textDark dark:bg-darkBox mb-7"
+    <div class="basket-checkout-container md:p-8 p-5 rounded-xl bg-textDark dark:bg-darkBox mb-7"
          data-entity="basket-checkout-aligner">
         <div class="basket-checkout-section-inner">
             <?php if ($arParams['HIDE_COUPON'] !== 'Y') { ?>

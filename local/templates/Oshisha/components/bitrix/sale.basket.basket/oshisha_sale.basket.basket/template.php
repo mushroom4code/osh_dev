@@ -312,7 +312,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 } ?>
                                 <div class="box w-full border-2 border-textDark dark:border-lightGrayBg rounded-lg mb-2"
                                      id="<?= $newName[1] ?>">
-                                    <div class="card-header basket_category py-3.5 px-5 dark:bg-lightGrayBg w-full
+                                    <div class="card-header basket_category md:py-3.5 py-3 px-5 dark:bg-lightGrayBg w-full
                                     bg-textDark"
                                          id="open<?= $newName[1] ?>">
                                         <button class="btn btn-link btn-block flex justify-between flex-row items-center

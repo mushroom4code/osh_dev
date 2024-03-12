@@ -233,7 +233,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             false
                         ); ?>
                     </div>
-                    <div class="ul_menu ul_menu_2 mt-5">
+                    <div class="ul_menu ul_menu_2 mt-5 mb-5">
                         <div class="box_top_panel flex flex-col">
                             <div class="px-4 flex flex-col">
                                 <a href="/about/o-nas/" class="mb-4">
@@ -269,7 +269,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
             </div>
         <?php }
-        if (strripos($APPLICATION->GetCurPage(), '/personal/') === false ||
+        if (strripos($APPLICATION->GetCurPage(), '/personal/cart/') !== false ||
+            strripos($APPLICATION->GetCurPage(), '/personal/') === false ||
             strripos($APPLICATION->GetCurPage(), '/personal/') !== false && !$mobile->isMobile()): ?>
             <div class="flex md:relative fixed md:bottom-auto bottom-0 flex-col md:bg-transparent bg-white px-4
             md:dark:bg-transparent dark:bg-darkBox md:drop-shadow-none md:dark:drop-shadow-none

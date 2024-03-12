@@ -230,3 +230,12 @@ select:-webkit-autofill:focus {
         box-shadow: 0 0 0 0 rgba(204,169,44, 0);
     }
 }
+
+jdiv .button_d58f{
+    margin-bottom: 0 !important;
+    margin-right: 11px;
+}
+
+jdiv .wrap_bfe9{
+    bottom: 65px;
+}

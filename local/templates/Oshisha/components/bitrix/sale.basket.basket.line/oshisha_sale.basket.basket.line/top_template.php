@@ -40,7 +40,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
 ?>
 <div class="flex flex-row justify-between items-center w-full">
     <?php if (!$compositeStub && $arParams['SHOW_AUTHOR'] == 'Y'): ?>
-        <div class="box_with_basket_login md:mr-5 mr-0 md:w-max w-1/5">
+        <div class="box_with_basket_login md:mr-5 mr-0 md:w-max w-1/4">
             <?php if ($USER->IsAuthorized()):
                 $name = $USER->GetFirstName();
                 $newName = $name;
@@ -106,7 +106,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
             <?php endif ?>
         </div>
     <?php endif ?>
-    <div class="box_with_basket_login md:mr-5 mr-0 md:w-max w-1/5">
+    <div class="box_with_basket_login md:mr-5 mr-0 md:w-max w-1/4">
         <a href="/personal/subscribe/" id="personal_subscribe" class="link_lk flex-col flex items-center justify-center">
             <svg width="25" height="24" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg"
                  class="stroke-lightGrayBg dark:stroke-textDarkLightGray">
@@ -116,7 +116,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
             <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs mt-1 md:block hidden">Избранное</span>
         </a>
     </div>
-    <div class="box_with_basket_login md:hidden block mr-0 md:w-max w-1/5">
+    <div class="box_with_basket_login md:hidden block mr-0 md:w-max w-1/4">
         <a href="/catalog/" class="flex justify-center">
             <div >
                 <svg width="28" height="18" viewBox="0 0 48 37" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -127,22 +127,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
             </div>
         </a>
     </div>
-    <div class="md:hidden block mr-0 md:w-max w-1/5">
-        <a href="/diskont/" class="flex justify-center">
-            <svg width="25" height="25" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M23.75 6.25L6.25 23.75" class="stroke-lightGrayBg dark:stroke-textDarkLightGray"
-                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M8.75 12.5C10.8211 12.5 12.5 10.8211 12.5 8.75C12.5 6.67894 10.8211 5 8.75 5C6.67894 5 5 6.67894 5 8.75C5 10.8211 6.67894 12.5 8.75 12.5Z"
-                      class="stroke-lightGrayBg dark:stroke-textDarkLightGray" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round"/>
-                <path d="M21.25 25C23.3211 25 25 23.3211 25 21.25C25 19.1789 23.3211 17.5 21.25 17.5C19.1789 17.5 17.5 19.1789 17.5 21.25C17.5 23.3211 19.1789 25 21.25 25Z"
-                      class="stroke-lightGrayBg dark:stroke-textDarkLightGray" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round"/>
-            </svg>
-
-        </a>
-    </div>
-    <div class="box_with_basket_login md:w-max w-1/5">
+    <div class="box_with_basket_login md:w-max w-1/4">
         <a class="link_header" href="<?= $arParams['PATH_TO_BASKET'] ?>">
             <div class="basket_top relative flex-col flex items-center">
                 <div>
