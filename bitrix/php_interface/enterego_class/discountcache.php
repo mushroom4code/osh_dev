@@ -157,7 +157,24 @@ final class DiscountCache
 				'NAME', 'CONDITIONS_LIST', 'ACTIONS_LIST', 'ACTIVE_FROM', 'ACTIVE_TO', 'PREDICTIONS_LIST', 'PREDICTIONS_APP',
 				'PREDICTION_TEXT', 'PRESET_ID', 'CURRENCY', 'LID', 'SHORT_DESCRIPTION', 'SHORT_DESCRIPTION_STRUCTURE',
 			);
-            //enterego changed procedure of getting and filtering discounts /begin
+            $discountFilter = array(
+                //enterego
+                //'@ID' => $discountIds,
+                //'=LID' => $LID,
+                //--
+                '@EXECUTE_MODULE' => $executeModuleFilter,
+                array(
+                    'LOGIC' => 'OR',
+                    '=ACTIVE_FROM' => null,
+                    '<=ACTIVE_FROM' => $currentDatetime
+                ),
+                array(
+                    'LOGIC' => 'OR',
+                    '=ACTIVE_TO' => null,
+                    '>=ACTIVE_TO' => $currentDatetime
+                )
+            );
+
 			$couponsDiscount = array();
 			if (!empty($couponList))
 			{
@@ -176,97 +193,55 @@ final class DiscountCache
 				unset($id, $row, $iterator);
 			}
 
-            $customDiscountIds = [];
-            $customDiscountsByLIDs = [];
-            $customDiscountsResCurSite = \Enterego\DiscountsSubsidiariesTable::getList(['filter' => [
-                '@DISCOUNT_ID' => $discountIds,
-                '=SITE_ID' => $siteId]
-            ]);
-            while ($customDiscount = $customDiscountsResCurSite->fetch()) {
-                if ($customDiscount['IS_MAIN']) {
-                    $customDiscountsByLIDs[$customDiscount['SITE_ID']][] = $customDiscount['DISCOUNT_ID'];
-                    unset($discountIds[array_search($customDiscount['DISCOUNT_ID'], $discountIds)]);
-                } else {
-                    $customDiscountIds[] = $customDiscount['DISCOUNT_ID'];
-                }
+            if (empty($couponsDiscount))
+            {
+                $discountFilter['=USE_COUPONS'] = 'N';
             }
-            if (!empty($customDiscountIds)) {
-                $customDiscountsResOtherSite = \Enterego\DiscountsSubsidiariesTable::getList(['filter' => [
-                    '@DISCOUNT_ID' => $customDiscountIds,
-                    '!=SITE_ID' => $siteId,
-                    '=IS_MAIN' => 1
-                ]]);
-                while ($customDiscount = $customDiscountsResOtherSite->fetch()) {
-                    $customDiscountsByLIDs[$customDiscount['SITE_ID']][] = $customDiscount['DISCOUNT_ID'];
-                    if ($discountIdsKey = array_search($customDiscount['DISCOUNT_ID'], $discountIds)) {
-                        unset($discountIds[$discountIdsKey]);
-                    }
-                }
-            }
-
-            foreach ($discountIds as $discountId) {
-                $customDiscountsByLIDs[$siteId][] = $discountId;
-            }
-
-            foreach ($customDiscountsByLIDs as $LID => $customDiscountsByLID) {
-                $discountFilter = array(
-                    '@ID' => $customDiscountsByLID,
-                    '=LID' => $LID,
-                    '@EXECUTE_MODULE' => $executeModuleFilter,
+            else
+            {
+                $discountFilter[] = array(
+                    'LOGIC' => 'OR',
+                    '=USE_COUPONS' => 'N',
                     array(
-                        'LOGIC' => 'OR',
-                        '=ACTIVE_FROM' => null,
-                        '<=ACTIVE_FROM' => $currentDatetime
-                    ),
-                    array(
-                        'LOGIC' => 'OR',
-                        '=ACTIVE_TO' => null,
-                        '>=ACTIVE_TO' => $currentDatetime
+                        '=USE_COUPONS' => 'Y',
+                        '@ID' => array_keys($couponsDiscount)
                     )
                 );
-
-                if (empty($couponsDiscount))
-                {
-                    $discountFilter['=USE_COUPONS'] = 'N';
-                }
-                else
-                {
-                    $discountFilter[] = array(
-                        'LOGIC' => 'OR',
-                        '=USE_COUPONS' => 'N',
-                        array(
-                            '=USE_COUPONS' => 'Y',
-                            '@ID' => array_keys($couponsDiscount)
-                        )
-                    );
-                }
-
-                //todo remove order. It's unnecessary because we rearrange discounts after by benefit for client.
-                $discountIterator = DiscountTable::getList(array(
-                    'select' => $discountSelect,
-                    'filter' => $discountFilter,
-                    'order' => array('PRIORITY' => 'DESC', 'SORT' => 'ASC', 'ID' => 'ASC')
-                ));
-
-                while($discount = $discountIterator->fetch())
-                {
-                    if (array_key_exists($discount['ID'], $currentList)) {
-                        continue;
-                    }
-                    $discount['ID'] = (int)$discount['ID'];
-                    if ($discount['USE_COUPONS'] == 'Y')
-                        $discount['COUPON'] = $couponList[$couponsDiscount[$discount['ID']]];
-                    $discount['CONDITIONS'] = $discount['CONDITIONS_LIST'];
-                    $discount['ACTIONS'] = $discount['ACTIONS_LIST'];
-                    $discount['PREDICTIONS'] = $discount['PREDICTIONS_LIST'];
-                    $discount['MODULE_ID'] = 'sale';
-                    $discount['MODULES'] = array();
-                    unset($discount['ACTIONS_LIST'], $discount['CONDITIONS_LIST'], $discount['PREDICTIONS_LIST']);
-                    $currentList[$discount['ID']] = $discount;
-                }
-                unset($discount, $discountIterator);
             }
-            //enterego changed procedure of getting and filtering discounts /end
+
+            //enterego
+            $newDiscountIds = $this->ent_getSubsidaryDiscount($discountIds, $siteId);
+            if (empty($newDiscountIds)) {
+                $this->discounts[$cacheKey] = [];
+                return [];
+            }
+            $discountFilter['@ID'] = $newDiscountIds;
+            //--
+
+            //todo remove order. It's unnecessary because we rearrange discounts after by benefit for client.
+            $discountIterator = DiscountTable::getList(array(
+                'select' => $discountSelect,
+                'filter' => $discountFilter,
+                'order' => array('PRIORITY' => 'DESC', 'SORT' => 'ASC', 'ID' => 'ASC')
+            ));
+
+            while($discount = $discountIterator->fetch())
+            {
+                if (array_key_exists($discount['ID'], $currentList)) {
+                    continue;
+                }
+                $discount['ID'] = (int)$discount['ID'];
+                if ($discount['USE_COUPONS'] == 'Y')
+                    $discount['COUPON'] = $couponList[$couponsDiscount[$discount['ID']]];
+                $discount['CONDITIONS'] = $discount['CONDITIONS_LIST'];
+                $discount['ACTIONS'] = $discount['ACTIONS_LIST'];
+                $discount['PREDICTIONS'] = $discount['PREDICTIONS_LIST'];
+                $discount['MODULE_ID'] = 'sale';
+                $discount['MODULES'] = array();
+                unset($discount['ACTIONS_LIST'], $discount['CONDITIONS_LIST'], $discount['PREDICTIONS_LIST']);
+                $currentList[$discount['ID']] = $discount;
+            }
+            unset($discount, $discountIterator);
 
 			\CTimeZone::Enable();
 
@@ -312,4 +287,26 @@ final class DiscountCache
 		}
 		unset($value, $key);
 	}
+
+    /**
+     * @param $discountIds
+     * @param $siteId
+     * @return array
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    private function ent_getSubsidaryDiscount($discountIds, $siteId): array
+    {
+        $customDiscountsResCurSite = \Enterego\DiscountsSubsidiariesTable::getList(['filter' => [
+            '@DISCOUNT_ID' => $discountIds,
+            '=SITE_ID' => $siteId]
+        ]);
+
+        $newDiscountIds = [];
+        while ($customDiscount = $customDiscountsResCurSite->fetch()) {
+            $newDiscountIds[] = $customDiscount['DISCOUNT_ID'];
+        }
+        return $newDiscountIds;
+    }
 }

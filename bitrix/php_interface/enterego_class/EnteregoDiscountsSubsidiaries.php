@@ -21,7 +21,7 @@ function MyOnAdminTabControlBegin(&$form) {
         }
         $form->arFields["LIDS"] = [
             "id" => "LIDS",
-            "required" => true,
+            "required" => false,
             "content" => "Сайт или несколько сайтов:",
             "html" => '<td width="40%"><span class="adm-required-field">Сайт или несколько сайтов:</span></td>'
                 .'<td><select name="LIDS[]" multiple>'. $htmlSelectOptions .'</select></td>',
@@ -31,7 +31,7 @@ function MyOnAdminTabControlBegin(&$form) {
         ];
         $form->tabs[0]["FIELDS"]["LIDS"] = [
             "id" => "LIDS",
-            "required" => true,
+            "required" => false,
             "content" => "Сайт или несколько сайтов:",
             "html" => '<td width="40%"><span class="adm-required-field">Сайт или несколько сайтов:</span></td>'
                 .'<td><select name="LIDS[]" multiple>'. $htmlSelectOptions .'</select></td>',
@@ -41,32 +41,34 @@ function MyOnAdminTabControlBegin(&$form) {
 
 function saveSubsidiariesOnDiscountChange($event)
 {
-    if (!in_array($_REQUEST['LID'], $_REQUEST['LIDS'])) {
-        $_REQUEST['LIDS'][] = $_REQUEST['LID'];
-    }
-    $discountLIDs = [];
-    $discountRes = \Enterego\DiscountsSubsidiariesTable::getList(['filter' => ['DISCOUNT_ID' => $_REQUEST['ID']]]);
-    while ($discountRow = $discountRes->fetch()) {
-        if (!in_array($discountRow['SITE_ID'], $_REQUEST['LIDS'])) {
-            \Enterego\DiscountsSubsidiariesTable::delete($discountRow['ID']);
-            continue;
+    if ($_REQUEST['LID']) {
+        if (!isset($_REQUEST['LIDS']) || !in_array($_REQUEST['LID'], $_REQUEST['LIDS'])) {
+            $_REQUEST['LIDS'][] = $_REQUEST['LID'];
         }
-        $discountLIDs[$discountRow['SITE_ID']] = $discountRow['ID'];
-    }
+        $discountLIDs = [];
+        $discountRes = \Enterego\DiscountsSubsidiariesTable::getList(['filter' => ['DISCOUNT_ID' => $_REQUEST['ID']]]);
+        while ($discountRow = $discountRes->fetch()) {
+            if (!in_array($discountRow['SITE_ID'], $_REQUEST['LIDS'])) {
+                \Enterego\DiscountsSubsidiariesTable::delete($discountRow['ID']);
+                continue;
+            }
+            $discountLIDs[$discountRow['SITE_ID']] = $discountRow['ID'];
+        }
 
-    foreach ($_REQUEST['LIDS'] as $LID) {
-        if (array_key_exists($LID, $discountLIDs)) {
-            \Enterego\DiscountsSubsidiariesTable::update($discountLIDs[$LID], ['fields' => [
-                'DISCOUNT_ID' => $_REQUEST['ID'],
-                'SITE_ID' => $LID,
-                'IS_MAIN' => $LID === $_REQUEST['LID'] ? 1 : 0
-            ]]);
-        } else {
-            \Enterego\DiscountsSubsidiariesTable::add(['fields' => [
-                'DISCOUNT_ID' => $_REQUEST['ID'],
-                'SITE_ID' => $LID,
-                'IS_MAIN' => $LID === $_REQUEST['LID'] ? 1 : 0
-            ]]);
+        foreach ($_REQUEST['LIDS'] as $LID) {
+            if (array_key_exists($LID, $discountLIDs)) {
+                \Enterego\DiscountsSubsidiariesTable::update($discountLIDs[$LID], ['fields' => [
+                    'DISCOUNT_ID' => $_REQUEST['ID'],
+                    'SITE_ID' => $LID,
+                    'IS_MAIN' => $LID === $_REQUEST['LID'] ? 1 : 0
+                ]]);
+            } else {
+                \Enterego\DiscountsSubsidiariesTable::add(['fields' => [
+                    'DISCOUNT_ID' => $_REQUEST['ID'],
+                    'SITE_ID' => $LID,
+                    'IS_MAIN' => $LID === $_REQUEST['LID'] ? 1 : 0
+                ]]);
+            }
         }
     }
 }
