@@ -9,8 +9,7 @@ namespace Enterego;
  create table ent_discounts_subsidiaries(
 	ID int auto_increment,
 	DISCOUNT_ID int,
-	SITE_ID int,
-	IS_MAIN bool,
+	SITE_ID varchar(100),
 	primary key(ID)
 );
  */
@@ -33,9 +32,6 @@ class DiscountsSubsidiariesTable extends \Bitrix\Main\Entity\DataManager
             ),
             'SITE_ID' => array(
                 'data_type' => 'string',
-            ),
-            'IS_MAIN' => array(
-                'data_type' => 'boolean',
             )
         );
     }

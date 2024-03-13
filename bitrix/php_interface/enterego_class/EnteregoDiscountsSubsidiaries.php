@@ -59,14 +59,12 @@ function saveSubsidiariesOnDiscountChange($event)
             if (array_key_exists($LID, $discountLIDs)) {
                 \Enterego\DiscountsSubsidiariesTable::update($discountLIDs[$LID], ['fields' => [
                     'DISCOUNT_ID' => $_REQUEST['ID'],
-                    'SITE_ID' => $LID,
-                    'IS_MAIN' => $LID === $_REQUEST['LID'] ? 1 : 0
+                    'SITE_ID' => $LID
                 ]]);
             } else {
                 \Enterego\DiscountsSubsidiariesTable::add(['fields' => [
                     'DISCOUNT_ID' => $_REQUEST['ID'],
-                    'SITE_ID' => $LID,
-                    'IS_MAIN' => $LID === $_REQUEST['LID'] ? 1 : 0
+                    'SITE_ID' => $LID
                 ]]);
             }
         }
