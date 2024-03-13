@@ -654,8 +654,7 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
             echo "failure\n" . GetMessage("CC_BSC1_EMPTY_CML");
         }
     } elseif ($_GET["mode"] == "info") {
-        ?>
-    <<?= "?" ?>xml version="1.0" encoding="windows-1251"<?= "?" ?>>
+        ?><<?= "?" ?>xml version="1.0" encoding="windows-1251"<?= "?" ?>>
         <<?= GetMessage("CC_BSC1_DI_GENERAL") ?>>
         <<?= GetMessage("CC_BSC1_DI_STATUSES") ?>>
         <?
