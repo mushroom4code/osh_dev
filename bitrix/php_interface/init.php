@@ -52,6 +52,9 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\DiscountsSubsidiariesTable' => '/bitrix/php_interface/enterego_class/DiscountsSubsidiariesTable.php'
 ));
 
+// add redefined discounts sale class
+require_once(__DIR__.'/enterego_class/discountcache.php');
+
 //redefine sale  basket condition
 require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
