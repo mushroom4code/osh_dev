@@ -49,7 +49,11 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoGroupedProducts' => '/bitrix/php_interface/enterego_class/EnteregoGroupedProducts.php',
     '\Enterego\PWA\EnteregoDBPushNotificationPWATable' => '/bitrix/php_interface/enterego_class/PWA/EnteregoDBPushNotificationPWATable.php',
     '\Enterego\PWA\EnteregoMobileAppEvents' => '/bitrix/php_interface/enterego_class/PWA/EnteregoMobileAppEvents.php',
+    '\Enterego\DiscountsSubsidiariesTable' => '/bitrix/php_interface/enterego_class/DiscountsSubsidiariesTable.php'
 ));
+
+// add redefined discounts sale class
+require_once(__DIR__.'/enterego_class/discountcache.php');
 
 //redefine sale  basket condition
 require_once(__DIR__ . '/enterego_class/sale_cond.php');
@@ -420,3 +424,5 @@ AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToke
 
 // bitrix24 feedback and callback integrations
 AddEventHandler('iblock', 'OnAfterIBlockElementAdd', ['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
+
+require_once(__DIR__ . '/enterego_class/EnteregoDiscountsSubsidiaries.php');

@@ -280,8 +280,10 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         let listLength = res.length;
         let classItem = 'col-7';
         const maxLength = 14;
+        let isLengthWholeNumber = true;
 
         if (res.length > maxLength) {
+            isLengthWholeNumber = (res.length / 2) % 1 === 0
             listLength = Math.ceil(res.length / 2);
             classItem = 'col-6';
         }
@@ -292,7 +294,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             createItem(itemList, menu_items, parentId, classItem)
 
             if (res.length > maxLength) {
-                let newIndex = (Math.floor(res.length / 2) + i) + 1;
+                let newIndex = (Math.floor(res.length / 2) + i) + (isLengthWholeNumber ? 0 : 1);
                 if ((res.length - 1) >= newIndex) {
                     itemList = res[newIndex];
                     createItem(itemList, menu_items, parentId, classItem)
