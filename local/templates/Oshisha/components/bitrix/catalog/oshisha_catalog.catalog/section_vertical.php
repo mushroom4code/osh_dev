@@ -223,9 +223,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/include/catal
         </div>
         <h1 id="pagetitle"><?php $APPLICATION->ShowTitle(false); ?></h1>
         <p class="message_for_user_minzdrav font-14"></p>
-        <div id="osh-filter-horizontal2"></div>
         <div class="osh-block-panel <?= \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
-            <div id="osh-filter-horizontal">
+            <div id="osh-filter-horizontal" class="mb-4">
                 <div id="osh-filter-horizontal-item" class="d-inline-block" data-osh-filter-state="hide"></div>
                 <div id="osh-filter-horizontal-item-count" class="osh-filter-item"
                      onclick="smartFilter.allFilterShowHide()">
@@ -236,62 +235,67 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/include/catal
                     <span class='d-inline-block osh-filter-horizontal-remove'></span>
                 </div>
             </div>
-            <div class="mb-4 col_navigation">
-                <div class="count-per-page">
-                    <span>Количество</span>
-                    <a href="?page=24"
-                       class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24): ?>active<?php endif; ?>">24</a>
-                    <a href="?page=36"
-                       class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 36): ?>active<?php endif; ?>">36</a>
-                    <a href="?page=72"
-                       class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 72): ?>active<?php endif; ?>">72</a>
-                </div>
-            </div>
-            <div class="sort-panel mb-4">
-                <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
-                    <div class="sort_panel_wrap">
-                        <div class="sort_panel" id="">
-                            <a class="sort_order sort_tool" href="#">
-                                <span class="sort_orders_by sort_caption"
-                                      style="min-width: 150px;">Сортировать по</span>
-                                <i class="fa fa-angle-down" aria-hidden="true"></i>
-                            </a>
-                            <div class="sort_orders_element js__sort_orders_element">
-                                <ul>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-sort="<?= 'PROPERTY_' . SORT_POPULARITY ?>"
-                                        data-order="DESC">По популярности
-                                    </li>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                        data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
-                                        data-order="ASC">По возрастанию цены
-                                    </li>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                        data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
-                                        data-order="DESC">По убыванию цены
-                                    </li>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-sort="NAME"
-                                        data-order="ASC">По названию
-                                    </li>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-sort="CREATED_DATE"
-                                        data-order="DESC">По новизне
-                                    </li>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-sort="<?= 'PROPERTY_' . SORT_BREND ?>"
-                                        data-order="DESC">По бренду
-                                    </li>
-                                </ul>
-                            </div>
+            <div id="osh-filters">
+                <div id="osh-filter-grammovka" class="mb-4"></div>
+                <div class="count-and-sort-filters">
+                    <div class="mb-4 col_navigation">
+                        <div class="count-per-page">
+                            <span>Количество</span>
+                            <a href="?page=24"
+                               class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24): ?>active<?php endif; ?>">24</a>
+                            <a href="?page=36"
+                               class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 36): ?>active<?php endif; ?>">36</a>
+                            <a href="?page=72"
+                               class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 72): ?>active<?php endif; ?>">72</a>
                         </div>
                     </div>
-                    <div class="button_panel_wrap">
-                        <div class="sort_mobile"></div>
-                        <div class="icon_sort_bar xs-d-none" id="card_catalog"></div>
-                        <div class="icon_sort_line xs-d-none" id="line_catalog"></div>
+                    <div class="sort-panel mb-4">
+                        <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
+                            <div class="sort_panel_wrap">
+                                <div class="sort_panel" id="">
+                                    <a class="sort_order sort_tool" href="#">
+                                    <span class="sort_orders_by sort_caption"
+                                          style="min-width: 150px;">Сортировать по</span>
+                                        <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                    </a>
+                                    <div class="sort_orders_element js__sort_orders_element">
+                                        <ul>
+                                            <li class="catalog_sort_item js__catalog-sort-item"
+                                                data-sort="<?= 'PROPERTY_' . SORT_POPULARITY ?>"
+                                                data-order="DESC">По популярности
+                                            </li>
+                                            <li class="catalog_sort_item js__catalog-sort-item"
+                                                data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
+                                                data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
+                                                data-order="ASC">По возрастанию цены
+                                            </li>
+                                            <li class="catalog_sort_item js__catalog-sort-item"
+                                                data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
+                                                data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
+                                                data-order="DESC">По убыванию цены
+                                            </li>
+                                            <li class="catalog_sort_item js__catalog-sort-item"
+                                                data-sort="NAME"
+                                                data-order="ASC">По названию
+                                            </li>
+                                            <li class="catalog_sort_item js__catalog-sort-item"
+                                                data-sort="CREATED_DATE"
+                                                data-order="DESC">По новизне
+                                            </li>
+                                            <li class="catalog_sort_item js__catalog-sort-item"
+                                                data-sort="<?= 'PROPERTY_' . SORT_BREND ?>"
+                                                data-order="DESC">По бренду
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button_panel_wrap">
+                                <div class="sort_mobile"></div>
+                                <div class="icon_sort_bar xs-d-none" id="card_catalog"></div>
+                                <div class="icon_sort_line xs-d-none" id="line_catalog"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

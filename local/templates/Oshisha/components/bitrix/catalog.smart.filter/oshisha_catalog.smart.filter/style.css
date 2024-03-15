@@ -1044,3 +1044,56 @@ label.smart-filter-checkbox-text.form-check-label.hide_not_available {
 .hover-red:hover {
     color: rgb(255 5 0) !important;
 }
+
+#osh-filter-grammovka {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#osh-filter-grammovka div {
+    border-radius: 5px;
+    width: 40px;
+    height: 26px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 28px;
+    color: #464646;
+    background: #e5e5e5;
+}
+
+#osh-filter-grammovka div.active {
+    color: #fff;
+    background: #F55F5C;
+}
+
+#osh-filters {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.count-and-sort-filters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    float: right;
+}
+
+div.sort-panel {
+    display: flex;
+    justify-content: center;
+}
+
+@media (min-width: 1380px) {
+    .count-and-sort-filters {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 584px) {
+    #osh-filters {
+        display: block;
+    }
+}
