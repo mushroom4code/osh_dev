@@ -191,6 +191,7 @@ JCSmartFilter.prototype.removeHorizontalFilterAll = function ()
 		BX(checkbox[i]).checked = false;
 		this.countCheckboxFilter--;
 	}
+	this.updateGrammovkaFilter(false, false);
 	this.updateHorizontalFilter();
 	this.proxy(true);
 };
@@ -200,6 +201,7 @@ JCSmartFilter.prototype.removeHorizontalFilter = function(checkbox)
 	const idFilter = BX(checkbox).getAttribute('id'),
 		idFilterItem = `item-${idFilter}`
 	BX.remove(BX(idFilterItem));
+	this.updateGrammovkaFilter(checkbox, false);
 	this.countCheckboxFilter--
 	this.updateHorizontalFilter()
 	this.proxy();
@@ -234,6 +236,7 @@ JCSmartFilter.prototype.addHorizontalFilter = function(checkbox)
 		mainBlock
 	);
 
+	this.updateGrammovkaFilter(checkbox, true);
 	this.updateHorizontalFilter()
 
 	BX.bind(BX(idFilterItem).querySelector('span'), 'click', (e) =>
@@ -610,6 +613,46 @@ JCSmartFilter.prototype.selectDropDownItem = function(element, controlId)
 	var currentOption = wrapContainer.querySelector('[data-role="currentOption"]');
 	currentOption.innerHTML = element.innerHTML;
 	BX.PopupWindowManager.getCurrentPopup().close();
+};
+
+JCSmartFilter.prototype.addFilterGrammovka = function(grammovkaFiltersList) {
+	var grammovkaFilterNode = document.querySelector('#osh-filter-grammovka');
+	grammovkaFiltersList = Object.values(grammovkaFiltersList).sort((a,b) => {
+		if (Number(a.VALUE) === Number(b.VALUE)) {
+			return 0;
+		} else {
+			return (Number(a.VALUE) < Number(b.VALUE)) ? -1 : 1;
+		}
+	});
+	grammovkaFiltersList.forEach((value) => {
+		var newNode = document.createElement('div');
+		newNode.textContent = value.VALUE;
+		newNode.dataset.controlId = value.CONTROL_ID;
+		if (value.CHECKED) {
+			newNode.classList.add('active');
+		}
+		grammovkaFilterNode.appendChild(newNode );
+		newNode.addEventListener('click', (event) => {
+			document.getElementById(event.target.dataset.controlId).click();
+		});
+	});
+};
+
+JCSmartFilter.prototype.updateGrammovkaFilter = function (checkbox, status) {
+	if (checkbox) {
+		var grammovkaFilter = document
+			.querySelector('#osh-filter-grammovka div[data-control-id="' + checkbox.getAttribute('id') + '"]');
+		if (status) {
+			grammovkaFilter.classList.add('active');
+		} else {
+			grammovkaFilter.classList.remove('active');
+		}
+	} else {
+		var allGrammovkaFilters = document.querySelectorAll('#osh-filter-grammovka div.active');
+		for (i = 0; i < allGrammovkaFilters.length; i++){
+			allGrammovkaFilters[i].classList.remove('active');
+		}
+	}
 };
 
 BX.namespace("BX.Iblock.SmartFilter");

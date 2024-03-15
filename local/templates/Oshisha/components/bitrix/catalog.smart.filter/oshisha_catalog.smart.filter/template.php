@@ -782,6 +782,11 @@ if (isset($templateData['TEMPLATE_THEME'])) {
     var smartFilter = new JCSmartFilter('<?echo CUtil::JSEscape($arResult["FORM_ACTION"])?>', '<?=CUtil::JSEscape($arParams["FILTER_VIEW_MODE"])?>', <?=CUtil::PhpToJSObject($arResult["JS_FILTER_PARAMS"])?>);
     window.smartFilter = smartFilter
     $(document).ready(function() {
+        <?php foreach ($arResult['ITEMS'] as $filter) {
+            if (($filter['CODE'] === 'GRAMMOVKA_G_1') && !empty($filter['VALUES'])) { ?>
+                smartFilter.addFilterGrammovka(<?= CUtil::PhpToJSObject($filter['VALUES'])?>);
+            <?php }
+        }?>
         $('input.check_input.form-check-input:checked').each(function () {
             smartFilter.addHorizontalFilter(this);
         });
