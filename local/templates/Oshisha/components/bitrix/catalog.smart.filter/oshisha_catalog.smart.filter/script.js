@@ -616,7 +616,16 @@ JCSmartFilter.prototype.selectDropDownItem = function(element, controlId)
 };
 
 JCSmartFilter.prototype.addFilterGrammovka = function(grammovkaFiltersList) {
-	var grammovkaFilterNode = document.querySelector('#osh-filter-grammovka');
+	var grammovkaFilterNodeWithList = document.querySelector('#osh-filter-grammovka .grammovka_filter_elements');
+	var grammovkaFilterNodeList = document.querySelector('#osh-filter-grammovka ul');
+	document.querySelector('#osh-filter-grammovka .grammovka_filter')
+		.addEventListener('click', (event) => {
+			if (grammovkaFilterNodeWithList.classList.contains('d-none')) {
+				grammovkaFilterNodeWithList.classList.remove('d-none');
+			} else {
+				grammovkaFilterNodeWithList.classList.add('d-none');
+			}
+	});
 	grammovkaFiltersList = Object.values(grammovkaFiltersList).sort((a,b) => {
 		if (Number(a.VALUE) === Number(b.VALUE)) {
 			return 0;
@@ -625,13 +634,14 @@ JCSmartFilter.prototype.addFilterGrammovka = function(grammovkaFiltersList) {
 		}
 	});
 	grammovkaFiltersList.forEach((value) => {
-		var newNode = document.createElement('div');
+		var newNode = document.createElement('li');
 		newNode.textContent = value.VALUE;
+		newNode.classList.add('catalog_sort_item');
 		newNode.dataset.controlId = value.CONTROL_ID;
 		if (value.CHECKED) {
 			newNode.classList.add('active');
 		}
-		grammovkaFilterNode.appendChild(newNode );
+		grammovkaFilterNodeList.appendChild(newNode );
 		newNode.addEventListener('click', (event) => {
 			document.getElementById(event.target.dataset.controlId).click();
 		});
@@ -641,14 +651,14 @@ JCSmartFilter.prototype.addFilterGrammovka = function(grammovkaFiltersList) {
 JCSmartFilter.prototype.updateGrammovkaFilter = function (checkbox, status) {
 	if (checkbox) {
 		var grammovkaFilter = document
-			.querySelector('#osh-filter-grammovka div[data-control-id="' + checkbox.getAttribute('id') + '"]');
+			.querySelector('#osh-filter-grammovka li[data-control-id="' + checkbox.getAttribute('id') + '"]');
 		if (status) {
 			grammovkaFilter.classList.add('active');
 		} else {
 			grammovkaFilter.classList.remove('active');
 		}
 	} else {
-		var allGrammovkaFilters = document.querySelectorAll('#osh-filter-grammovka div.active');
+		var allGrammovkaFilters = document.querySelectorAll('#osh-filter-grammovka li.active');
 		for (i = 0; i < allGrammovkaFilters.length; i++){
 			allGrammovkaFilters[i].classList.remove('active');
 		}
