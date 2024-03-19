@@ -783,7 +783,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
     window.smartFilter = smartFilter
     $(document).ready(function() {
         <?php foreach ($arResult['ITEMS'] as $filter) {
-            if (($filter['CODE'] === 'GRAMMOVKA_G_1') && !empty($filter['VALUES'])) { ?>
+            if (($filter['CODE'] === GRAMMOVKA_PROPERTY) && !empty($filter['VALUES'])) { ?>
                 smartFilter.addFilterGrammovka(<?= CUtil::PhpToJSObject($filter['VALUES'])?>);
             <?php }
         }?>

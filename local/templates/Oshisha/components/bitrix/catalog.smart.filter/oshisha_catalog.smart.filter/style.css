@@ -1045,32 +1045,71 @@ label.smart-filter-checkbox-text.form-check-label.hide_not_available {
     color: rgb(255 5 0) !important;
 }
 
-#osh-filter-grammovka {
+.grammovka_filter_panel_wrap {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    align-items: end;
+    justify-content: end;
 }
 
-#osh-filter-grammovka div {
-    border-radius: 5px;
-    width: 40px;
-    height: 26px;
-    vertical-align: middle;
-    text-align: center;
-    line-height: 28px;
-    color: #464646;
-    background: #e5e5e5;
+.grammovka_filter_panel {
+    min-width: 145px;
+    position: relative;
+    display: flex;
 }
 
-#osh-filter-grammovka div.active {
-    color: #fff;
-    background: #F55F5C;
+.grammovka_filter {
+    border: 1px solid #9f9f9f;
+    margin-bottom: 0;=
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    padding: 6px 15px;
+    font-size: 11px;
+}
+
+.grammovka_filter:hover {
+    color: unset;
+}
+
+.grammovka_filter > i {
+    float: right;
+    margin-left: 7px;
+    font-size: 16px;
+}
+
+.grammovka_filter_elements {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 793;
+    background: #F0F0F0;
+    width: 100%;
+    border-radius: 0 0 10px 10px;
+    min-width: auto;
+    transition: all 0.3s linear;
+}
+
+.grammovka_filter_elements li {
+    cursor: pointer;
+    transition: all 0.3s linear;
+    padding: 8px 0 8px 15px;
+    font-size: 12px;
+}
+
+.grammovka_filter_elements li:hover {
+    background-color: #dbdbdb;
+    box-sizing: border-box;
+}
+
+#osh-filter-grammovka li.active {
+    color: #F55F5C;
 }
 
 #osh-filters {
     display: flex;
     width: 100%;
-    gap: 10px;
+    justify-content: space-between;
 }
 
 .count-and-sort-filters {
@@ -1079,11 +1118,6 @@ label.smart-filter-checkbox-text.form-check-label.hide_not_available {
     justify-content: center;
     flex-direction: column;
     float: right;
-}
-
-div.sort-panel {
-    display: flex;
-    justify-content: center;
 }
 
 @media (min-width: 1380px) {
@@ -1095,5 +1129,11 @@ div.sort-panel {
 @media (max-width: 584px) {
     #osh-filters {
         display: block;
+    }
+}
+
+@media (max-width: 578px) {
+    div#osh-filter-horizontal-item {
+        margin-bottom: 10px !important;
     }
 }
