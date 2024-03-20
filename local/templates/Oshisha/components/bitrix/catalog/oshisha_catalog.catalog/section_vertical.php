@@ -239,8 +239,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/include/catal
                 <div class="grammovka_filter_panel_wrap" id="osh-filter-grammovka">
                     <div class="grammovka_filter_panel mb-4" id="">
                         <a class="grammovka_filter" href="#">
-                                    <span class="grammovka_filters_caption"
-                                          style="min-width: 150px;">Граммовка, г</span>
+                                    <span class="grammovka_filter_caption">Граммовка, г</span>
                             <i class="fa fa-angle-down" aria-hidden="true"></i>
                         </a>
                         <div class="grammovka_filter_elements d-none">
@@ -266,8 +265,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/include/catal
                             <div class="sort_panel_wrap">
                                 <div class="sort_panel" id="">
                                     <a class="sort_order sort_tool" href="#">
-                                    <span class="sort_orders_by sort_caption"
-                                          style="min-width: 150px;">Сортировать по</span>
+                                    <span class="sort_orders_by sort_caption">Сортировать по</span>
                                         <i class="fa fa-angle-down" aria-hidden="true"></i>
                                     </a>
                                     <div class="sort_orders_element js__sort_orders_element">
