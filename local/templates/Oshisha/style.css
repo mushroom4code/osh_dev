@@ -5022,6 +5022,17 @@ li, ul {
         font-size: 12px;
     }
 }
+@media (min-width: 500px) and (max-width: 1024px) {
+    .sort-panel-flex {
+        justify-content: space-between !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .sort-panel-flex {
+        justify-content: space-between !important;
+    }
+}
 
 @media (max-width: 1024px) {
     .by-card .product-item-small-card {
@@ -5034,10 +5045,6 @@ li, ul {
         width: 30px;
         height: 30px;
         margin-right: 4px;
-    }
-
-    .sort-panel-flex {
-        justify-content: space-between !important;
     }
 
     .box_filter_catalog {
