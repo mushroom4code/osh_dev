@@ -1,1 +1,1 @@
-oshisha (1c-bitrix)
+oshisha.net (1c-bitrix)
